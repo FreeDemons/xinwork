@@ -18,6 +18,7 @@ mui.init({
 mui.plusReady(function() {
 	
 	//检查更新
+	
 	mui.getJSON(XW.base + 'appversion/1',function(data){
 		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
 	});
