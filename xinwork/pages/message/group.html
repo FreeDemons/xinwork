@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/chat.css" />
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/setting.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init()
+			mui.plusReady(function() {
+				var allmemeber = document.getElementById("allmember");
+				allmemeber.addEventListener("tap", function() {
+					mui.openWindow({
+						id: 'allmember',
+						url: "allmember.html",
+						extras: {
+							rid: document.querySelector('#rid').innerText
+						},
+						show: {
+							duration: 200
+						}
+					});
+				})
+				var notice = document.getElementById("notice");
+				notice.addEventListener('tap', function() {
+						mui.openWindow({
+							id: 'notice',
+							url: "notice.html",
+							show: {
+								duration: 200
+							},
+							extras: {
+								rid: document.querySelector('#rid').innerText
+							},
+							show: {
+								duration: 200
+							}
+						});
+					})
+					//监听fire事件
+				window.addEventListener('room', function(event) {
+					var rname = event.detail.roomname,
+						rid = event.detail.roomid;
+					document.querySelector('#rid').innerText = rid;
+					document.querySelector('.mui-table-view-cell p').innerText = rname;
+					mui.getJSON(XW.base + 'rongcloud/group/queryUser?groupId=' + rid, function(data) {
+						mui.each(data, function(index, item) {
+							var hpicUrl = ( item.image == '' ? '../../images/default.jpg': item.image);
+							document.querySelector('.memberBox').innerHTML = document.querySelector('.memberBox').innerHTML + '<div class="amember"><img src="' +
+								hpicUrl + '"/><span>&nbsp;' + item.userName + '</span></div>';
+							if(index == 17) { //显示头像不超过18个
+								return false;
+							}
+						})
+					})
+				})
+			})
+		</script>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title mess-title">聊天信息</h1>
+			<h2 id='rid' style="display: none;"></h2>
+		</header>
+		<div class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<div class="groupBox">
+					<div class="memberBox">
+						<!--<div class="amember"><img src="../../images/100x100.png"/><span>&nbsp;范成镇</span></div>-->
+					</div>
+					<div class="mui-table-view-cell" id="allmember">
+						<a class="mui-navigate-right" style="top: 5px;">全部群成员</a>
+					</div>
+				</div>
+				<ul class="mui-table-view">
+					<li class="mui-table-view-cell ">
+						<a>群名称</a>
+						<p style="margin:5px 0px -5px 10px;font-size: 16px;"></p>
+					</li>
+					<li class="mui-table-view-cell" data-page='notice' >
+						<a class="mui-navigate-right" id='notice'> 群公告 </a>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+
+	</body>
+
+</html>

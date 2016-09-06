@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init();
+$.plusReady(function(){
+	//关闭侧滑返回，ios的侧滑返回无法关闭窗口
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});
+	//遍历选项卡
+	for(var i=0;i<$('.mui-table-view-cell a').length;i++){
+		var path = $('.mui-table-view-cell a')[i].getAttribute("data-path");
+		$.preload({url: path + '.html',id: path});
+	}
+	$('.mui-table-view-cell').on('tap', 'a', function() {$.openWindow({id:this.getAttribute("data-path")})});
+})
+}(mui, document));
+</script>
+<style type="text/css">
+.mui-table-view{margin-bottom: 15px;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">个人简历</h1>
+	</header>
+	<div class="mui-content">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="data">基本资料<span class="mui-badge">必填</span></a></li>
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="learn">学业信息<span class="mui-badge">必填</span></a></li>
+        </ul>
+        <ul class="mui-table-view">
+        	<li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="summary">个人简介</a></li>
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="photo">生活照</a></li>
+        </ul>
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="idletime">可兼职时间</a></li>
+        </ul>
+	</div>
+</body>
+</html>

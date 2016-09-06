@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init();
+mui.plusReady(function() {
+	//执行打开窗口的load_node事件
+	window.addEventListener("load_node",function(event){
+		mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);
+		var nid = event.detail.nid;
+		document.querySelector(".mui-scroll").innerHTML = "";
+		document.querySelector(".mui-title").innerText = event.detail.title;
+		mui.getJSON(XW.base + 'node/' + nid,function(data){
+			document.querySelector(".mui-scroll").innerHTML = data.body.und[0].value;
+		});
+	});
+})
+</script>
+<style type="text/css">
+.mui-content p{margin-bottom: 0px;}
+.mui-content img{width: 100%;display: block;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title"></h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll"></div>
+	</div>
+</body>
+</html>

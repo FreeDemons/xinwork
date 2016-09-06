@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({swipeBack:true});
+mui.plusReady(function(){
+	mui('.mui-scroll-wrapper').scroll();
+	//显示初始值
+	var fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_summary;
+	if(fieldId != ""){
+		mui.getJSON(XW.base + 'entity_field_collection_item/' + fieldId.und[0].value,function(data){
+			mui("#summary")[0].value=data.user_summary;
+			mui("#saveBtn")[0].classList.remove("mui-disabled");
+		});
+	}
+	//检查文本框输入是否为空
+	mui("#summary")[0].addEventListener('input',function(){
+		if(this.value == ""){
+			mui("#saveBtn")[0].classList.add("mui-disabled");
+		}else{
+			mui("#saveBtn")[0].classList.remove("mui-disabled");
+		}
+	});
+	//点击保存
+	mui("#saveBtn")[0].addEventListener('tap',function(){
+		//获取输入值
+		var fc_arr={};
+		var fc_field_arr={};
+		fc_field_arr['user_summary'] = mui("#summary")[0].value;
+		//检查是新建还是更新
+		if(fieldId != ""){
+			fc_arr = fc_field_arr;
+			var saveurl = 'entity_field_collection_item/' + fieldId.und[0].value;
+			var sendtype = 'put';
+		}else{
+			fc_arr['field_name'] = 'field_user_group_summary';
+			fc_arr['entity_type'] = 'user';
+			fc_arr['field'] = fc_field_arr;
+			var saveurl = 'customize/entity_field_collection_item/create';
+			var sendtype = 'post';
+		}
+		
+		plus.nativeUI.showWaiting( "正在保存..." );
+		mui.ajax(XW.base + saveurl,{
+			headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+  			data:fc_arr,
+  			type:sendtype,
+  			dataType: 'json',
+  			success:function(data){
+  				plus.nativeUI.closeWaiting();
+  				if(data == 1 || fieldId != ""){
+  					app.setUser();
+      				mui.alert("保存成功","温馨提示","",function(){
+      					mui.back();
+      				});
+  				}else{
+  					mui.alert("保存失败","温馨提示");
+  				}
+  			},
+  			error:function(){
+  				plus.nativeUI.closeWaiting();
+  				mui.alert("保存失败","温馨提示");
+  			}
+		});
+	})
+})
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">个人简介</h1>
+	</header>
+	<div class="mui-scroll-wrapper mui-content">
+		<div class="mui-scroll">
+			<form class="mui-input-group"><textarea id="summary" rows="5" placeholder="你有哪些优秀的地方..."></textarea></form>
+		    <div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">保存</button></div>
+       </div>
+	</div>
+</body>
+</html>

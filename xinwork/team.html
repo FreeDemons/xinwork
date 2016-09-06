@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>首页</title>
+<script src="js/mui.min.js"></script>
+<script src="js/setting.js"></script>
+<link href="css/mui.min.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	keyEventBind: {backbutton: false}//关闭back按键监听
+});
+
+mui.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll({deceleration:0.001,bounce: true});
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
+	showTeam(JSON.parse(plus.storage.getItem('team')));
+	
+	mui.getJSON(XW.base + 'teamlist',function(data){
+		plus.storage.setItem('team',JSON.stringify(data));
+		showTeam(data);
+	});
+	//打开团队详情页
+	mui.preload({id:'teamDetailt',url:'pages/team/teamDetailt.html'});
+	mui('#teamList').on('tap', '.mui-table-view-cell', function() {
+		mui.fire(plus.webview.getWebviewById('teamDetailt'),'load_team',{
+		    tid:this.getAttribute("data-tid"),
+		    phone:this.getAttribute("data-phone"),
+		    title:this.getAttribute("data-title"),
+		    name:this.querySelector(".team-title b").textContent,
+		    logo:this.querySelector("img").getAttribute("src"),
+		    place:this.querySelector(".team-place").textContent,
+		    proof:this.querySelector(".team-title span").textContent,
+		    description:this.querySelector(".team-description").textContent
+		});
+		mui.openWindow({id:'teamDetailt',show:{duration:200}});
+	});
+});
+function showTeam(data){
+	var teamList = document.body.querySelector('#teamList');
+	teamList.innerHTML = "";
+	mui.each(data, function(i, n) {
+		var li = document.createElement('li');
+		li.setAttribute("data-tid",n.id);
+		li.setAttribute("data-phone",n.field_team_phone);
+		li.setAttribute("data-title",n.title);
+		li.className = 'mui-table-view-cell mui-media';
+		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="team-title"><b>' + n.field_team_name + '</b><span>' + n.field_team_proof + '</span>'
+						+ '</div><div class="team-description">' + n.field_team_description + '</div><p class="team-place mui-ellipsis"><span class="mui-icon mui-icon-location"></span>'
+						+ n.field_team_address + '</p></div>';
+		teamList.appendChild(li);
+	});
+}
+</script>
+</head>
+<body>
+	<div class="mui-content">
+		<div class="mui-content team-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<ul class="mui-table-view" id="teamList"></ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

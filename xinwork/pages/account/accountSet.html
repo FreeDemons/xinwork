@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init();
+mui.plusReady(function(){
+	//关闭侧滑返回，ios的侧滑返回无法关闭窗口
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});
+	//更换头像
+	mui('.mui-table-view-cell')[0].addEventListener('tap',function() {app.addPicture("avatar")});
+	//邮箱和密码
+	mui.preload({url: 'accountEmail.html',id: 'accountEmail'});
+	mui.preload({url: 'accountPw.html',id: 'accountPw'});
+	mui('.mui-table-view-cell')[1].addEventListener('tap',function() {mui.openWindow({id:'accountEmail'})});
+	mui('.mui-table-view-cell')[2].addEventListener('tap',function() {mui.openWindow({id:'accountPw'})});
+	//点击退出登录
+	mui('.mui-table-view-cell')[3].addEventListener('tap',function() {logout()});
+});
+//图片上传成功后的回调函数
+function photoCallback(data,localpath){
+	data = JSON.parse(data);
+	mui.ajax(XW.base+'customize/user_edit/avatar',{
+		data:{fid:data.fid},
+		type:'post',
+		success:function(data){
+			plus.nativeUI.closeWaiting();
+			if(data == 1){
+				mui.alert("保存失败，请稍后再试","温馨提示");
+			}else{
+				app.setUser();
+				plus.webview.getWebviewById('account').evalJS('$("#accountUser .mui-media-object").html(\'<img src="'+localpath+'"/>\')');
+  				mui.alert("保存成功","温馨提示","",function(){mui.back()});
+			}
+		},
+		error:function(){
+			plus.nativeUI.closeWaiting();
+			mui.alert("保存失败，请稍后再试","温馨提示");
+		}
+	});
+}
+//退出帐号
+function logout(){
+	var btnArray = ['取消','确定'];
+	mui.confirm("确定退出此账号？",'',btnArray, function(e){
+		if(e.index == 1){
+			plus.nativeUI.showWaiting("正在退出...");
+			mui.ajax(XW.base+'user/logout',{
+				headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+				type:'post',
+				success:function(){
+					plus.nativeUI.closeWaiting();
+					plus.storage.removeItem('user');
+					plus.webview.getWebviewById('account').evalJS('noUser()');
+	      			plus.webview.getWebviewById('chat').evalJS('refreshPage()');
+	      			plus.webview.getWebviewById('chat').evalJS('delMsgCache()');
+					mui.toast('退出成功');
+					mui.back();
+				},
+				error:function(){
+					plus.nativeUI.closeWaiting();
+					mui.alert("退出失败","温馨提示");
+				}
+			});
+		}
+	});
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">帐号设置</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view">
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="">更改头像</a></li>
+        </ul>
+        <ul class="mui-table-view" style="margin: 15px 0px;">
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="accountEmail">邮箱地址</a></li>
+        	<li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="accountPw">修改密码</a></li>
+        </ul>
+        <ul class="mui-table-view">
+        	<li class="mui-table-view-cell mui-text-center">退出帐号</li>
+        </ul>
+	</div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../css/account.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init({
+	gestureConfig:{longtap:true}
+});
+$.plusReady(function() {
+	$('.mui-scroll-wrapper').scroll({startY: 0,bounce: true});
+	
+	//初始化数据
+	var nadeArr = {};
+	var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
+	window.addEventListener("load_detail",function(event){
+		var data = event.detail;
+		doc.querySelector("#recordTitle").innerHTML = data.titleHtml;
+		doc.querySelector("#jobId span").innerHTML = data.jobId;
+		doc.querySelector("#time span").innerHTML = data.time;
+		doc.querySelector("#qrcode").style.display = "none";
+		//选择日期
+		if(this.date == ""){
+			doc.querySelector("#date").style.display = "none";
+		}else{
+			doc.querySelector("#date").style.display = "block";
+			doc.querySelector("#date span").innerHTML = data.date;
+		}
+		//备注
+		if(data.remark == ""){
+			doc.querySelector("#remark").style.display = "none";
+		}else{
+			doc.querySelector("#remark").style.display = "block";
+			doc.querySelector("#remark span").innerHTML = data.remark;
+		}
+		plus.nativeUI.showWaiting();
+		mui.getJSON(XW.base + 'entity_node/' + data.jobId,function(n){
+			plus.nativeUI.closeWaiting();
+			if(data.enrol == 1 && n.job_qrcode_img.length != 0){
+				mui.getJSON(n.job_qrcode_img.file.uri,function(f){
+					doc.querySelector("#qrcode img").src = f.url;
+					doc.querySelector("#qrcode").style.display = "block";
+				});
+			}
+			
+			nadeArr.nid = data.jobId;
+			nadeArr.title = n.title;
+			nadeArr.created = new Date(parseInt(n.created) * 1000).toLocaleString().split(' ')[0];
+			nadeArr.date = n.date;
+			nadeArr.time = n.time;
+			nadeArr.wage = n.wage;
+			nadeArr.sort = n.sort;
+			nadeArr.place = n.place;
+			nadeArr.number = n.wage;
+			nadeArr.status = statusArr[n.job_status];
+		});
+	});
+	//点击查看兼职详情
+	$.preload({id:"jobDetailt",url:'../job/jobDetailt.html'});
+	doc.querySelector("#recordTitle").addEventListener("tap",function(){
+		$.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',nadeArr);
+		$.openWindow({id:'jobDetailt',show:{duration:200}});
+	})
+	//长按保存二维码图片
+	doc.querySelector("#qrcode img").addEventListener("longtap",function(){
+		var actionList = {cancel:"取消",buttons:[{title:"保存图片到相册"}]};
+        var imgSrc = this.getAttribute("src");
+        //弹出actionSheet选项
+        plus.nativeUI.actionSheet(actionList,function(e){
+            if(e.index==1){
+                //创建一个下载任务
+                var imgDtask = plus.downloader.createDownload(imgSrc,{method:"GET"},function(d,status){
+                    //下载完成的回调函数
+                    if (status == 200 ) { 
+                        plus.gallery.save(d.filename,function(){//保存到相册
+                            plus.io.resolveLocalFileSystemURL(d.filename,function(entry){
+                                entry.remove();//删除临时文件
+                            });
+                            return plus.nativeUI.toast('图片已保存至相册',{'verticalAlign':'center'});
+                        });                     
+                    }else{
+                        plus.nativeUI.toast("保存失败!",{'verticalAlign':'center'}); 
+                    }  
+                });
+                imgDtask.start();//开始下载任务
+            }
+        });
+	});
+});
+}(mui, document));
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">报名详情</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="recordDetailPage">
+		<div class="mui-scroll">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell mui-media" id="recordTitle"></li>
+				<li class="mui-table-view-cell" id="recordData">
+					<p id="jobId">兼职编号：<span></span></p>
+					<p id="time">报名时间：<span></span></p>
+					<p id="date">选择日期：<span></span></p>
+					<p id="remark">备<i></i>注：<span></span></p>
+				</li>
+				<li class="mui-table-view-cell" id="qrcode">
+					<p>微信扫描下方二维码加入工作群<br/><span style="font-size: 12px;">(长按保存图片，然后到微信识别)</span></p>
+					<p><img src=""></img></p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+/*聊天主页chat.html*/
+.chat-content{ margin-top: 5px; }
+.conNews{font-size: 14px;color: #CCCCCC;display:block;width: 80%;margin-top: 5px;}
+.conTime{display: block;float:right;font-size: 14px;color: #CCCCCC;}
+
+.noLoginBox{ text-align:center;width: 90%;height: 100%; margin: 0% 5%;}
+.noLoginBox button{ margin-top: 20px;width:50%;border-radius: 0px; }
+.noLoginBox #loginBtn{ color:#0F9D58 ;background-color:transparent;margin-bottom: 20px; }
+.noLoginBox a button:active{border-color: #0F9D58;}
+.noLoginBox img{ height: 60%;} 
+
+
+/*聊天信息页message.html*/
+
+.clear{zoom:1}
+.clear:after{display:block;clear:both;content:""；}
+html,body{height: 100%;margin: 0px;padding: 0px;overflow: hidden;-webkit-touch-callout: none;-webkit-user-select: none;}
+footer{position:absolute;width: 100%;z-index: 2;height: 50px;min-height: 50px;border-top: solid 1px #bbb;left: 0px;bottom: 0px;overflow: hidden;padding: 0px 50px;background-color: #fafafa;}
+.footer-left{position: absolute;width: 50px;height: 50px;left: 0px;bottom: 0px;text-align: center;vertical-align: middle;line-height: 100%;padding: 12px 4px;}
+.footer-right{position: absolute;width: 50px;height: 50px;right: 0px;bottom: 0px;text-align: center;vertical-align: middle;line-height: 100%;padding: 17px 5px;display: inline-block;}
+.footer-center{height: 100%;padding: 5px 0px;}
+.footer-center [class*=input]{width: 88%;height: 100%;border-radius: 5px;}
+.footer-center .input-text{background: #fff;border: solid 1px #ddd;padding: 10px !important;font-size: 16px !important;line-height: 18px !important;font-family: verdana !important;overflow:hidden;}
+.footer-center .input-sound{background-color: #eee;}
+.mui-content{height: 100%;padding: 44px 0px 50px 0px;overflow: auto;background-color: #eaeaea;}
+#msg-list{height: 100%;overflow: auto;-webkit-overflow-scrolling: touch ;padding-bottom: 10px;}
+.msg-more{text-align:center;margin:0;clear:both;margin-top: 10px;}
+.msg-time{text-align:center;margin:0;clear:both;padding-top:15px;font-size:12px;}
+.msg-item{padding:8px;clear:both;}
+.msg-item:after{display:block;clear:both}
+.msg-item .msg-user{width:38px;height:38px;border:solid 1px #d3d3d3;display:inline-block;background:#fff;border-radius:3px;vertical-align:top;text-align:center;float:left;padding:3px;color:#ddd}
+.msg-item .msg-avatar{width:38px;height:38px;display:inline-block;border-radius:3px;vertical-align:top;text-align:center;float:left;color:#ddd}
+.msg-item .msg-main{display:inline-block;float:left;max-width:75%;min-width:35px}
+.msg-item .msg-main .self-name{margin-bottom:5px;padding-left:7px;font-size:12px;line-height:1}
+.msg-item-self .msg-main .self-name{text-align:right;padding-right:7px}
+.msg-item .msg-main .msg-content{border-radius:5px;border:solid 1px #d3d3d3;background-color:#FFF;color:#333;padding:8px;vertical-align:top;font-size:15px;position:relative;margin:0 8px}
+.msg-item .msg-main .msg-content .msg-content-inner{overflow-x:hidden}
+.msg-item .msg-main .msg-content .msg-content-arrow{position:absolute;border:solid 1px #d3d3d3;border-right:none;border-top:none;background-color:#FFF;width:10px;height:10px;left:-5px;top:8px;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}
+.msg-item-self .msg-avatar,.msg-item-self .msg-main{float:right}
+.msg-item-self .msg-main .msg-content .msg-content-arrow{left:auto;right:-5px;-webkit-transform:rotateZ(225deg);transform:rotateZ(225deg)}
+.msg-item-self .msg-main .msg-content,.msg-item-self .msg-main .msg-content .msg-content-arrow{background-color:#b2e281;color:#333;border-color:#b2e281}
+
+footer .mui-icon{color: #000;}
+footer .mui-icon:active{color: #007AFF !important;}
+footer .mui-icon-paperplane:before{content: "发送";}
+footer .mui-icon-paperplane{font-size: 18px !important;word-break: keep-all;line-height: 100%;position: relative;top:3px;color: rgba(0, 135, 250, 1);}
+#msg-sound{-webkit-user-select: none !important;user-select: none !important;}
+.rprogress{position: absolute;left: 50%;top: 50%;z-index:3;width: 140px;height: 140px;margin-left: -70px;margin-top: -70px;background-image: url(../images/arecord.png);background-repeat: no-repeat;background-position: center center;background-size: 30px 30px;background-color: rgba(0, 0, 0, 0.7);border-radius: 5px;display: none;-webkit-transition: .15s;}
+.rschedule{background-color: rgba(0, 0, 0, 0);border: 5px solid rgba(0, 183, 229, 0.9);opacity: .9;border-left: 5px solid rgba(0, 0, 0, 0);border-right: 5px solid rgba(0, 0, 0, 0);border-radius: 50px;box-shadow: 0 0 15px #2187e7;width: 46px;height: 46px;position: absolute;left: 50%;top: 50%;margin-left: -23px;margin-top: -23px;-webkit-animation: spin 1s infinite linear;animation: spin 1s infinite linear;}
+.r-sigh{display: none;border-radius: 50px;box-shadow: 0 0 15px #2187e7;width: 46px;height: 46px;position: absolute;left: 50%;top: 50%;margin-left: -23px;margin-top: -23px;text-align: center;line-height: 46px;font-size: 40px;font-weight: bold;color: #2187e7;}
+.rprogress-sigh{background-image: none !important;}
+.rprogress-sigh .rschedule{display: none !important;}
+.rprogress-sigh .r-sigh{display: block !important;}
+.rsalert{font-size: 12px;color: #bbb;text-align: center;position: absolute;border-radius: 5px;width: 130px;margin: 5px 5px;padding: 5px;left: 0px;bottom: 0px;}
+@-webkit-keyframes spin{0%{-webkit-transform: rotate(0deg);}100%{-webkit-transform: rotate(360deg);}}
+@keyframes spin{0%{transform: rotate(0deg);}100%{transform: rotate(360deg);}}
+#h{background: none;/*border: solid 1px #ddd;*/padding: 10px !important;font-size: 16px !important;font-family: verdana !important;line-height: 18px !important;overflow: visible;position: absolute;left: -1000px;right: 0px;word-break: break-all;word-wrap: break-word;}
+.cancel{background-color: darkred;}
+#msgPopover{height: 50px;width:50%;border-radius: 0px;text-align: center;vertical-align:middle;line-height: 50px;position: absolute;top:40%;left:25%}
+.popover-adjust{ position: absolute;  top: -223px; overflow: inherit; }
+.footer-cenRight{ position: absolute;width: 50px;height: 50px;right: 35px;bottom: 0px;text-align: center;vertical-align: middle;line-height: 100%;padding: 17px 5px;display: inline-block; }
+.riseFooter{ position: absolute; bottom: 180px; }
+.faceBox{background-color: #F0F0F0;width: 100%;height: 180px;position: absolute;bottom:0px;overflow: scroll;z-index: 3;}
+.msglist_heigth_66{height: 66% !important;}
+.fall{ display: none; }
+.facelist{ height: 40px; width: 13%;margin-top:15px ; display: inline-block; font-size: 24px !important; text-align: center; }
+.iconfont{font-size: 22px !important;}
+
+/*群组成员页group.html*/
+.groupBox{width: 100%;height: 25%;margin: 18px 0px;padding:10px;background-color: #fff;}
+.memberBox{ width: 100%;height: 80%;border-bottom: solid 1px #F0F0F0; }
+.allmember{margin: 0px 15px 0px 15px;}
+.allmember span{ display: block;margin-top: 10px; }
+.groupBox hr{height: 1px;border:none;border-bottom: solid 1px #F0F0F0; }
+.amember{height: 80px;width: 23%;display: inline-block;text-align: center;margin: 5px 0px;}
+.amember span{ font-size: 14px;display:block ; }
+.amember img{ width: 55px; height: 55px;}
+/*所有群成员allmember.com*/
+
+.allBox{ border:none }
