@@ -16,8 +16,8 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init({swipeBack:true});
 mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
-	selectSchool();
 	selectEntryyear();
 	//显示初始值
 	var fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_learn;
@@ -31,12 +31,14 @@ mui.plusReady(function(){
 			mui("#saveBtn")[0].removeAttribute("disabled");
 		});
 	}
+	//点击学校
+	document.getElementById('school').addEventListener('tap', function(event){mui.openWindow({id:'schoollist',url:'schoollist.html'})});
 	//点击保存
 	mui("#saveBtn")[0].addEventListener('tap',function(){
 		//验证合法性
-		if(mui("#school")[0].value == ""){mui.alert("请选择学校","温馨提示")}
-		else if(mui("#discipline")[0].value == ""){mui.alert("请填写专业","温馨提示")}
-		else if(mui("#entryyear")[0].value == ""){mui.alert("请选择入学年份","温馨提示")}
+		if(mui("#school")[0].value == ""){mui.toast("请选择学校")}
+		else if(mui("#discipline")[0].value == ""){mui.toast("请填写专业")}
+		else if(mui("#entryyear")[0].value == ""){mui.toast("请选择入学年份")}
 		else{
 			//获取输入值
 			var fc_arr={};
@@ -72,23 +74,23 @@ mui.plusReady(function(){
 	  				plus.nativeUI.closeWaiting();
 	  				if(data == 1 || fieldId != ""){
       					app.setUser();
-	      				mui.alert("保存成功","温馨提示","",function(){
-	      					mui.back();
-	      				});
+      					plus.webview.getWebviewById('resume').evalJS("document.querySelector(\".mui-navigate-right[data-path='learn'] .mui-badge\").style.display = 'block'");
+	      				mui.toast("保存成功");
+	      				mui.back();
       				}else{
-      					mui.alert("保存失败","温馨提示");
+      					mui.toast("保存失败");
       				}
 	  			},
 	  			error:function(){
 	  				plus.nativeUI.closeWaiting();
-	  				mui.alert("保存失败","温馨提示");
+	  				mui.toast("保存失败");
 	  			}
 			});
 		}
 	});
 })
 //选择学校
-function selectSchool(){
+/*function selectSchool(){
 	var schoolData=[
 			{text:"珠海",children:['广东科学技术职业学院','珠海城市职业技术学院','珠海艺术职业学院','吉林大学珠海学院','遵义医学院珠海校区',
 									'北京理工大学珠海学院','北京师范大学珠海分校','暨南大学珠海校区','中山大学珠海校区']},
@@ -104,8 +106,9 @@ function selectSchool(){
 		cityPicker.show(function(items) {
 			school.value = items[1];
 		});
+		mui.openWindow({id:'schoollist',url:'schoollist.html'});
 	}, false);
-}
+}*/
 //选择班级
 function selectEntryyear(){
 	var schoolData=['2012','2013','2014','2015','2016','其它']
@@ -130,7 +133,7 @@ function selectEntryyear(){
 	<div class="mui-scroll-wrapper mui-content">
 		<div class="mui-scroll">
 	        <form class="mui-input-group">
-	            <div class="mui-input-row"><label>就读学校</label><input type="text" id="school"></input></div>
+	            <div class="mui-input-row"><label>就读学校</label><input type="text" id="school" readonly="readonly"></input></div>
 				<div class="mui-input-row"><label for="discipline">所学专业</label><input type="text" id="discipline"></input></div>
 				<div class="mui-input-row"><label>入学年份</label><input type="text" id="entryyear"></input></div>
 	    	</form>

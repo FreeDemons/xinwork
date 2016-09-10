@@ -27,7 +27,7 @@ mui.plusReady(function() {
 	});
 	//拨打电话号码
 	document.querySelector("#teamPhone").addEventListener("tap",function(){
-		var phoneNumber = $(this).find("b").text()
+		var phoneNumber = $(this).find("font").text();
 		var btnArray = ['取消','拨打'];
 		var confirmText = '拨打 '+phoneNumber;
 		mui.confirm(confirmText,'',btnArray, function(e){
@@ -48,7 +48,7 @@ mui.plusReady(function() {
 	});
 });
 //初始化页面数据
-function setData(){
+function setData(event){
 	$("#teamTitle b").text(event.detail.title);
 	$("#teamTitle span").text('('+event.detail.name+')');
 	$("#teamProof font").text(event.detail.proof);

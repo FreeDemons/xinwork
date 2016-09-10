@@ -11,19 +11,21 @@
 (function($, doc) {
 $.init();
 $.plusReady(function(){
-	//关闭侧滑返回，ios的侧滑返回无法关闭窗口
-	plus.webview.currentWebview().setStyle({'popGesture':'none'});
-	//遍历选项卡
-	for(var i=0;i<$('.mui-table-view-cell a').length;i++){
-		var path = $('.mui-table-view-cell a')[i].getAttribute("data-path");
-		$.preload({url: path + '.html',id: path});
-	}
-	$('.mui-table-view-cell').on('tap', 'a', function() {$.openWindow({id:this.getAttribute("data-path")})});
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
+	var user=JSON.parse(plus.storage.getItem('user'));
+	if(user.field_user_group_data != ""){doc.querySelector(".mui-navigate-right[data-path='data'] .mui-badge").style.display = 'block'}
+	if(user.field_user_group_learn != ""){doc.querySelector(".mui-navigate-right[data-path='learn'] .mui-badge").style.display = 'block'}
+	if(user.field_user_group_summary != ""){doc.querySelector(".mui-navigate-right[data-path='summary'] .mui-badge").style.display = 'block'}
+	
+	$('.mui-table-view-cell').on('tap', 'a', function() {
+		var path = this.getAttribute("data-path");
+		$.openWindow({id:path,url:path + '.html'});
+	});
 })
 }(mui, document));
 </script>
 <style type="text/css">
-.mui-table-view{margin-bottom: 15px;}
+.mui-badge{display: none;}
 </style>
 </head>
 <body>
@@ -32,12 +34,14 @@ $.plusReady(function(){
 		<h1 class="mui-title">个人简历</h1>
 	</header>
 	<div class="mui-content">
+		<p style="margin: 10px 0px 0px 15px;font-size: 12px;">必填项</p>
         <ul class="mui-table-view">
-            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="data">基本资料<span class="mui-badge">必填</span></a></li>
-            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="learn">学业信息<span class="mui-badge">必填</span></a></li>
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="data">基本资料<span class="mui-badge mui-badge-success mui-badge-inverted">已填</span></a></li>
+            <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="learn">学业信息<span class="mui-badge mui-badge-success mui-badge-inverted">已填</span></a></li>
         </ul>
-        <ul class="mui-table-view">
-        	<li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="summary">个人简介</a></li>
+        <p style="margin: 10px 0px 0px 15px;font-size: 12px;">加分项</p>
+        <ul class="mui-table-view" style="margin-bottom: 15px;">
+        	<li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="summary">个人简介<span class="mui-badge mui-badge-success mui-badge-inverted">已填</span></a></li>
             <li class="mui-table-view-cell"><a class="mui-navigate-right" data-path="photo">生活照</a></li>
         </ul>
         <ul class="mui-table-view">

@@ -11,15 +11,11 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 mui.plusReady(function(){
-	//关闭侧滑返回，ios的侧滑返回无法关闭窗口
-	plus.webview.currentWebview().setStyle({'popGesture':'none'});
 	//更换头像
 	mui('.mui-table-view-cell')[0].addEventListener('tap',function() {app.addPicture("avatar")});
 	//邮箱和密码
-	mui.preload({url: 'accountEmail.html',id: 'accountEmail'});
-	mui.preload({url: 'accountPw.html',id: 'accountPw'});
-	mui('.mui-table-view-cell')[1].addEventListener('tap',function() {mui.openWindow({id:'accountEmail'})});
-	mui('.mui-table-view-cell')[2].addEventListener('tap',function() {mui.openWindow({id:'accountPw'})});
+	mui('.mui-table-view-cell')[1].addEventListener('tap',function() {mui.openWindow({url: 'accountEmail.html',id: 'accountEmail'})});
+	mui('.mui-table-view-cell')[2].addEventListener('tap',function() {mui.openWindow({url: 'accountPw.html',id: 'accountPw'})});
 	//点击退出登录
 	mui('.mui-table-view-cell')[3].addEventListener('tap',function() {logout()});
 });

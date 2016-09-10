@@ -61,9 +61,9 @@ function hasUser(user){
 	$("#accountUser .mui-media-object").html(avatar);
 	
 	if(user.field_identity_group == ""){
-		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge").text("未认证");
+		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-inverted").text("未认证");
 	}else{
-		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-warning").text("已认证");
+		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-success mui-badge-inverted").text("已认证");
 	}
 	
 	$(".mui-table-view-cell[data-wid='wallet'] .mui-badge").show().find("font").text(user.userpoints.withdraw);
@@ -96,13 +96,13 @@ function noUser(){
 				<li class="mui-table-view-cell" data-path="pages/other/approve.html" data-wid="approve">
 					<a class="mui-navigate-right">
 						<span class="mui-icon iconfont icon-approve"></span>身份认证
-						<span class="mui-badge" style="display: none;"></span>
+						<span class="mui-badge mui-badge-inverted" style="display: none;"></span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell" data-path="pages/wallet/wallet.html" data-wid="wallet">
 					<a class="mui-navigate-right">
 						<span class="mui-icon iconfont icon-wallet"></span>我的钱包
-						<span class="mui-badge mui-badge-warning" style="display: none;"><font></font> 积分</span>
+						<span class="mui-badge mui-badge-success mui-badge-inverted" style="display: none;"><font></font> 积分</span>
 					</a>
 				</li>
 				<li class="mui-table-view-cell" data-path="pages/record/record.html" data-wid="record">

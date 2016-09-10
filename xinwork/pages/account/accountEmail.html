@@ -12,15 +12,15 @@
 (function($, doc) {
 $.init();
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	var state = JSON.parse(plus.storage.getItem('user'));
 	var email = doc.querySelector("#email");
 	email.value = state.mail;
 	
 	doc.getElementById("emailBtn").addEventListener('tap',function(){
 		if(email.value == state.mail){
-			$.alert("保存成功","温馨提示","",function(){
-				$.back();
-			});
+			$.toast('保存成功');
+      		$.back();
 		}else if(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(email.value)){
 			plus.nativeUI.showWaiting( "正在保存..." );
   			$.ajax(XW.base+'customize/user_edit/email',{
@@ -29,19 +29,20 @@ $.plusReady(function() {
       			success:function(data){
       				plus.nativeUI.closeWaiting();
       				if(data == 1){
-      					$.alert("邮箱已被使用","温馨提示");
+      					$.toast('邮箱已被使用');
       				}else{
       					app.setUser();
-	      				$.alert("保存成功","温馨提示","",function(){$.back()});
+      					$.toast('保存成功');
+      					$.back();
       				}
       			},
       			error:function(){
       				plus.nativeUI.closeWaiting();
-      				$.alert("保存失败，请稍后再试","温馨提示");
+      				$.toast('保存失败，请稍后再试');
       			}
       		});
 		}else{
-			$.alert("请输入正确的邮箱格式","温馨提示");
+			$.toast('请输入正确的邮箱格式');
 		}
 		
 	});

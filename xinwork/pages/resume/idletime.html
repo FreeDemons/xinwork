@@ -13,6 +13,7 @@
 mui.init({swipeBack:true});
 var fieldId;
 mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
 	
 	fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_idletime;
@@ -103,16 +104,15 @@ function switchday(){
 			plus.nativeUI.closeWaiting();
 			if(data == 1 || fieldId != ""){
 				app.setUser();
-  				mui.alert("保存成功","温馨提示","",function(){
-  					mui.back();
-  				});
+  				mui.toast("保存成功");
+  				mui.back();
 			}else{
-				mui.alert("保存失败","温馨提示");
+				mui.toast("保存失败");
 			}
 		},
 		error:function(){
 			plus.nativeUI.closeWaiting();
-			mui.alert("保存失败","温馨提示");
+			mui.toast("保存失败");
 		}
 	});
 }

@@ -11,6 +11,7 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init({swipeBack:true});
 mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
 	//显示初始值
 	var fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_summary;
@@ -57,16 +58,16 @@ mui.plusReady(function(){
   				plus.nativeUI.closeWaiting();
   				if(data == 1 || fieldId != ""){
   					app.setUser();
-      				mui.alert("保存成功","温馨提示","",function(){
-      					mui.back();
-      				});
+  					plus.webview.getWebviewById('resume').evalJS("document.querySelector(\".mui-navigate-right[data-path='summary'] .mui-badge\").style.display = 'block'");
+      				mui.toast("保存成功");
+      				mui.back();
   				}else{
-  					mui.alert("保存失败","温馨提示");
+  					mui.toast("保存失败");
   				}
   			},
   			error:function(){
   				plus.nativeUI.closeWaiting();
-  				mui.alert("保存失败","温馨提示");
+  				mui.toast("保存失败");
   			}
 		});
 	})

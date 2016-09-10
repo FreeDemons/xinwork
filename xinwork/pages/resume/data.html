@@ -11,6 +11,7 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
 	selectSex();
 	selectHealth();
@@ -35,14 +36,14 @@ mui.plusReady(function(){
 	//点击保存
 	mui("#saveBtn")[0].addEventListener('tap',function(){
 		//验证合法性
-		if(mui("#name")[0].value == ""){mui.alert("请填写姓名","温馨提示")}
-		else if(mui("#sex")[0].value == ""){mui.alert("请选择性别","温馨提示")}
-		else if(mui("#height")[0].value == ""){mui.alert("请填写身高","温馨提示")}
-		else if(mui("#weight")[0].value == ""){mui.alert("请填写体重","温馨提示")}
-		else if(mui("#birthday")[0].value == ""){mui.alert("请选择生日","温馨提示")}
-		else if(mui("#health")[0].value == ""){mui.alert("请选择是否有健康证","温馨提示")}
-		else if(mui("#wechat")[0].value == ""){mui.alert("请填写微信号","温馨提示")}
-		else if(mui("#hometown")[0].value == ""){mui.alert("请填写籍贯","温馨提示")}
+		if(mui("#name")[0].value == ""){mui.toast("请填写姓名")}
+		else if(mui("#sex")[0].value == ""){mui.toast("请选择性别")}
+		else if(mui("#height")[0].value == ""){mui.toast("请填写身高")}
+		else if(mui("#weight")[0].value == ""){mui.toast("请填写体重")}
+		else if(mui("#birthday")[0].value == ""){mui.toast("请选择生日")}
+		else if(mui("#health")[0].value == ""){mui.toast("请选择是否有健康证")}
+		else if(mui("#wechat")[0].value == ""){mui.toast("请填写微信号")}
+		else if(mui("#hometown")[0].value == ""){mui.toast("请填写籍贯")}
 		else{
 			//获取输入值
 			var fc_arr={};
@@ -78,16 +79,16 @@ mui.plusReady(function(){
 	  				plus.nativeUI.closeWaiting();
 	  				if(data == 1 || fieldId != ""){
       					app.setUser();
-	      				mui.alert("保存成功","温馨提示","",function(){
-	      					mui.back();
-	      				});
+      					plus.webview.getWebviewById('resume').evalJS("document.querySelector(\".mui-navigate-right[data-path='data'] .mui-badge\").style.display = 'block'");
+	      				mui.toast("保存成功");
+	      				mui.back();
       				}else{
-      					mui.alert("保存失败","温馨提示");
+      					mui.toast("保存失败");
       				}
 	  			},
 	  			error:function(){
 	  				plus.nativeUI.closeWaiting();
-	  				mui.alert("保存失败","温馨提示");
+	  				mui.toast("保存失败");
 	  			}
 			});
 		}

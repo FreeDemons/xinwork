@@ -10,6 +10,7 @@
 <link href="css/mui.min.css" rel="stylesheet"/>
 <link href="css/style.css" rel="stylesheet"/>
 <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="css/offcanvas-drag-down.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" charset="UTF-8">
 mui.init({
 	pullRefresh : {
@@ -74,7 +75,8 @@ mui.plusReady(function() {
 	});
 	//点击积分商城
 	document.querySelector('#homeMall').addEventListener("tap",function(){
-		plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
+		//plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
+		mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
 	});
 	//点击签到
 	document.querySelector('#homeSignin').addEventListener("tap",function(){
@@ -94,13 +96,26 @@ mui.plusReady(function() {
 			});
 		}
 	});
+	//点击空白区域隐藏城市选择
+	document.getElementById("menu-backdrop").addEventListener('tap', toggleMenu);
+	//城市选择下沉菜单中的点击事件
+	mui('#cityMenu').on('tap', 'a', function() {
+		toggleMenu();
+		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+this.innerHTML+"'");
+		//alert(this.innerHTML);
+		//mui('#refreshContainer').pullRefresh().scrollTo(0,0,100);
+		city = this.getAttribute("data-cid");
+		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
+		homeLoad();
+	});
 });
 
 var page=0;
+var city="";
 function homeLoad() {
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
-	mui.getJSON(XW.base + 'joblist',function(data){
+	mui.getJSON(XW.base + 'joblist?city=' + city,function(data){
 		plus.storage.setItem('job',JSON.stringify(data));
 		page=0;
 		document.body.querySelector('#jobList').innerHTML = "";
@@ -118,7 +133,7 @@ function homeLoad() {
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-    mui.getJSON(XW.base + 'joblist?page=' + page,function(data){
+    mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
 		showJob(data);
 		setTimeout(function() {
 			var refb = data.length < 20 ? true : false;
@@ -141,7 +156,6 @@ function showBanner(data){
 function showJob(data){
 	var jobList = document.body.querySelector('#jobList');
 	mui.each(data, function(i, n) {
-		//console.log(n.field_logo.src);
 		var statusclass= n.field_job_status == "正在报名" ? " status-apply" : "";
 		var li = document.createElement('li');
 		li.className = 'mui-table-view-cell mui-media';
@@ -154,6 +168,33 @@ function showJob(data){
 						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';
 		jobList.appendChild(li);
 	});
+}
+//城市选择的显示与隐藏
+var busying = false;
+function toggleMenu() {
+	if (busying) {return;}
+	busying = true;
+	
+	var menuWrapper = document.getElementById("menu-wrapper");
+	var menu = document.getElementById("cityMenu");
+	var menuWrapperClassList = menuWrapper.classList;
+	var backdrop = document.getElementById("menu-backdrop");
+	
+	if (menuWrapperClassList.contains('mui-active')) {
+		document.body.classList.remove('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-out-up animated';
+		menu.className = 'menu bounce-out-up animated';
+		setTimeout(function() {
+			backdrop.style.opacity = 0;
+			menuWrapper.classList.add('hidden');
+		}, 500);
+	} else {
+		document.body.classList.add('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
+		menu.className = 'menu bounce-in-down animated';
+		backdrop.style.opacity = 1;
+	}
+	setTimeout(function() {busying = false;}, 500);
 }
 </script>
 </head>
@@ -180,5 +221,19 @@ function showJob(data){
 			<ul class="mui-table-view" id="jobList"></ul>
 		</div>
 	</div>
+	<div id="menu-wrapper" class="menu-wrapper hidden">
+		<div id="cityMenu" class="menu">
+			<ul class="mui-table-view mui-table-view-inverted">
+				<li class="mui-table-view-cell"><a data-cid="">全部</a></li>
+				<li class="mui-table-view-cell"><a data-cid="96">珠海</a></li>
+				<li class="mui-table-view-cell"><a data-cid="95">中山</a></li>
+				<li class="mui-table-view-cell"><a data-cid="80">佛山</a></li>
+				<li class="mui-table-view-cell"><a data-cid="83">江门</a></li>
+				<li class="mui-table-view-cell"><a data-cid="79">东莞</a></li>
+				<li class="mui-table-view-cell"><a data-cid="93">湛江</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="menu-backdrop" class="menu-backdrop"></div>
 </body>
 </html>

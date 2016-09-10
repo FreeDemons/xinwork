@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/mui.indexedlist.js"></script>
+<script src="../../js/setting.js"></script>
+<!--<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>-->
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/mui.indexedlist.css" rel="stylesheet" />
+<script type="text/javascript" charset="UTF-8">
+mui.init();
+mui.plusReady(function(){
+	var header = document.querySelector('header.mui-bar');
+	var list = document.getElementById('list');
+	var searchInput = document.querySelector("#list .mui-indexed-list-search .mui-indexed-list-search-input");
+	//calc hieght
+	list.style.height = (document.body.offsetHeight - header.offsetHeight) + 'px';
+	//create
+	window.indexedList = new mui.IndexedList(list);
+	//点击选项
+	mui("#list").on("tap",".mui-indexed-list-item",function(){
+		searchInput.value = this.textContent;
+		list.querySelector(".mui-indexed-list-search").classList.add("mui-active");
+	});
+	//点击确定
+	header.querySelector(".mui-btn-link").addEventListener("tap",function(){
+		var value = searchInput.value;
+		if(value == ""){
+			mui.toast("请选择或输入学校");
+		}else{
+			plus.webview.getWebviewById('learn').evalJS("document.getElementById('school').value='" + value + "'");
+			mui.back();
+		}
+	});
+})
+</script>
+<style>
+html,body {height: 100%;overflow: hidden;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">选择学校</h1>
+		<a class="mui-btn-link mui-pull-right">确定</a>
+	</header>
+	<div class="mui-content">
+		<div id='list' class="mui-indexed-list">
+			<div class="mui-indexed-list-search mui-input-row mui-search">
+				<input type="search" class="mui-input-clear mui-indexed-list-search-input" placeholder="输入学校名字">
+			</div>
+			<div class="mui-indexed-list-bar"><a>珠</a><a>中</a><a>江</a><a>湛</a><a>佛</a><a>莞</a><a>社</a></div>
+			<div class="mui-indexed-list-alert"></div>
+			<div class="mui-indexed-list-inner">
+				<div class="mui-indexed-list-empty-alert">没有匹配到学校</div>
+				<ul class="mui-table-view">
+					<li data-group="珠" class="mui-table-view-divider mui-indexed-list-group">珠海</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">广东科学技术职业学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">珠海城市职业技术学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">珠海艺术职业学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">吉林大学珠海学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">遵义医学院珠海校区</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">北京理工大学珠海学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">北京师范大学珠海分校</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">暨南大学珠海校区</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">中山大学珠海校区</li>
+					<li data-group="中" class="mui-table-view-divider mui-indexed-list-group">中山</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">电子科技大学中山学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">广东药学院中山校区</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">广东理工学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">火炬职业技术学院</li>
+					<li class="mui-table-view-cell mui-indexed-list-item">中山职业技术学院</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

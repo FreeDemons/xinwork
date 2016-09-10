@@ -14,6 +14,7 @@
 mui.init({swipeBack:true,gestureConfig:{longtap: true}});
 var fieldId;
 mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
 	//添加图片
 	mui(".mui-bar-nav").on("tap",'#add_photo',function(){
@@ -48,7 +49,6 @@ mui.plusReady(function(){
 				plus.nativeUI.closeWaiting();
 				if(data == 1){
 					app.setUser();
-					mui.back();
 				}else{
 					mui(".mui-bar-nav").off("tap",'#add_photo');
 				}

@@ -1381,11 +1381,11 @@ p {
 
 .mui-badge-green, .mui-badge-success {
  color: #fff;
- background-color: #4cd964
+ background-color: #0F9D58
 }
 
 .mui-badge-green.mui-badge-inverted, .mui-badge-success.mui-badge-inverted {
- color: #4cd964;
+ color: #0F9D58;
  background-color: transparent
 }
 
@@ -1584,10 +1584,6 @@ p {
  -webkit-transform: scaleY(.5);
  transform: scaleY(.5);
  background-color: #222
-}
-
-.mui-table-view-inverted .mui-table-view-cell.mui-active, .mui-table-view-inverted .mui-table-view-cell > a:not(.mui-btn).mui-active {
- background-color: #242424
 }
 
 .mui-table-view-cell {

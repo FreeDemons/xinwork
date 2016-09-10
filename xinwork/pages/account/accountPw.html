@@ -12,6 +12,7 @@
 (function($, doc) {
 $.init();
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	var currentPw = doc.querySelector("#currentPw");
 	var newPw = doc.querySelector("#newPw");
 	var confirmPw = doc.querySelector("#confirmPw");
@@ -19,27 +20,28 @@ $.plusReady(function() {
 	doc.querySelector("#accountPwBtn").addEventListener('tap',function(){
 		var regpass=/^(?=.{6,16}$)[0-9a-zA-Z]+$/;
 		if(currentPw.value == "" || newPw.value == "" || confirmPw.value == ""){
-			mui.alert("请填写密码","温馨提示");
+			$.toast("请填写密码");
 		}else if(!regpass.test(newPw.value)){
-			mui.alert("密码格式不允许","温馨提示");
+			$.toast("密码格式不允许");
 		}else if(newPw.value != confirmPw.value){
-			mui.alert("两次输入密码不一致","温馨提示");
+			$.toast("两次输入密码不一致");
 		}else{
 			plus.nativeUI.showWaiting( "正在保存..." );
-			mui.ajax(XW.base+'customize/user_edit/pass',{
+			$.ajax(XW.base+'customize/user_edit/pass',{
       			data:{currentPassword:currentPw.value,newPassword:newPw.value},
       			type:'post',
       			success:function(data){
       				plus.nativeUI.closeWaiting();
       				if(data == 1){
-      					mui.alert("当前密码不正确","温馨提示");
+      					$.toast("当前密码不正确");
       				}else{
-	      				mui.alert("修改成功","温馨提示","",function(){$.back();});
+	      				$.toast("修改成功");
+	      				$.back();
       				}
       			},
       			error:function(){
       				plus.nativeUI.closeWaiting();
-      				mui.alert("保存失败，请稍后再试","温馨提示");
+      				$.toast("保存失败，请稍后再试");
       			}
       		})
 		}
