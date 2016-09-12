@@ -101,12 +101,15 @@ mui.plusReady(function() {
 	//城市选择下沉菜单中的点击事件
 	mui('#cityMenu').on('tap', 'a', function() {
 		toggleMenu();
+		//改变标题栏的文字
 		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+this.innerHTML+"'");
-		//alert(this.innerHTML);
-		//mui('#refreshContainer').pullRefresh().scrollTo(0,0,100);
+		
 		city = this.getAttribute("data-cid");
+		plus.storage.setItem('city',city);
 		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
 		homeLoad();
+		//加载团队页
+		plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
 	});
 });
 

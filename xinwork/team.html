@@ -17,11 +17,8 @@ mui.plusReady(function() {
 	mui('.mui-scroll-wrapper').scroll({deceleration:0.001,bounce: true});
 	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
 	showTeam(JSON.parse(plus.storage.getItem('team')));
+	loadTeam('');
 	
-	mui.getJSON(XW.base + 'teamlist',function(data){
-		plus.storage.setItem('team',JSON.stringify(data));
-		showTeam(data);
-	});
 	//打开团队详情页
 	mui.preload({id:'teamDetailt',url:'pages/team/teamDetailt.html'});
 	mui('#teamList').on('tap', '.mui-table-view-cell', function() {
@@ -38,6 +35,14 @@ mui.plusReady(function() {
 		mui.openWindow({id:'teamDetailt',show:{duration:200}});
 	});
 });
+//加载团队数据
+function loadTeam(city){
+	mui.getJSON(XW.base + 'teamlist?city=' + city,function(data){
+		plus.storage.setItem('team',JSON.stringify(data));
+		showTeam(data);
+	});
+}
+//显示团队项
 function showTeam(data){
 	var teamList = document.body.querySelector('#teamList');
 	teamList.innerHTML = "";
