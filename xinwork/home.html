@@ -203,6 +203,7 @@ function toggleMenu() {
 	var backdrop = document.getElementById("menu-backdrop");
 	
 	if (menuWrapperClassList.contains('mui-active')) {
+		mui('#refreshContainer').pullRefresh().setStopped(false);
 		document.body.classList.remove('menu-open');
 		menuWrapper.className = 'menu-wrapper fade-out-up animated';
 		menu.className = 'menu bounce-out-up animated';
@@ -211,6 +212,7 @@ function toggleMenu() {
 			menuWrapper.classList.add('hidden');
 		}, 500);
 	} else {
+		mui('#refreshContainer').pullRefresh().setStopped(true);
 		document.body.classList.add('menu-open');
 		menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
 		menu.className = 'menu bounce-in-down animated';

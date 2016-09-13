@@ -67,7 +67,7 @@
 .menu-open .mui-scroll-wrapper {position: absolute;top: 0;bottom: 0;left: 0;z-index: 1;width: 100%;overflow: hidden;-webkit-backface-visibility: hidden;}
 .menu-backdrop {display: none;}
 .menu-open .menu-backdrop {position: fixed;top: 0;bottom: 0;height: 100%;width: 100%;display: block;z-index: 998;background: rgba(0,0,0,0.4);}
-.menu-wrapper {position: absolute;top: 0px;left: 0;right: 0;z-index: 999;background-color: #fff;width: 100%;height: 170px;overflow: scroll;}
+.menu-wrapper {position: absolute;top: 0px;left: 0;right: 0;z-index: 999;background-color: #fff;width: 100%;height: 170px;overflow: auto;}
 .menu-wrapper.hidden {-webkit-transform: translate3d(0, -100%, 0);transform: translate3d(0, -100%, 0);z-index: -1;}
 .menu .mui-table-view-inverted {color: #333;font-size: 14px;background: #fff;}
 .menu .mui-table-view-inverted:before,.menu .mui-table-view-inverted:after{background: #e1e1e1;}
