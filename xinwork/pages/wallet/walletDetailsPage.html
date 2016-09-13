@@ -39,19 +39,19 @@ $.plusReady(function() {
 //兼职工资详细
 function jobLoad(nid){
 	var jobData = {};
-	$.getJSON(XW.base + 'entity_node/' + nid,function(data){
+	$.getJSON(XW.base + 'node/' + nid,function(data){console.log(JSON.stringify(data));
 		var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
 		jobData = {
 			nid:nid,
 		    title:data.title,
 		    created:new Date(parseInt(data.created) * 1000).toLocaleString().split(' ')[0],
-		    date:data.date,
-		    time:data.time,
-		    wage:data.wage,
-		    sort:data.sort,
-		    place:data.place,
-		    number:data.number,
-		    status:statusArr[data.job_status]
+		    date:data.field_date.und[0].value,
+		    time:data.field_time.und[0].value,
+		    wage:data.field_wage.und[0].value,
+		    sort:data.field_sort.und[0].value,
+		    place:data.field_team_address.und[0].detail,
+		    number:data.field_number.und[0].value,
+		    status:statusArr[data.field_job_status.und[0].value]
 		};
 		doc.querySelector('#jobLink').style.display = "block";
 		doc.querySelector('#details').style.display = "block";

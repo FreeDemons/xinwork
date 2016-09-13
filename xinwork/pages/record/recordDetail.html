@@ -42,10 +42,10 @@ $.plusReady(function() {
 			doc.querySelector("#remark span").innerHTML = data.remark;
 		}
 		plus.nativeUI.showWaiting();
-		mui.getJSON(XW.base + 'entity_node/' + data.jobId,function(n){
+		mui.getJSON(XW.base + 'node/' + data.jobId,function(n){
 			plus.nativeUI.closeWaiting();
-			if(data.enrol == 1 && n.job_qrcode_img.length != 0){
-				mui.getJSON(n.job_qrcode_img.file.uri,function(f){
+			if(data.enrol == 1 && n.field_job_qrcode_img.length != 0){
+				mui.getJSON(XW.base + 'entity_file/' + n.field_job_qrcode_img.und[0].fid,function(f){
 					doc.querySelector("#qrcode img").src = f.url;
 					doc.querySelector("#qrcode").style.display = "block";
 				});
@@ -54,13 +54,13 @@ $.plusReady(function() {
 			nadeArr.nid = data.jobId;
 			nadeArr.title = n.title;
 			nadeArr.created = new Date(parseInt(n.created) * 1000).toLocaleString().split(' ')[0];
-			nadeArr.date = n.date;
-			nadeArr.time = n.time;
-			nadeArr.wage = n.wage;
-			nadeArr.sort = n.sort;
-			nadeArr.place = n.place;
-			nadeArr.number = n.wage;
-			nadeArr.status = statusArr[n.job_status];
+			nadeArr.date = n.field_date.und[0].value;
+			nadeArr.time = n.field_time.und[0].value;
+			nadeArr.wage = n.field_wage.und[0].value;
+			nadeArr.sort = n.field_sort.und[0].value;
+			nadeArr.place = n.field_team_address.und[0].detail;
+			nadeArr.number = n.field_number.und[0].value;
+			nadeArr.status = statusArr[n.field_job_status.und[0].value];
 		});
 	});
 	//点击查看兼职详情

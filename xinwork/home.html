@@ -27,7 +27,7 @@ mui.init({
 	      //height:50,//可选.默认50.触发上拉加载拖动距离
 	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
 	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
-	      callback :pullUpfresh 
+	      callback :pullUpfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 	    }
   	},
 	keyEventBind: {
@@ -35,9 +35,17 @@ mui.init({
 	}
 });
 
+var page=0;
+var city='';
 mui.plusReady(function() {
-	showJob(JSON.parse(plus.storage.getItem('job')));
+	if(plus.storage.getItem('job') != null){
+		showJob(JSON.parse(plus.storage.getItem('job')));
+	}else{
+		document.body.querySelector('#noneTips').style.display="block";
+	}
+	
 	showBanner(JSON.parse(plus.storage.getItem('banner')));
+	city = plus.storage.getItem('city') != null ? plus.storage.getItem('city') : '';
 	homeLoad();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
@@ -107,25 +115,35 @@ mui.plusReady(function() {
 		city = this.getAttribute("data-cid");
 		plus.storage.setItem('city',city);
 		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
+		
+		plus.nativeUI.showWaiting();
 		homeLoad();
 		//加载团队页
 		plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
 	});
 });
 
-var page=0;
-var city="";
 function homeLoad() {
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
 	mui.getJSON(XW.base + 'joblist?city=' + city,function(data){
-		plus.storage.setItem('job',JSON.stringify(data));
+		plus.nativeUI.closeWaiting();
 		page=0;
 		document.body.querySelector('#jobList').innerHTML = "";
-		showJob(data);
-		setTimeout(function() {
-			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
-		}, 1000);
+		mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+		
+		if(data.length > 0){
+			showJob(data);
+			document.body.querySelector('#jobList').style.display="block";
+			document.body.querySelector('#noneTips').style.display="none";
+			plus.storage.setItem('job',JSON.stringify(data));
+			mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+		}else{
+			document.body.querySelector('#jobList').style.display="none";
+			document.body.querySelector('#noneTips').style.display="block";
+			mui('#refreshContainer').pullRefresh().disablePullupToRefresh();
+			plus.storage.removeItem('job');
+		}
 	});
 	//添加banner图
 	mui.getJSON(XW.base + 'banner',function(data){
@@ -159,6 +177,7 @@ function showBanner(data){
 function showJob(data){
 	var jobList = document.body.querySelector('#jobList');
 	mui.each(data, function(i, n) {
+		var place = n.field_team_address.split("\n  ").pop();
 		var statusclass= n.field_job_status == "正在报名" ? " status-apply" : "";
 		var li = document.createElement('li');
 		li.className = 'mui-table-view-cell mui-media';
@@ -167,7 +186,7 @@ function showJob(data){
 		li.setAttribute("data-date",n.field_date);
 		li.setAttribute("data-time",n.field_time);
 		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="job-title mui-ellipsis">' + n.title + '</div><p class="mui-ellipsis job-mid"><font>'
-						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + n.field_place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
+						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
 						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';
 		jobList.appendChild(li);
 	});
@@ -222,6 +241,7 @@ function toggleMenu() {
 				<a id="homeSignin"><span class="iconfont icon-signin"></span> 每日签到</a>
 			</div>
 			<ul class="mui-table-view" id="jobList"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>可怜，啥都没有 !</div>
 		</div>
 	</div>
 	<div id="menu-wrapper" class="menu-wrapper hidden">

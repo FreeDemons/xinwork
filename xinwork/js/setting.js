@@ -1,6 +1,7 @@
 window.XW={
 	env:"production",
-	base:"http://120.24.36.146/xinworkapp/"
+	base:"http://120.24.36.146/xinworkapp/",
+	city:{96:'珠海',95:'中山',80:'佛山',83:'江门',79:'东莞',93:'湛江'}
 }
 
 //添加下边线

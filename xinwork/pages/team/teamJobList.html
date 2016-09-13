@@ -81,6 +81,7 @@ function pullUpfresh(){
 //加载工作列表数据
 function loadJobList(data) {
 	mui.each(data, function(i, n) {
+		var place = n.field_team_address.split("\n  ").pop();
 		var li = document.createElement('li');
 		li.className = 'mui-table-view-cell';
 		li.setAttribute("data-nid",n.nid);
@@ -90,7 +91,7 @@ function loadJobList(data) {
 		li.setAttribute("data-status",n.field_job_status);
 		li.innerHTML = '<div class="job-title"><span class="mui-ellipsis">' + n.title + '</span><b>' + n.field_wage + '</b></div><div class="job-label"><span class="job-sort">'
 						+ n.field_sort + '</span> & <span class="job-status">' + n.field_job_status + '</span></div><div class="job-place mui-ellipsis"><span>'
-						+ n.field_place + '</span> | 招聘 <font>' + n.field_number + '</font> 人</div>';
+						+ place + '</span> | 招聘 <font>' + n.field_number + '</font> 人</div>';
 		jobList.appendChild(li);
 	});
 }

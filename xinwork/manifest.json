@@ -227,14 +227,19 @@
 					"images/banner_old.png",
 					"js/mui.min.js",
 					"css/mui.min.css",
-					"js/app.js"
+					"js/app.js",
+					"css/offcanvas-drag-down.css",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"jobDetailt.html",
 					"pages/job/jobDetailt.html",
 					"pages/job/jobNameList.html",
 					"pages/other/bannerPage.html",
-					"pages/other/teamwork.html"
+					"pages/other/teamwork.html",
+					"pages/login/login.html",
+					"pages/mall/mallhome.html"
 				],
 				"priority": 0
 			},

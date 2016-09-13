@@ -18,7 +18,6 @@ mui.init({
 mui.plusReady(function() {
 	
 	//检查更新
-	
 	mui.getJSON(XW.base + 'appversion/1',function(data){
 		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
 	});
@@ -48,6 +47,13 @@ mui.plusReady(function() {
 		}
 		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
+	//显示城市
+	if(plus.storage.getItem('city') == null || plus.storage.getItem('city') == ""){
+		document.querySelector('#citySelect font').innerHTML='全部';
+	}else{
+		var cityid = plus.storage.getItem('city');
+		document.querySelector('#citySelect font').innerHTML=XW.city[cityid];
+	}
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
@@ -117,7 +123,7 @@ mui.plusReady(function() {
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-pull-left mui-btn-link" id="citySelect" style="color: #333;font-size: 14px;padding-left: 5px;">
-			<font>全部</font> 
+			<font></font> 
 			<span class="mui-icon mui-icon-arrowdown" style="font-size: 16px;"></span>
 		</a>
 		<h1 class="mui-title">首页</h1>
