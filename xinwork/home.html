@@ -38,14 +38,14 @@ mui.init({
 var page=0;
 var city='';
 mui.plusReady(function() {
-	if(plus.storage.getItem('job') != null){
+	if(plus.storage.getItem('job')){
 		showJob(JSON.parse(plus.storage.getItem('job')));
 	}else{
 		document.body.querySelector('#noneTips').style.display="block";
 	}
 	
 	showBanner(JSON.parse(plus.storage.getItem('banner')));
-	city = plus.storage.getItem('city') != null ? plus.storage.getItem('city') : '';
+	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
 	homeLoad();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
@@ -83,8 +83,8 @@ mui.plusReady(function() {
 	});
 	//点击积分商城
 	document.querySelector('#homeMall').addEventListener("tap",function(){
-		//plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
-		mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
+		plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
+		//mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
 	});
 	//点击签到
 	document.querySelector('#homeSignin').addEventListener("tap",function(){

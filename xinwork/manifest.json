@@ -7,7 +7,7 @@
 	"id": "xinwork",/*应用的标识，创建应用时自动生成，勿手动修改*/
 	"name": "薪窝兼职",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "1.0.0",/*应用版本名称*/
+		"name": "1.1.0",/*应用版本名称*/
 		"code": "85"
 	},
 	"description": "",/*应用描述信息*/
@@ -89,9 +89,9 @@
 	},
 	"plus": {
 		"splashscreen": {
-			"autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
-			"waiting": false,
-			"delay": "2000"
+			"autoclose": false,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+			"waiting": true,
+			"delay": "500"
 		},
 		"popGesture": "hide",/*none:新建webview窗口无侧滑返回功能；close：新建webview窗口默认侧滑返回关闭；hide：新建webview窗口默认侧滑返回隐藏。暂时仅iOS平台支持"*/
 		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
@@ -121,7 +121,7 @@
 				"password": "",/*iOS应用打包个人证书导入密码*/
 				"p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
 				"devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
-				//"UIReserveStatusbarOffset": false,/*iOS沉浸式状态栏*/
+				"UIReserveStatusbarOffset": false,/*iOS沉浸式状态栏*/
 				//"StatusBarBackground":"#f7f7f7",/*iOS状态栏颜色*/
 				"frameworks": []
 			},
@@ -130,7 +130,7 @@
 				"keystore": "",/*Android应用打包使用的密钥库文件*/
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-				//"ImmersedStatusbar":true,/*Android沉浸式状态栏*/
+				"ImmersedStatusbar":true,/*Android沉浸式状态栏*/
 				//"theme":"@android:style/Theme.DeviceDefault.Light",
 				"permissions": [
 					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
@@ -245,7 +245,8 @@
 				"refer": [
 					"team.html",
 					"chat.html",
-					"pages/login/login.html"
+					"pages/login/login.html",
+					"guide.html"
 				]
 			},
 			"home.html": {
@@ -270,7 +271,8 @@
 					"pages/other/bannerPage.html",
 					"pages/other/teamwork.html",
 					"pages/login/login.html",
-					"pages/mall/mallhome.html"
+					"pages/mall/mallhome.html",
+					"guide.html"
 				],
 				"priority": 0
 			},
@@ -317,7 +319,8 @@
 					"js/setting.js",
 					"fonts/mui.ttf",
 					"css/style.css",
-					"images/banner.png"
+					"images/banner.png",
+					"css/iconfont.css"
 				],
 				"refer": [
 					"pages/team/teamDetailt.html"
@@ -822,6 +825,18 @@
 			"pages/record/recordDetail.html": {
 				"resources": [
 					"js/app.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"guide.html": {
+				"resources": [
+					"images/message.png",
+					"images/wallet.png",
+					"images/team.png",
+					"images/index.png",
+					"js/mui.min.js",
+					"css/mui.min.css"
 				],
 				"refer": [],
 				"priority": 0

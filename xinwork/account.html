@@ -23,10 +23,8 @@ mui.plusReady(function() {
 	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
 	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
 	//加载用户信息
-	user = plus.storage.getItem('user');
-	if(user != null){
-		user = JSON.parse(user);
-		hasUser(user);
+	if(plus.storage.getItem('user')){
+		hasUser(JSON.parse(plus.storage.getItem('user')));
 	}else{
 		noUser();
 	}
@@ -55,19 +53,22 @@ mui.plusReady(function() {
 	});
 });
 //显示当前用户
-function hasUser(user){
-	user=user;
-	var avatar = user.picture == null ? '<span class="mui-icon iconfont icon-camera"></span>' : '<img src="'+user.picture.urls+'"/>';
-	$("#accountUser .mui-media-object").html(avatar);
-	
-	if(user.field_identity_group == ""){
-		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-inverted").text("未认证");
-	}else{
-		$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-success mui-badge-inverted").text("已认证");
+function hasUser(data){
+	if(data){
+		user=data;
+		var avatar = data.picture == null ? '<span class="mui-icon iconfont icon-camera"></span>' : '<img src="'+data.picture.urls+'"/>';
+		$("#accountUser .mui-media-object").html(avatar);
+		
+		if(data.field_identity_group == ""){
+			$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-inverted").text("未认证");
+		}else{
+			$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-success mui-badge-inverted").text("已认证");
+		}
+		
+		$(".mui-table-view-cell[data-wid='wallet'] .mui-badge").show().find("font").text(data.userpoints.withdraw);
+		$("#accountUser .mui-media-body").text(app.interceptionStr(data.name));
 	}
 	
-	$(".mui-table-view-cell[data-wid='wallet'] .mui-badge").show().find("font").text(user.userpoints.withdraw);
-	$("#accountUser .mui-media-body").text(app.interceptionStr(user.name));
 }
 //没有当前用户
 function noUser(){
