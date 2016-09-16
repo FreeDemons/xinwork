@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll();
+	
+	var version;
+	plus.runtime.getProperty(plus.runtime.appid,function(inf){
+		doc.querySelector(".about_version span").innerText = inf.version;
+		version = inf.version;
+	});
+	
+//	doc.querySelector(".about_version a").addEventListener("tap",function(){
+//		plus.nativeUI.showWaiting();
+//		$.getJSON(XW.base + 'appversion/1',function(data){
+//			plus.nativeUI.closeWaiting();
+//			if(data[0].field_remark == version){
+//				$.alert("当前已是最新版本","温馨提示");
+//			}else{
+//				app.checkUpdate(data[0].field_remark,data[0].field_version_file);
+//			}
+//		});
+//	});
+});
+}(mui, document));
+</script>
+<style type="text/css">
+.about_main{padding: 15px;}
+.about_main p{text-indent: 2em;color: #666;}
+.about_main h4{margin: 20px 0px 10px;font-size: 14px;}
+.about_version{text-align: center;position: absolute;bottom: 0px;width: 100%;}
+.about_version a{color: #0F9D58;margin-left: 10px;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">关于薪窝</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<div class="about_main">
+				<p>薪窝兼职平台是由珠海零夏信息科技有限公司团队开发的，为国内首款以真正服务学生、服务兼职公司或兼职团队、服务需求企业三方为开发宗旨的兼职综合平台。</p>
+				<p>我们尝试通过为正规兼职公司或兼职团队提供便捷的管理操作平台，整合真实靠谱兼职资源；通过以正规兼职公司或者校园团队引流的方式，为需求企业提供最优的线下执行团队；
+					通过正规兼职公司或者兼职团队提供的靠谱信息源保障兼职学生的个人利益。</p>
+				<h4>联系方式：</h4>
+				<p>公司地址：珠海香洲区紫荆路323号304室</p>
+				<p>客服电话：0756-7231110</p>
+				<p>合作热线：15919187268（廖生）</p>
+			</div>
+		</div>
+		<div class="about_version"><p>当前版本 <span></span></p></div>
+	</div>
+</body>
+</html>
