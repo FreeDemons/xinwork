@@ -164,6 +164,92 @@
 					plus.webview.getWebviewById('message').close();
 				}
 			}
+			var refreshChat = function() {
+				mui.getJSON(XW.base + 'rongcloud/my_group_info', function(data) {
+					if (data.length == 0) {
+						document.getElementById("chat_body").innerHTML = '<div class="mui-text-center"> <p>你还未有任何兼职工作群，赶紧找工作吧(≥◇≤)</p> </div>';
+					}
+					mui.each(data, function(index, item) {
+						var conName = item.groupName,
+							conId = item.groupId,
+							newMsg;
+							gidArray[index] = item.groupId;
+							getNewMsg(item.groupId, function(data) {
+							newMsg = (data == null ? '' :data[0]);
+							if(newMsg.messageType == 'TextMessage') {
+								conNew = newMsg.sendContent.replace(new RegExp('\n', 'gm'), '<br/>');
+							} else if(newMsg.messageType == 'ImageMessage') {
+								conNew = '[图片信息]';
+							} else {
+								conNew = '[语音信息]';
+							}
+							conTime = app.timestampToTime(newMsg.sendTime*1000);
+							document.getElementById("chatlist").innerHTML = document.getElementById("chatlist").innerHTML + packListHtml(conName, conId, conTime, conNew);
+						});
+					})
+					plus.storage.setItem('gidarray',JSON.stringify(gidArray));
+				})
+			}
+			var packListHtml = function(conName, conId, conTime, conNew) {
+				var listHtml = '<li class="mui-table-view-cell mui-media" data-gid="' +
+					conId + '"><img class="mui-media-object mui-pull-left" src="images/chatheader.png"><span class="chat-badge" hidden></span><span class="conTime">' +
+					conTime + '</span><div class="mui-media-body" ><span class="conName">' +
+					conName + '</span><p class="mui-ellipsis">' + conNew + '</p></div></li>'
+
+				return listHtml;
+			}
+
+			var getNewMsg = function(groupId, callback) {
+				mui.ajax(XW.base + 'rongcloud/history/load/' + groupId, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型	              
+					async: true,
+					success: function(data) {
+						callback(data);
+					}
+				})
+			}
+			
+			var checkNewMsg = function(groupId,unread) {
+				var group_li = document.querySelector(".mui-table-view li[data-gid='" + groupId + "']");
+				if(group_li){
+					var badge = group_li.querySelector('.chat-badge');
+					var news_p = group_li.querySelector('div p');
+					var time_span = group_li.querySelector('.conTime');
+					badge.innerText = unread;
+					badge.removeAttribute('hidden');
+					if(unread ==0){
+						badge.setAttribute('hidden','hidden');
+					}
+					getNewMsg(groupId, function(data) {
+						if(data[0].messageType == 'TextMessage') {
+							conNew = data[0].sendContent;
+						} else if(data[0].messageType == 'ImageMessage') {
+							conNew = '[图片信息]';
+						} else {
+							conNew = '[语音信息]';
+						}
+						time_span.innerText = app.timestampToTime(data[0].sendTime*1000);
+						news_p.innerText = conNew;
+					});
+				}else{
+					return false;				}
+
+			}
+			var showError = function(errInfo){
+				if(document.querySelector('.chat-error') != null){
+					removeError();
+				}
+				var theUl = document.getElementById("chatlist");
+				var errDiv = document.createElement("div");
+				errDiv.classList.add('chat-error');
+				errDiv.innerHTML = '<span class="mui-icon mui-icon-reload"></span> <span>'+errInfo+'</span><button onclick="refreshPage()">点击重连</button>';
+				document.querySelector('.mui-scroll').insertBefore(errDiv,theUl);
+				errDiv.addEventListener('tap',function(){
+						app.checkNetwork();
+					});
+				plus.webview.getWebviewById('message').close();
+			}
 			var removeError = function(){
 				var errDiv = document.querySelector('.chat-error');
 				if(errDiv){

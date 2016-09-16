@@ -38,6 +38,7 @@ mui.init({
 var page=0;
 var city='';
 mui.plusReady(function() {
+
 	
 //读取本地存储，检查是否为首次启动
 	var showGuide = plus.storage.getItem("lauchFlag");
@@ -70,6 +71,15 @@ mui.plusReady(function() {
 	
 	showBanner(JSON.parse(plus.storage.getItem('banner')));
 	city = plus.storage.getItem('city') != null ? plus.storage.getItem('city') : '';
+
+	if(plus.storage.getItem('job')){
+		showJob(JSON.parse(plus.storage.getItem('job')));
+	}else{
+		document.body.querySelector('#noneTips').style.display="block";
+	}
+	
+	showBanner(JSON.parse(plus.storage.getItem('banner')));
+	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
 	homeLoad();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');

@@ -22,6 +22,9 @@ mui.plusReady(function() {
 	}
 	
 	var city = plus.storage.getItem('city') != null ? plus.storage.getItem('city') : '';
+	if(plus.storage.getItem('team')){showTeam(JSON.parse(plus.storage.getItem('team')));}
+	
+	var city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
 	loadTeam(city);
 	//打开团队详情页
 	mui.preload({id:'teamDetailt',url:'pages/team/teamDetailt.html'});

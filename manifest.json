@@ -91,7 +91,7 @@
 		"splashscreen": {
 			"autoclose": false,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
 			"waiting": true,
-			"delay": "2000"
+			"delay": "500"
 		},
 		"popGesture": "hide",/*none:新建webview窗口无侧滑返回功能；close：新建webview窗口默认侧滑返回关闭；hide：新建webview窗口默认侧滑返回隐藏。暂时仅iOS平台支持"*/
 		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
@@ -245,7 +245,8 @@
 				"refer": [
 					"team.html",
 					"chat.html",
-					"pages/login/login.html"
+					"pages/login/login.html",
+					"guide.html"
 				]
 			},
 			"home.html": {
@@ -833,7 +834,9 @@
 					"images/message.png",
 					"images/wallet.png",
 					"images/team.png",
-					"images/index.png"
+					"images/index.png",
+					"js/mui.min.js",
+					"css/mui.min.css"
 				],
 				"refer": [],
 				"priority": 0
