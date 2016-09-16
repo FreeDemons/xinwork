@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<script src="js/mui.min.js"></script>
+		<script src="js/setting.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="css/chat.css" />
+		<script type="text/javascript" charset="UTF-8">
+			mui.init({
+				keyEventBind: {
+					backbutton: false
+				} //关闭back按键监听
+			});
+
+			mui.plusReady(function() {
+				plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
+				app.setUser();
+				isLogined(); //根据是否登录刷新页面
+				refreshChat(); //刷新会话列表
+				var messPage = mui.preload({
+						id: 'message',
+						url: "pages/message/message.html"
+				});
+					//打开聊天页面
+				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+					if(!this.querySelector('.chat-badge').hasAttribute('hidden')){
+						this.querySelector('.chat-badge').setAttribute('hidden','hidden');
+					}
+					mui.fire(messPage, 'roomName', {
+						roomname: this.querySelector('.conName').innerText,
+						roomid: this.getAttribute('data-gid')
+					});
+					mui.openWindow({
+						id: 'message'
+					});
+				})
+				
+				//没有登录的操作
+				mui('.noLoginBox').on('tap', 'button', function() {
+					var id = this.getAttribute('data');
+					mui.openWindow({
+						url: "pages/login/" + id + ".html",
+						id: id,
+						show: {
+							aniShow: "slide-in-bottom",
+							duration: 300
+						}
+					});
+				})
+
+			});
+			
+			 var refreshPage = function(){
+   				plus.webview.currentWebview().reload();
+   				plus.webview.getWebviewById('message').reload();
+  			 }
+			var isLogined = function() {
+				app.setUser();
+				var user = plus.storage.getItem('user'); //获取用户对象
+
+				if(user == null) {
+					document.querySelector('.chat-content').style.display = 'none';
+					document.querySelector('.noLoginBox').removeAttribute('style');
+				} else {
+					document.querySelector('.chat-content').style.display = 'block';
+					document.querySelector('.noLoginBox').style.display = 'none';
+				}
+			}
+			var conTime, conNew,gidArray = [];
+			var refreshChat = function() {
+				mui.getJSON(XW.base + 'rongcloud/my_group_info', function(data) {
+					if (data.length == 0) {
+						document.getElementById("chat_body").innerHTML = '<div class="mui-text-center"> <p>你还未有任何兼职工作群，赶紧找工作吧(≥◇≤)</p> </div>';
+					}
+					mui.each(data, function(index, item) {
+						var conName = item.groupName,
+							conId = item.groupId,
+							newMsg;
+							gidArray[index] = item.groupId;
+							getNewMsg(item.groupId, function(data) {
+							newMsg = (data == null ? '' :data[0]);
+							if(newMsg.messageType == 'TextMessage') {
+								conNew = newMsg.sendContent.replace(new RegExp('\n', 'gm'), '<br/>');
+							} else if(newMsg.messageType == 'ImageMessage') {
+								conNew = '[图片信息]';
+							} else {
+								conNew = '[语音信息]';
+							}
+							conTime = app.timestampToTime(newMsg.sendTime*1000);
+							document.getElementById("chatlist").innerHTML = document.getElementById("chatlist").innerHTML + packListHtml(conName, conId, conTime, conNew);
+						});
+					})
+					plus.storage.setItem('gidarray',JSON.stringify(gidArray));
+				})
+			}
+			var packListHtml = function(conName, conId, conTime, conNew) {
+				var listHtml = '<li class="mui-table-view-cell mui-media" data-gid="' +
+					conId + '"><img class="mui-media-object mui-pull-left" src="images/chatheader.png"><span class="chat-badge" hidden></span><span class="conTime">' +
+					conTime + '</span><div class="mui-media-body" ><span class="conName">' +
+					conName + '</span><p class="mui-ellipsis">' + conNew + '</p></div></li>'
+
+				return listHtml;
+			}
+
+			var getNewMsg = function(groupId, callback) {
+				mui.ajax(XW.base + 'rongcloud/history/load/' + groupId, {
+					dataType: 'json', //服务器返回json格式数据
+					type: 'post', //HTTP请求类型	              
+					async: true,
+					success: function(data) {
+						callback(data);
+					}
+				})
+			}
+			
+			var checkNewMsg = function(groupId,unread) {
+				var group_li = document.querySelector(".mui-table-view li[data-gid='" + groupId + "']");
+				if(group_li){
+					var badge = group_li.querySelector('.chat-badge');
+					var news_p = group_li.querySelector('div p');
+					var time_span = group_li.querySelector('.conTime');
+					badge.innerText = unread;
+					badge.removeAttribute('hidden');
+					if(unread ==0){
+						badge.setAttribute('hidden','hidden');
+					}
+					getNewMsg(groupId, function(data) {
+						if(data[0].messageType == 'TextMessage') {
+							conNew = data[0].sendContent;
+						} else if(data[0].messageType == 'ImageMessage') {
+							conNew = '[图片信息]';
+						} else {
+							conNew = '[语音信息]';
+						}
+						time_span.innerText = app.timestampToTime(data[0].sendTime*1000);
+						news_p.innerText = conNew;
+					});
+				}else{
+					return false;				}
+
+			}
+			var showError = function(errInfo){
+				if(document.querySelector('.chat-error') != null){
+					removeError();
+				}
+				var theUl = document.getElementById("chatlist");
+				var errDiv = document.createElement("div");
+				errDiv.classList.add('chat-error');
+				errDiv.innerHTML = '<span class="mui-icon mui-icon-reload"></span> <span>'+errInfo+'</span><button onclick="refreshPage()">点击重连</button>';
+				document.querySelector('.mui-scroll').insertBefore(errDiv,theUl);
+				errDiv.addEventListener('tap',function(){
+						app.checkNetwork();
+					});
+				plus.webview.getWebviewById('message').close();
+			}
+			var removeError = function(){
+				var errDiv = document.querySelector('.chat-error');
+				if(errDiv){
+					document.querySelector('.mui-scroll').removeChild(errDiv);
+				}
+			}
+			
+			var delMsgCache = function(){
+				var gidArray = JSON.parse(plus.storage.getItem('gidarray'));
+				for (var i = 0;i < gidArray.length;i++) {
+					plus.storage.removeItem(gidArray[i]);
+				}
+				var msgItem = JSON.parse(plus.storage.getItem('msgUser'));
+				app.delFile(msgItem.imgUrlocal);
+				plus.storage.removeItem('msgUser');
+			}
+		</script>
+		<style type="text/css">
+			.chat-badge {
+				position: absolute;
+				left: 90%;
+				top:45px;
+				-webkit-transform: translateY(-50%);
+				padding:0px 8px;
+				border-radius: 100px;
+				background-color: red;
+				font-size: 10px;
+				color: white;
+			}
+			.chat-error{
+				background-color: #FFE4E1;
+				height: 35px;
+				padding: 3px 10px;
+				font-size: 16px;
+			}
+			.chat-error .mui-icon{
+				color: red;
+				font-weight: 700;
+			}
+			.chat-error button{
+				height: 30px;
+				padding: 3px 5px;
+				float: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="chat-content mui-scroll-wrapper">
+				<div class="mui-scroll" id="chat_body">
+					<ul class="mui-table-view" id="chatlist"> </ul>
+				</div>
+			</div>
+
+			<div class="noLoginBox" style="display: none;">
+				<img src="images/parter.png" />
+				<a><button id="loginBtn" data="login">登录薪窝</button></a>
+				<p>兼职不孤单，与小伙伴一起分享成长</p>
+				<p>兼职不迷惘，听组长领队教你不烦恼</p>
+			</div>
+		</div>
+
+	</body>
+
+</html>

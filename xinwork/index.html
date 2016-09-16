@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="js/mui.min.js"></script>
+<script src="js/setting.js"></script>
+<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="css/mui.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
+<script type="text/javascript" charset="utf-8">
+mui.init({
+	swipeBack: false,
+	statusBarBackground: '#f7f7f7',
+	gestureConfig:{doubletap:true}
+});
+mui.plusReady(function() {
+	//读取本地存储，检查是否为首次启动
+	if(plus.storage.getItem("lauchFlag")){
+		setTimeout(function() {plus.navigator.closeSplashscreen();}, 2000);
+	}else{
+		mui.openWindow({id:'guide',url:'guide.html',show:{aniShow:'none'}});
+	}
+	//检查更新
+	mui.getJSON(XW.base + 'appversion/1',function(data){
+		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
+	});
+	
+	app.setUser();//刷新用户状态
+	if(plus.storage.getItem('msgUser') != null){
+		var msgUser = JSON.parse(plus.storage.getItem('msgUser'));
+		console.log(JSON.stringify(msgUser));
+	}else{
+		console.log("msgUser不存在");
+	}
+    var self = plus.webview.currentWebview();
+    var subpages = ['home','team','chat','account'];
+    for(var i=0;i<subpages.length;i++){
+    	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44,bottom: 51});
+    	if(subpages[i] == "home"){
+    		self.append(sub);
+    	}else{
+    		sub.hide();
+    	}
+    }
+    //双击头部返回顶部
+    var contentWebview = null;
+	document.querySelector('header').addEventListener('doubletap',function () {
+		if(contentWebview==null){
+			contentWebview = plus.webview.currentWebview().children()[0];
+		}
+		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
+	});
+	//显示城市
+	if(plus.storage.getItem('city') == null || plus.storage.getItem('city') == ""){
+		document.querySelector('#citySelect font').innerHTML='全部';
+	}else{
+		var cityid = plus.storage.getItem('city');
+		document.querySelector('#citySelect font').innerHTML=XW.city[cityid];
+	}
+	//选择城市
+    document.getElementById("citySelect").addEventListener('tap',function(){
+    	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
+    })
+    //选项卡点击事件
+    var activeTab = 'home';
+    var title=document.querySelector(".mui-title");
+	mui('.mui-bar-tab').on('tap', 'a', function(e) {
+		//获取目标子页的id
+	    var targetTab = this.getAttribute('data-tab');
+	    if (targetTab == activeTab) {
+	        return;
+	    }
+	    //刷新账号页
+	    if(targetTab == "account"){
+	    	app.setUser();
+	    	var user = plus.storage.getItem('user');
+	    	if(user != null){
+				user = JSON.parse(user);
+				mui.fire(plus.webview.getWebviewById('account'),'refresh',{user:user});
+			}else{
+				plus.webview.getWebviewById('account').evalJS("noUser()");
+			}
+	    }
+	    //首页显示城市选择按钮
+	    if(targetTab == "home"){
+	    	document.getElementById("citySelect").style.display = "block";
+	    }else{
+	    	document.getElementById("citySelect").style.display = "none";
+	    }
+	    //更换标题
+	    title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+	    //显示目标选项卡
+	    plus.webview.show(targetTab);
+	    //隐藏当前选项卡
+    	plus.webview.hide(activeTab);
+    	activeTab = targetTab;
+	});
+	//首页返回键处理,处理逻辑：1秒内，连续两次按返回键，则退出应用；
+	var backfirst = null;
+	mui.back = function() {
+		if (!backfirst) {
+			backfirst = new Date().getTime();
+			mui.toast('再按一次退出应用');
+			setTimeout(function() {
+				backfirst = null;
+			}, 1000);
+		} else {
+			if (new Date().getTime() - backfirst < 1000) {
+				plus.runtime.quit();
+			}
+		}
+	};
+});
+</script>
+<style type="text/css">
+.tab-home .iconfont:before { content: "\e621";}
+.tab-home.mui-active .iconfont:before { content: "\e624";}
+.tab-team .iconfont:before { content: "\e619";}
+.tab-team.mui-active .iconfont:before { content: "\e600";}
+.tab-chat .iconfont:before { content: "\e616"; }
+.tab-chat.mui-active .iconfont:before { content: "\e61a";}
+.tab-account .iconfont:before { content: "\e630";}
+.tab-account.mui-active .iconfont:before { content: "\e62f";}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-pull-left mui-btn-link" id="citySelect" style="color: #333;font-size: 14px;padding-left: 5px;">
+			<font></font> 
+			<span class="mui-icon mui-icon-arrowdown" style="font-size: 16px;"></span>
+		</a>
+		<h1 class="mui-title">首页</h1>
+	</header>
+	<nav class="mui-bar mui-bar-tab">
+        <a class="mui-tab-item mui-active tab-home" data-tab="home">
+            <span class="mui-icon iconfont"></span>
+            <span class="mui-tab-label">首页</span>
+        </a>
+        <a class="mui-tab-item tab-team" data-tab="team">
+            <span class="mui-icon iconfont"></span>
+            <span class="mui-tab-label">团队</span>
+        </a>
+        <a class="mui-tab-item tab-chat" data-tab="chat">
+            <span class="mui-icon iconfont"></span>
+            <span class="mui-tab-label">消息</span>
+        </a>
+        <a class="mui-tab-item tab-account" data-tab="account">
+            <span class="mui-icon iconfont"></span>
+            <span class="mui-tab-label">我的</span>
+        </a>
+	</nav>
+</body>
+</html>

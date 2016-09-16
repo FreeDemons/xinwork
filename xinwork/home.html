@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>首页</title>
+<script src="js/mui.min.js"></script>
+<script src="js/setting.js"></script>
+<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="css/mui.min.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="css/offcanvas-drag-down.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	pullRefresh : {
+	    container:"#refreshContainer",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    down : {
+	      //height:50,//可选,默认50.触发下拉刷新拖动距离,
+	      //auto: true,//可选,默认false.自动下拉刷新一次（安卓机无法自动下拉）
+	      contentdown : "下拉刷新...",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+	      contentover : "松开刷新...",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+	      contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+	      callback :homeLoad //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    },
+	    up : {
+	      //height:50,//可选.默认50.触发上拉加载拖动距离
+	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	      callback :pullUpfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    }
+  	},
+	keyEventBind: {
+		backbutton: false  //关闭back按键监听
+	}
+});
+
+var page=0;
+var city='';
+mui.plusReady(function() {
+	if(plus.storage.getItem('job')){
+		showJob(JSON.parse(plus.storage.getItem('job')));
+	}else{
+		document.body.querySelector('#noneTips').style.display="block";
+	}
+	
+	showBanner(JSON.parse(plus.storage.getItem('banner')));
+	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
+	homeLoad();
+	//获得slider插件对象
+	var gallery = mui('.mui-slider');
+	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
+	
+	//打开banner页
+	mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
+	mui('.mui-slider-group').on('tap', 'a', function() {
+		mui.fire(plus.webview.getWebviewById('bannerPage'),'load_node',{
+		    nid:this.getAttribute("data-nid"),
+		    title:this.getAttribute("data-title")
+		});
+		mui.openWindow({id:'bannerPage',show:{duration:200}});
+	});
+	//打开兼职详情页
+	mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
+	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
+		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
+		    nid:this.getAttribute("data-nid"),
+		    created:this.getAttribute("data-created"),
+		    date:this.getAttribute("data-date"),
+		    time:this.getAttribute("data-time"),
+		    title:this.querySelector(".job-title").textContent,
+		    wage:this.querySelector(".job-wage").textContent,
+		    sort:this.querySelector(".job-mid font").textContent,
+		    place:this.querySelector(".job-mid span").textContent,
+		    number:this.querySelector(".job-number").textContent,
+		    status:this.querySelector(".job-status").textContent
+		});
+		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+	});
+	//点击商家合作
+	document.querySelector('#homeTeamwork').addEventListener("tap",function(){
+		mui.openWindow({url: "pages/other/teamwork.html",id: "teamwork"});
+	});
+	//点击积分商城
+	document.querySelector('#homeMall').addEventListener("tap",function(){
+		plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
+		//mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
+	});
+	//点击签到
+	document.querySelector('#homeSignin').addEventListener("tap",function(){
+		if(JSON.parse(plus.storage.getItem('user')) == null){
+			mui.openWindow({url: "pages/login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+		}else{
+			mui.ajax(XW.base + 'signin-ajax', {
+				dataType: 'json',
+				type: 'post',
+				success: function(data) {
+					if(data['status'] == "0"){
+						mui.toast('签到成功，获得5积分！');
+					}else{
+						mui.toast('您今天已签到！');
+					}
+				}
+			});
+		}
+	});
+	//点击空白区域隐藏城市选择
+	document.getElementById("menu-backdrop").addEventListener('tap', toggleMenu);
+	//城市选择下沉菜单中的点击事件
+	mui('#cityMenu').on('tap', 'a', function() {
+		toggleMenu();
+		//改变标题栏的文字
+		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+this.innerHTML+"'");
+		
+		city = this.getAttribute("data-cid");
+		plus.storage.setItem('city',city);
+		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
+		
+		plus.nativeUI.showWaiting();
+		homeLoad();
+		//加载团队页
+		plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
+	});
+});
+
+function homeLoad() {
+	if(app.checkNetwork() != true){return false;}
+	//加载工作列表数据
+	mui.getJSON(XW.base + 'joblist?city=' + city,function(data){
+		plus.nativeUI.closeWaiting();
+		page=0;
+		document.body.querySelector('#jobList').innerHTML = "";
+		mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+		
+		if(data.length > 0){
+			showJob(data);
+			document.body.querySelector('#jobList').style.display="block";
+			document.body.querySelector('#noneTips').style.display="none";
+			plus.storage.setItem('job',JSON.stringify(data));
+			mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+		}else{
+			document.body.querySelector('#jobList').style.display="none";
+			document.body.querySelector('#noneTips').style.display="block";
+			mui('#refreshContainer').pullRefresh().disablePullupToRefresh();
+			plus.storage.removeItem('job');
+		}
+	});
+	//添加banner图
+	mui.getJSON(XW.base + 'banner',function(data){
+		plus.storage.setItem('banner',JSON.stringify(data));
+		showBanner(data);
+	});
+}
+//上拉加载
+function pullUpfresh() {
+	page += 1;
+    mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
+		showJob(data);
+		setTimeout(function() {
+			var refb = data.length < 20 ? true : false;
+			mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
+		}, 1000);
+	});
+}
+//显示首页banner
+function showBanner(data){
+	mui.each(data, function(i, n) {
+		var bannerHtml = '<a data-title="' + n.title + '" data-nid="' + n.nid + '"><img src="' + n.field_image.src +'" /></a>';
+		document.querySelector('.mui-slider-item:nth-child(' + (i+2) + ')').innerHTML = bannerHtml;
+		//图片循环轮播，需要在第一位i插入最后一张图片，在最后一位插入第一张图片
+		if(i == 0){document.querySelector('.mui-slider-item:last-child').innerHTML = bannerHtml;}
+		else if(i == (data.length-1)){document.querySelector('.mui-slider-item:first-child').innerHTML = bannerHtml;}
+	});
+	document.querySelector('.mui-slider').style.opacity="1";
+}
+//显示兼职列表
+function showJob(data){
+	var jobList = document.body.querySelector('#jobList');
+	mui.each(data, function(i, n) {
+		var place = n.field_team_address.split("\n  ").pop();
+		var statusclass= n.field_job_status == "正在报名" ? " status-apply" : "";
+		var li = document.createElement('li');
+		li.className = 'mui-table-view-cell mui-media';
+		li.setAttribute("data-nid",n.nid);
+		li.setAttribute("data-created",n.created);
+		li.setAttribute("data-date",n.field_date);
+		li.setAttribute("data-time",n.field_time);
+		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="job-title mui-ellipsis">' + n.title + '</div><p class="mui-ellipsis job-mid"><font>'
+						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
+						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';
+		jobList.appendChild(li);
+	});
+}
+//城市选择的显示与隐藏
+var busying = false;
+function toggleMenu() {
+	if (busying) {return;}
+	busying = true;
+	
+	var menuWrapper = document.getElementById("menu-wrapper");
+	var menu = document.getElementById("cityMenu");
+	var menuWrapperClassList = menuWrapper.classList;
+	var backdrop = document.getElementById("menu-backdrop");
+	
+	if (menuWrapperClassList.contains('mui-active')) {
+		mui('#refreshContainer').pullRefresh().setStopped(false);
+		document.body.classList.remove('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-out-up animated';
+		menu.className = 'menu bounce-out-up animated';
+		setTimeout(function() {
+			backdrop.style.opacity = 0;
+			menuWrapper.classList.add('hidden');
+		}, 500);
+	} else {
+		mui('#refreshContainer').pullRefresh().setStopped(true);
+		document.body.classList.add('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
+		menu.className = 'menu bounce-in-down animated';
+		backdrop.style.opacity = 1;
+	}
+	setTimeout(function() {busying = false;}, 500);
+}
+</script>
+</head>
+<body>
+	<div class="mui-content home-content mui-scroll-wrapper" id="refreshContainer">
+		<div class="mui-scroll">
+			<div class="mui-slider" style="opacity: 0;">
+			  	<div class="mui-slider-group mui-slider-loop">
+			  		<div class="mui-slider-item mui-slider-item-duplicate"></div>
+			  		<div class="mui-slider-item"></div><div class="mui-slider-item"></div><div class="mui-slider-item"></div>
+			  		<div class="mui-slider-item mui-slider-item-duplicate"></div>
+			  	</div>
+			  	<div class="mui-slider-indicator">
+			  		<div class="mui-indicator mui-active"></div>
+			  		<div class="mui-indicator"></div>
+			  		<div class="mui-indicator"></div>
+			  	</div>
+			</div>
+			<div class="home-menu mui-table-view">
+				<a id="homeTeamwork"><span class="iconfont icon-teamwork"></span> 商家合作</a>
+				<a id="homeMall"><span class="iconfont icon-mall"></span> 积分商城</a>
+				<a id="homeSignin"><span class="iconfont icon-signin"></span> 每日签到</a>
+			</div>
+			<ul class="mui-table-view" id="jobList"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>可怜，啥都没有 !</div>
+		</div>
+	</div>
+	<div id="menu-wrapper" class="menu-wrapper hidden">
+		<div id="cityMenu" class="menu">
+			<ul class="mui-table-view mui-table-view-inverted">
+				<li class="mui-table-view-cell"><a data-cid="">全部</a></li>
+				<li class="mui-table-view-cell"><a data-cid="96">珠海</a></li>
+				<li class="mui-table-view-cell"><a data-cid="95">中山</a></li>
+				<li class="mui-table-view-cell"><a data-cid="80">佛山</a></li>
+				<li class="mui-table-view-cell"><a data-cid="83">江门</a></li>
+				<li class="mui-table-view-cell"><a data-cid="79">东莞</a></li>
+				<li class="mui-table-view-cell"><a data-cid="93">湛江</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="menu-backdrop" class="menu-backdrop"></div>
+</body>
+</html>

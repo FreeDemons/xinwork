@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../css/job.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	pullRefresh : {
+	    container:"#nameListPage",
+	    up : {
+	      contentrefresh : "正在加载...",
+	      contentnomore:'没有更多数据了',
+	      callback :pullUpfresh
+	    }
+  	}
+});
+
+var listUrl,nid,type,page;
+mui.plusReady(function() {
+	//执行打开窗口的load_node事件
+	nameList = document.body.querySelector('#nameListPage .mui-table-view');
+	window.addEventListener("load_namelist",function(event){
+		if(mui.os.ios){mui('.mui-scroll-wrapper').scroll({indicators:false}).scrollTo(0,0,0)}
+		mui('#nameListPage').pullRefresh().refresh(true);
+		nid = event.detail.nid;
+		type = event.detail.type;
+		page=0;
+		document.querySelector(".mui-title").innerText = event.detail.title;
+		nameList.innerHTML = "";
+		nameList.style.display="none";
+		document.body.querySelector('#noneTips').style.display="none";
+		
+		listUrl = type == "applyList" ? nid : nid + "/1";
+		plus.nativeUI.showWaiting();
+		mui.getJSON(XW.base + 'jobnamelist/' + listUrl,function(data){
+			plus.nativeUI.closeWaiting();
+			if(data.length > 0){
+				loadNameList(data);
+				nameList.style.display="block";
+				mui('#nameListPage').pullRefresh().enablePullupToRefresh();
+			}else{
+				document.body.querySelector('#noneTips').style.display="block";
+				mui('#nameListPage').pullRefresh().disablePullupToRefresh();
+			}
+			
+		});
+	});
+})
+
+//加载工作列表数据
+function loadNameList(data) {
+	mui.each(data, function(i, n) {
+		var enrol = (n.count == 1) ? '<span class="mui-badge mui-badge-success">✓</span>' : '';
+		var li = document.createElement('li');
+		li.className = 'mui-table-view-cell ';
+		li.innerHTML = n.counter + '. ' + n.field_user_name + enrol;
+		document.querySelector(".mui-table-view").appendChild(li);
+	});
+}
+//上拉加载更多
+function pullUpfresh(){
+	page += 1;
+	mui.getJSON(XW.base + 'jobnamelist/' + listUrl + '?page=' + page,function(data){
+		loadNameList(data);
+		setTimeout(function() {
+			var refb = data.length < 30 ? true : false;
+			mui('#nameListPage').pullRefresh().endPullupToRefresh(refb);
+		}, 1000);
+	});
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title"></h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="nameListPage">
+		<div class="mui-scroll">
+			<ul class="mui-table-view"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
+		</div>
+	</div>
+</body>
+</html>

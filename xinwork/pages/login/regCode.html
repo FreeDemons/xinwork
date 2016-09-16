@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/md5.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/job.css" rel="stylesheet"/>
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+$.init();
+var extrasval,phoneNumber,code;
+$.plusReady(function() {
+	//获得传递值
+	extrasval = plus.webview.currentWebview();
+    phoneNumber = extrasval.phoneNumber;
+    
+    var getCode=doc.querySelector("#getCode");
+    var confirmCode=doc.querySelector("#confirmCode");
+    var regCodeBtn=doc.querySelector("#regCodeBtn");
+	
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭侧滑返回
+    doc.querySelector("#sendTips span").innerText=phoneNumber;//添加提示
+    
+  	getCode.addEventListener('tap',function(){getCodeFn();});//点击获取确认码
+  	mui.trigger(getCode,'tap');
+  	
+  	changeBtn();//改变按钮状态
+	newBack();//返回，放弃注册
+	regCodeBtn.addEventListener('tap',function(){regSubmit()});//提交
+});
+//改变按钮状态
+function changeBtn(){
+	confirmCode.addEventListener('input',function(){
+		if(this.value.length == 6){
+			regCodeBtn.removeAttribute("disabled");
+		}else{
+			regCodeBtn.setAttribute("disabled","disabled");
+		}
+	});
+}
+//覆写返回按钮
+function newBack(){
+	//备份mui.back，$.back已将窗口关闭逻辑封装的比较完善（预加载及父子窗口），因此最好复用mui.back
+	var old_back = $.back;
+	$.back = function(){
+	  var btnArray = ["取消","确定"];
+	  $.confirm('返回将终止本次注册','',btnArray,function(e){
+	    if(e.index==1){
+	    	old_back();
+	    }
+	  });
+	}
+}
+//获取确认码
+function getCodeFn(){
+	if(getCode.innerText == '获取确认码'){
+		$.ajax(XW.base.replace("xinworkapp/","")+'sms/PHPCodeHttp.php',{
+  			data:{phone:encodeURIComponent(phoneNumber)},
+  			type:'post',
+  			success:function(data){
+  				code = data;
+  			},
+  			error:function(){
+  				$.alert("发送失败，请稍后再试","温馨提示");
+  			}
+  		});
+		
+		var dtime=180;
+		var counttime=setInterval(function(){
+			dtime--;
+			getCode.innerText = dtime+"s 后重发";
+			if(dtime<=0){
+				clearInterval(counttime);
+				getCode.innerText = "获取确认码";
+			}
+		},1000);
+	}
+}
+//提交
+function regSubmit(){
+	if(hex_md5(phoneNumber+confirmCode.value) == code){
+		mui.openWindow({url: 'regPw.html',id:'regPw',extras:{phoneNumber:phoneNumber,confirmCode:confirmCode.value,sendCode:code}});
+	}else{
+		mui.alert("确认码错误","温馨提示");
+	}
+}
+}(mui, document));
+</script>
+<style type="text/css">
+#sendTips{color: #666;padding-left: 15px;font-size: 12px;margin-top: -10px;}
+#getCode{font-size: 12px;border: #0F9D58 1px solid;color:#0F9D58;width: auto;padding: 5px 10px;position: absolute;top: 7px;right: 15px;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">填写确认码</h1>
+	</header>
+	<div class="mui-content">
+		<form id='regCode-form' class="mui-input-group">	
+			<div class="mui-input-row" style="position: relative;">
+				<label for="confirmCode">确认码</label>
+				<input id="confirmCode" maxlength="6" type="tel" class="mui-input">
+				<button id="getCode" type="button" class="mui-btn mui-btn-outlined">获取确认码</button>
+			</div>
+		</form>
+		<p id="sendTips">确认码已发送至：<span></span></p>
+		<div class="mui-content-padded">
+			<button id="regCodeBtn" class="mui-btn mui-btn-block mui-btn-success" disabled="disabled">下一步</button>
+		</div>
+	</div>
+</body>
+</html>

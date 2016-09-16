@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.view.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/mui.picker.css" rel="stylesheet" />
+<link href="../../css/mui.poppicker.css" rel="stylesheet" />
+<script type="text/javascript" charset="UTF-8">
+mui.init({swipeBack:true});
+mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
+	mui('.mui-scroll-wrapper').scroll();
+	selectEntryyear();
+	//显示初始值
+	var fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_learn;
+	if(fieldId != ""){
+		fieldId = fieldId.und[0].value;
+		mui("#saveBtn")[0].setAttribute("disabled","disabled");
+		mui.getJSON(XW.base + 'entity_field_collection_item/' + fieldId,function(data){
+			mui("#school")[0].value=data.user_school;
+			mui("#discipline")[0].value=data.user_discipline;
+			mui("#entryyear")[0].value=data.user_entryyear;
+			mui("#saveBtn")[0].removeAttribute("disabled");
+		});
+	}
+	//点击学校
+	document.getElementById('school').addEventListener('tap', function(event){mui.openWindow({id:'schoollist',url:'schoollist.html'})});
+	//点击保存
+	mui("#saveBtn")[0].addEventListener('tap',function(){
+		//验证合法性
+		if(mui("#school")[0].value == ""){mui.toast("请选择学校")}
+		else if(mui("#discipline")[0].value == ""){mui.toast("请填写专业")}
+		else if(mui("#entryyear")[0].value == ""){mui.toast("请选择入学年份")}
+		else{
+			//获取输入值
+			var fc_arr={};
+			var fc_field_arr={};
+			fc_field_arr['user_school'] = mui("#school")[0].value;
+			fc_field_arr['user_discipline'] = mui("#discipline")[0].value;
+			fc_field_arr['user_entryyear'] = mui("#entryyear")[0].value;
+			if(fc_field_arr['user_entryyear'] == "2013"){fc_field_arr['user_grade'] = "大四"}
+			else if(fc_field_arr['user_entryyear'] == "2014"){fc_field_arr['user_grade'] = "大三"}
+			else if(fc_field_arr['user_entryyear'] == "2015"){fc_field_arr['user_grade'] = "大二"}
+			else if(fc_field_arr['user_entryyear'] == "2016"){fc_field_arr['user_grade'] = "大一"}
+			else{fc_field_arr['user_grade'] = "其他";}
+			//检查是新建还是更新
+			if(fieldId != ""){
+				fc_arr = fc_field_arr;
+				var saveurl = 'entity_field_collection_item/' + fieldId;
+				var sendtype = 'put';
+			}else{
+				fc_arr['field_name'] = 'field_user_group_learn';
+				fc_arr['entity_type'] = 'user';
+				fc_arr['field'] = fc_field_arr;
+				var saveurl = 'customize/entity_field_collection_item/create';
+				var sendtype = 'post';
+			}
+			
+			plus.nativeUI.showWaiting( "正在保存..." );
+			mui.ajax(XW.base + saveurl,{
+				headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+	  			data:fc_arr,
+	  			type:sendtype,
+	  			dataType: 'json',
+	  			success:function(data){
+	  				plus.nativeUI.closeWaiting();
+	  				if(data == 1 || fieldId != ""){
+      					app.setUser();
+      					plus.webview.getWebviewById('resume').evalJS("document.querySelector(\".mui-navigate-right[data-path='learn'] .mui-badge\").style.display = 'block'");
+	      				mui.toast("保存成功");
+	      				mui.back();
+      				}else{
+      					mui.toast("保存失败");
+      				}
+	  			},
+	  			error:function(){
+	  				plus.nativeUI.closeWaiting();
+	  				mui.toast("保存失败");
+	  			}
+			});
+		}
+	});
+})
+//选择学校
+/*function selectSchool(){
+	var schoolData=[
+			{text:"珠海",children:['广东科学技术职业学院','珠海城市职业技术学院','珠海艺术职业学院','吉林大学珠海学院','遵义医学院珠海校区',
+									'北京理工大学珠海学院','北京师范大学珠海分校','暨南大学珠海校区','中山大学珠海校区']},
+			{text:"中山",children:['电子科技大学中山学院','广东药学院中山校区','广东理工学院','火炬职业技术学院','中山职业技术学院']},
+			{text:"其它",children:['其它学校','社会人士']}
+		]
+	
+	//级联示例
+	var cityPicker = new mui.PopPicker({layer: 2});
+	cityPicker.setData(schoolData);
+	var school = document.getElementById('school');
+	school.addEventListener('tap', function(event) {
+		cityPicker.show(function(items) {
+			school.value = items[1];
+		});
+		mui.openWindow({id:'schoollist',url:'schoollist.html'});
+	}, false);
+}*/
+//选择班级
+function selectEntryyear(){
+	var schoolData=['2012','2013','2014','2015','2016','其它']
+	
+	//级联示例
+	var cityPicker = new mui.PopPicker();
+	cityPicker.setData(schoolData);
+	var entryyear = document.getElementById('entryyear');
+	entryyear.addEventListener('tap', function(event) {
+		cityPicker.show(function(items) {
+			entryyear.value = items;
+		});
+	}, false);
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">学业信息</h1>
+	</header>
+	<div class="mui-scroll-wrapper mui-content">
+		<div class="mui-scroll">
+	        <form class="mui-input-group">
+	            <div class="mui-input-row"><label>就读学校</label><input type="text" id="school" readonly="readonly"></input></div>
+				<div class="mui-input-row"><label for="discipline">所学专业</label><input type="text" id="discipline"></input></div>
+				<div class="mui-input-row"><label>入学年份</label><input type="text" id="entryyear"></input></div>
+	    	</form>
+	        
+	        <div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">保存</button></div>
+	   </div>
+    </div>
+</body>
+</html>

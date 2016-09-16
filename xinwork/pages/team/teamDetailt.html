@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../css/team.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init();
+var tid;
+mui.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
+	//添加下边线
+	var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
+	$("#teamTitle,.team-block-header").addClass(lineclass);
+	
+	//执行打开窗口的load_node事件
+	window.addEventListener("load_team",function(event){
+		mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);
+		tid = event.detail.tid;
+		setData(event);
+	});
+	//拨打电话号码
+	document.querySelector("#teamPhone").addEventListener("tap",function(){
+		var phoneNumber = $(this).find("font").text();
+		var btnArray = ['取消','拨打'];
+		var confirmText = '拨打 '+phoneNumber;
+		mui.confirm(confirmText,'',btnArray, function(e){
+			if(e.index == 1){plus.device.dial(phoneNumber, true);}
+		});
+	})
+	//点击招聘情况
+	var teamJobList=null;
+	mui.preload({id:'teamJobList',url:'teamJobList.html'});
+	mui('.team-detail-recruitment').on('tap', '.mui-table-view-cell', function() {
+		if(!teamJobList){teamJobList = plus.webview.getWebviewById('teamJobList')}
+		mui.fire(teamJobList,'load_joblist',{
+			type:this.getAttribute("id"),
+			tid:tid,
+			title:this.innerText
+		});
+		mui.openWindow({id:'teamJobList',show:{duration:200}});
+	});
+});
+//初始化页面数据
+function setData(event){
+	$("#teamTitle b").text(event.detail.title);
+	$("#teamTitle span").text('('+event.detail.name+')');
+	$("#teamProof font").text(event.detail.proof);
+	$("#teamPlace").text(event.detail.place);
+	$("#teamLogo").attr("src",event.detail.logo);
+	$("#teamDescription").html(event.detail.description);
+	$("#applyJob b").text("0");
+	$("#allJob b").text("0");
+	//是否有电话
+	if(event.detail.phone == "" || event.detail.phone == null){
+		$("#teamPhone").hide();
+	}else{
+		$("#teamPhone").show().find("font").text(event.detail.phone);
+	}
+	
+	mui.getJSON(XW.base + 'customize/team/' + tid,function(data){
+		$("#applyJob b").text(data.applyjob);
+		$("#allJob b").text(data.alljob);
+	});
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">团队详情</h1>
+	</header>
+	
+	<div class="mui-content mui-scroll-wrapper" id="teamDetaitPage">
+		<div class="mui-scroll">
+			<div class="team-detail-info team-block">
+				<div class="mui-ellipsis" id="teamTitle"><b></b><span></span></div>
+				<div>
+					<img src="" id="teamLogo" />
+					<div class="info-item">
+						<p id="teamProof"><span class="mui-icon mui-icon-paperplane"></span><font></font></p>
+						<p id="teamPhone" style="display: none;"><span class="mui-icon mui-icon-phone"></span><font></font></p>
+						<!--<p id="teamPlace"><span class="mui-icon mui-icon-location"></span><font></font></p>-->
+					</div>
+				</div>
+				
+			</div>
+			
+			<ul class="mui-table-view team-detail-recruitment" style="margin-bottom: 15px;">
+				<div class="team-block-header"><span class="mui-icon iconfont icon-recruitment"></span>&nbsp;招聘情况</div>
+				<li class="mui-table-view-cell" id="applyJob"><a class="mui-navigate-right">正在招聘 <b></b> 个兼职</a></li>
+				<li class="mui-table-view-cell" id="allJob"><a class="mui-navigate-right">历史发布 <b></b> 个兼职</a></li>
+			</ul>
+			
+			<div class="team-detail-place team-block">
+				<div class="team-block-header"><span class="mui-icon iconfont icon-address"></span>&nbsp;办公地址</div>
+				<div id="teamPlace"></div>
+			</div>
+			
+			<div class="team-detail-description team-block">
+				<div class="team-block-header"><span class="mui-icon iconfont icon-summary"></span>&nbsp;团队简介</div>
+				<div id="teamDescription"></div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

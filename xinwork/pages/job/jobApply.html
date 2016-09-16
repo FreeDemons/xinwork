@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/job.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init();
+mui.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll();
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
+	//获得传递值
+	var extrasval = plus.webview.currentWebview();
+	var title = extrasval.title;
+	var date_select = extrasval.date_select;
+	if(date_select != ""){
+		$(".mui-table-view,.block-header:eq(1)").show();
+		mui.each(date_select, function(i, n) {
+			var li = document.createElement('li');
+			li.className = 'mui-table-view-cell mui-checkbox mui-left';
+			li.innerHTML = '<input type="checkbox" value="' + n.value + '"></input>' + n.text;
+			document.querySelector(".mui-table-view").appendChild(li);
+		});
+	}
+	//点击确定
+	mui("#saveBtn")[0].addEventListener('tap',function(){
+		var $text = "";
+		if(date_select != ""){
+	        for(var i = 0;i < $(".mui-table-view input[type=checkbox]:checked").length;i++){
+	        	$text = $text + $(".mui-table-view input[type=checkbox]:checked").eq(i).val() + ",";
+	        }
+	        if($text == ""){
+	        	mui.toast("请选择报名日期！");
+	        	return;
+	        }
+		}
+		
+    	var btnArray = ['取消','确定'];
+		var confirmText = '确定报名 ' + title;
+		mui.confirm(confirmText,'',btnArray, function(e){
+			if(e.index == 1){
+				var user=JSON.parse(plus.storage.getItem('user'));
+				var data_arr = {};
+				data_arr['type'] = 'apply_info';
+				data_arr['title'] = title;
+				data_arr['body'] = {"value":$("#body").val()};
+				data_arr['job_number'] = extrasval.nid;
+				data_arr['part_time'] = $text.substring(0,$text.length-1);
+				data_arr['reference_team'] = {"id":extrasval.tid};
+				data_arr['node_reference'] = {"id":extrasval.nid};
+				data_arr['author'] = {"id":user.uid};
+				
+				plus.nativeUI.showWaiting();
+				mui.ajax(XW.base + 'entity_node',{
+					headers:{
+						'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token
+					},
+		  			data:data_arr,
+		  			type:'post',
+		  			dataType: 'json',
+		  			success:function(){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("恭喜您已成功报名本兼职！录取结果我们将会以短信方式通知","温馨提示","",function(){
+		  					plus.webview.getWebviewById('jobDetailt').evalJS('$("#jobApply button").text("您已报名本兼职").attr("disabled","disabled")');
+		  					mui.back();
+		  				});
+		  			},
+		  			error:function(a,b,c){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("报名失败，请稍后重试...","温馨提示");
+		  			}
+				});
+			}
+		});
+	});
+})
+</script>
+<style type="text/css">
+.block-header{margin-bottom: 0px;padding: 5px 15px;font-size: 14px;color: #333;margin-top: 10px;}
+.mui-table-view:after,.mui-table-view:before{background: #ccc;}
+.mui-table-view{color: #333;font-size: 16px;margin-bottom: 40px;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">报名兼职</h1>
+		<a class="mui-btn-link mui-pull-right" id="saveBtn">确定</a>
+	</header>
+	<div class="mui-content mui-scroll-wrapper">
+		<div class="mui-scroll">
+			<p class="block-header">填写备注：</p>
+			<form class="mui-input-group" style="margin: 0px;">
+				<textarea id="body" rows="3" maxlength="100" placeholder="备注可能直接影响录取喔..."></textarea>
+			</form>
+			<p class="block-header" style="display: none;">选择报名日期（必选）：</p>
+			<ul class="mui-table-view" style="display: none;"></ul>
+		</div>
+	</div>
+</body>
+</html>

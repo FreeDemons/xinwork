@@ -1,0 +1,552 @@
+{
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "home.html",
+      "fonts/mui.ttf",
+      "js/app.js",
+      "js/setting.js",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "home.html",
+      "account.html",
+      "team.html",
+      "chat.html",
+      "pages/login/login.html"
+    ],
+    "priority": 0
+  },
+  "home.html": {
+    "resources": [
+      "images/banner1.png",
+      "js/setting.js",
+      "fonts/mui.ttf",
+      "css/style.css",
+      "images/banner.png",
+      "images/banner_old.png",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/app.js",
+      "css/offcanvas-drag-down.css",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "jobDetailt.html",
+      "pages/job/jobDetailt.html",
+      "pages/job/jobNameList.html",
+      "pages/other/bannerPage.html",
+      "pages/other/teamwork.html",
+      "pages/login/login.html",
+      "pages/mall/mallhome.html"
+    ]
+  },
+  "account.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/jquery.min.js",
+      "css/account.css",
+      "fonts/mui.ttf",
+      "js/app.js",
+      "js/setting.js",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "pages/login/login.html",
+      "pages/account/accountSet.html",
+      "pages/resume/resume.html",
+      "pages/other/record.html",
+      "pages/other/approve.html",
+      "pages/wallet/wallet.html",
+      "pages/other/about.html",
+      "pages/other/question.html",
+      "pages/other/feedback.html",
+      "pages/record/record.html"
+    ]
+  },
+  "jobDetailt.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "js/setting.js",
+      "js/mui.min.js",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "team.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/setting.js",
+      "fonts/mui.ttf",
+      "css/style.css",
+      "images/banner.png"
+    ],
+    "refer": [
+      "pages/team/teamDetailt.html"
+    ]
+  },
+  "pages/job/jobDetailt.html": {
+    "resources": [
+      "css/job.css",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/jquery.min.js",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "pages/job/jobNameList.html",
+      "pages/login/login.html",
+      "pages/resume/resume.html",
+      "pages/job/jobApply.html",
+      "pages/team/teamDetailt.html"
+    ]
+  },
+  "pages/job/jobNameList.html": {
+    "resources": [
+      "js/jquery.min.js",
+      "css/job.css",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/login/login.html": {
+    "resources": [
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "js/setting.js",
+      "fonts/mui.ttf",
+      "css/job.css"
+    ],
+    "refer": [
+      "pages/login/reg.html",
+      "pages/login/forget.html"
+    ]
+  },
+  "pages/login/reg.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "css/job.css",
+      "css/mui.min.css",
+      "fonts/mui.ttf"
+    ],
+    "refer": [
+      "pages/login/regCode.html"
+    ]
+  },
+  "pages/login/regCode.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/job.css",
+      "css/mui.min.css",
+      "js/md5.js"
+    ],
+    "refer": [
+      "pages/login/regPw.html"
+    ]
+  },
+  "pages/login/forget.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": [
+      "pages/login/forgetCode.html"
+    ]
+  },
+  "pages/account/accountSet.html": {
+    "refer": [
+      "pages/account/accountEmail.html",
+      "pages/account/accountPw.html"
+    ],
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/setting.js",
+      "js/app.js"
+    ]
+  },
+  "pages/resume/resume.html": {
+    "refer": [
+      "pages/resume/idletime.html",
+      "pages/resume/learn.html",
+      "pages/resume/summary.html",
+      "pages/resume/photo.html",
+      "pages/resume/data.html"
+    ],
+    "resources": [
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "js/setting.js"
+    ]
+  },
+  "pages/resume/data.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/resume/learn.html": {
+    "resources": [
+      "js/mui.picker.js",
+      "js/mui.poppicker.js",
+      "css/mui.poppicker.css",
+      "css/mui.picker.css",
+      "js/mui.view.js",
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/resume/summary.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/resume/photo.html": {
+    "resources": [
+      "js/jquery.min.js",
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/account/accountEmail.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/resume/idletime.html": {
+    "resources": [
+      "js/jquery.min.js",
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/job/jobApply.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/job.css",
+      "css/mui.min.css",
+      "js/jquery.min.js"
+    ],
+    "refer": []
+  },
+  "pages/team/teamDetailt.html": {
+    "resources": [
+      "js/jquery.min.js",
+      "fonts/mui.ttf",
+      "css/job.css",
+      "js/setting.js",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/team.css",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "pages/team/teamJobList.html"
+    ]
+  },
+  "pages/team/teamJobList.html": {
+    "resources": [
+      "css/job.css",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/team.css"
+    ],
+    "refer": [
+      "pages/job/jobDetailt.html"
+    ]
+  },
+  "pages/other/record.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/account.css",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/other/approve.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/jquery.min.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/account.css",
+      "css/mui.min.css",
+      "css/iconfont.css"
+    ],
+    "refer": []
+  },
+  "pages/account/accountPw.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/other/bannerPage.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/wallet/wallet.html": {
+    "resources": [
+      "fonts/mui.ttf",
+      "fonts/iconfont.ttf",
+      "js/setting.js",
+      "js/mui.min.js",
+      "css/account.css",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "js/app.js",
+      "js/echarts.js"
+    ],
+    "refer": [
+      "pages/wallet/walletDetails.html",
+      "pages/wallet/walletBankcard.html"
+    ]
+  },
+  "pages/wallet/walletDetails.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/account.css",
+      "css/mui.min.css",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf"
+    ],
+    "refer": [
+      "pages/wallet/walletDetailsPage.html"
+    ]
+  },
+  "pages/wallet/walletDetailsPage.html": {
+    "resources": [
+      "js/app.js"
+    ],
+    "refer": []
+  },
+  "pages/other/about.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/other/question.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ],
+    "refer": []
+  },
+  "pages/other/feedback.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ]
+  },
+  "chat.html": {
+    "resources": [
+      "css/chat.css",
+      "js/jquery.min.js",
+      "images/hdImg1.jpg",
+      "images/hdImg2.jpg",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "images/parter.png",
+      "images/100x100.png",
+      "images/default.jpg",
+      "js/app.js",
+      "js/setting.js",
+      "images/chatheader.png"
+    ],
+    "refer": [
+      "pages/message/message.html",
+      "pages/login/login.html",
+      "pages/login/reg.html"
+    ]
+  },
+  "pages/message/message.html": {
+    "resources": [
+      "js/mui.imageViewer.js",
+      "js/emoji.js",
+      "css/mui.imageviewer.css",
+      "js/arttmpl.js",
+      "fonts/mui.ttf",
+      "css/iconfont.css",
+      "fonts/iconfont.ttf",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/chat.css",
+      "images/hdImg1.jpg",
+      "images/hdImg2.jpg",
+      "js/message.min.js",
+      "js/RongIMClient.init.js",
+      "js/message.js",
+      "js/message.send.js",
+      "js/RongIMClient.function.js",
+      "js/RongIMLib-2.2.1.min.js",
+      "js/app.js",
+      "js/setting.js",
+      "images/default.jpg"
+    ],
+    "refer": [
+      "pages/message/group.html"
+    ]
+  },
+  "pages/message/group.html": {
+    "resources": [
+      "images/100x100.png",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/chat.css",
+      "js/setting.js",
+      "images/default.jpg"
+    ],
+    "refer": [
+      "pages/message/allmember.html",
+      "pages/message/notice.html"
+    ]
+  },
+  "pages/login/forgetCode.html": {
+    "resources": [
+      "js/md5.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ]
+  },
+  "pages/wallet/walletBankcard.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/account.css",
+      "css/mui.min.css"
+    ]
+  },
+  "pages/message/notice.html": {
+    "resources": [
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css"
+    ]
+  },
+  "pages/message/allmember.html": {
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "css/chat.css"
+    ]
+  },
+  "pages/other/teamwork.html": {
+    "resources": [
+      "images/marchantICON/changlong.png",
+      "js/app.js",
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/mui.min.css",
+      "images/marchantICON/xinlangleju.png",
+      "images/marchantICON/jinhaima.png",
+      "images/marchantICON/xindongfang.png",
+      "images/marchantICON/shanghaidazhong.png",
+      "images/marchantICON/wanke.png",
+      "images/marchantICON/J.D. Power.png",
+      "images/marchantICON/baidunuomi.png"
+    ]
+  },
+  "pages/record/record.html": {
+    "refer": [
+      "pages/record/recordDetail.html"
+    ],
+    "resources": [
+      "js/setting.js",
+      "js/mui.min.js",
+      "fonts/mui.ttf",
+      "css/account.css",
+      "css/iconfont.css",
+      "css/mui.min.css",
+      "fonts/iconfont.ttf"
+    ]
+  },
+  "pages/record/recordDetail.html": {
+    "resources": [
+      "js/app.js"
+    ]
+  }
+}

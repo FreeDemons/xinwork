@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/account.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	window.addEventListener("load_details",function(event){
+		doc.querySelector("#details").style.display = "none";
+		doc.querySelector('#jobLink').style.display = "none";
+		var data = event.detail;
+		doc.querySelector("#points font").innerHTML = data.points;
+		doc.querySelector("#tid").innerText = data.tid;
+		doc.querySelector("#time").innerText = data.time;
+		doc.querySelector("#expirydate").innerText = data.expirydate;
+		
+		var stutas = "已生效";
+		if(data.stutas == "1") stutas = "未生效";
+		else if(data.stutas == "2") stutas = "已撤消";
+		doc.querySelector("#stutas").innerText = stutas;
+		
+		if(data.tid == '兼职工资' && data.nid != ''){
+			plus.nativeUI.showWaiting();
+			jobLoad(data.nid);
+		}else if(data.tid == '工资提现' && data.nid != ''){
+			plus.nativeUI.showWaiting();
+			cashLoad(data.nid);
+		}
+	});
+});
+//兼职工资详细
+function jobLoad(nid){
+	var jobData = {};
+	$.getJSON(XW.base + 'node/' + nid,function(data){console.log(JSON.stringify(data));
+		var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
+		jobData = {
+			nid:nid,
+		    title:data.title,
+		    created:new Date(parseInt(data.created) * 1000).toLocaleString().split(' ')[0],
+		    date:data.field_date.und[0].value,
+		    time:data.field_time.und[0].value,
+		    wage:data.field_wage.und[0].value,
+		    sort:data.field_sort.und[0].value,
+		    place:data.field_team_address.und[0].detail,
+		    number:data.field_number.und[0].value,
+		    status:statusArr[data.field_job_status.und[0].value]
+		};
+		doc.querySelector('#jobLink').style.display = "block";
+		doc.querySelector('#details').style.display = "block";
+		doc.querySelector("#details").innerHTML='<p>兼职标题<span>'+data.title+'</span></p><p>兼职编号<span>'+nid+'</span></p>';
+		plus.nativeUI.closeWaiting();
+	});
+	
+	$.preload({id:"jobDetailt",url:'../job/jobDetailt.html'});
+	doc.querySelector("#jobLink").addEventListener("tap",function(){
+		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',jobData);
+		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+	});
+}
+//工资提现详细
+function cashLoad(nid){
+	$.getJSON(XW.base + 'entity_node/' + nid,function(data){
+		doc.querySelector('#details').style.display = "block";
+		var way = data.cash_way == "bank" ? "银行卡" : "支付宝";
+		var remark = data.remark == null ? "" : '<p>备<i></i>注<span>'+data.remark+'</span></p>';
+		if(data.cash_check == "通过"){
+			var check = "已打款";
+		}else if(data.cash_check == "不通过"){
+			var check = "提现失败";
+		}else{
+			var check = "处理中";
+		}
+		
+		doc.querySelector("#details").innerHTML='<p>提现方式<span>'+way+'</span></p><p>账<i></i>号<span>'
+												+data.cash_account+'</span></p><p>提现审核<span>'+check
+												+'</span></p>'+remark;
+		plus.nativeUI.closeWaiting();
+	});
+}
+}(mui, document));
+</script>
+<style type="text/css">
+.mui-table-view-cell{font-size: 14px;color: #999;}
+.mui-table-view-cell i{display: inline-block;width: 2em;}
+.mui-table-view-cell p{padding-left: 5em;text-indent: -5em;margin: 5px 0px;color: #999;}
+.mui-table-view-cell p span{margin-left: 1em;color: #333;}
+#points.mui-active,#details.mui-active{background: none;}
+#points font{font-size: 24px;font-weight: 200;color: #000;margin-left: 15px;}
+#points font span.green{color: #0F9D58;}
+#points font span.gray{color: #ccc;}
+#jobLink{text-align: center;color: #0F9D58;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">积分详情</h1>
+	</header>
+	<div class="mui-content">
+		<ul class="mui-table-view" style="margin-top: 15px;">
+			<li class="mui-table-view-cell" id="points">积<i></i>分<font></font></li>
+			<li class="mui-table-view-cell">
+				<p>类<i></i>型<span id="tid"></span></p>
+				<p>创建时间<span id="time"></span></p>
+				<p>积分状态<span id="stutas"></span></p>
+				<p>生效时间<span id="expirydate"></span></p>
+			</li>
+			<li class="mui-table-view-cell" id="details"></li>
+			<li class="mui-table-view-cell" id="jobLink">查看兼职详情</li>
+		</ul>
+	</div>
+</body>
+</html>
