@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../css/account.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init({
+	pullRefresh : {
+	    container:"#recordPage",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    up : {
+	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	      callback :pullUpfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    }
+  	}
+});
+var page=0;
+$.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
+	//打开加载
+	plus.nativeUI.showWaiting();
+	$.getJSON(XW.base + 'user/jobrecord',function(data){
+		plus.nativeUI.closeWaiting();
+		if(data.length > 0){
+			doc.body.querySelector('.mui-table-view').style.display="block";
+			jobLoad(data);
+		}else{
+			doc.body.querySelector('#noneTips').style.display="block";
+			$('#recordPage').pullRefresh().disablePullupToRefresh();
+		}
+	});
+	//打开兼职详情页
+	mui.preload({id:"recordDetail",url:"recordDetail.html"});
+	mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+		mui.fire(plus.webview.getWebviewById('recordDetail'),'load_detail',{
+			titleHtml:this.innerHTML,
+			jobId:this.getAttribute("data-jobId"),
+			time:this.getAttribute("data-time"),
+			date:this.getAttribute("data-date"),
+			remark:this.getAttribute("data-remark"),
+			enrol:this.getAttribute("data-enrol")
+		});
+		mui.openWindow({id:'recordDetail',show:{duration:200}});
+	});
+})
+function pullUpfresh(){
+	page += 1;
+	mui.getJSON(XW.base + 'user/jobrecord/?page=' + page,function(data){
+		jobLoad(data);
+		setTimeout(function() {
+			var refb = data.length < 20 ? true : false;
+			mui('#recordPage').pullRefresh().endPullupToRefresh(refb);
+		}, 1000);
+	});
+}
+//
+function jobLoad(data){
+	var recordList = doc.body.querySelector('.mui-table-view');
+	$.each(data, function(i, n) {
+		var li = doc.createElement('li');
+		li.className = 'mui-table-view-cell mui-media';
+		var flagged = n.flagged == 0 ? '<font>未录取</font>' : '<font class="green">已录取</font>';
+		var statusclass = n.field_job_status == "正在报名" ? " status-apply" : "";
+		li.setAttribute("data-jobId",n.nid);
+		li.setAttribute("data-time",n.created);
+		li.setAttribute("data-date",n.field_part_time);
+		li.setAttribute("data-remark",n.body);
+		li.setAttribute("data-enrol",n.flagged);
+		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body">'
+						+ '<div class="job-title mui-ellipsis">' + n.title + '</div><p>' + flagged + '<span class="job-status' + statusclass
+						+ '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';
+		recordList.appendChild(li);
+	});
+}
+}(mui, document));
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">已报兼职</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="recordPage">
+		<div class="mui-scroll">
+			<ul class="mui-table-view"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<!--App自定义的css-->
+		<style>
+			.mui-table h4, .mui-table h5, .mui-table .mui-h5, .mui-table .mui-h6, .mui-table p {
+				margin-top: 0;
+			}
+			
+			.mui-table .oa-icon {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+			}
+			
+			.mui-table .oa-icon-star-filled {
+				color: #f14e41;
+			}
+			
+			.notice-popover {
+				padding: 10px 15px;
+				width: 80%;
+				border-radius: 10px;
+				vertical-align: middle;
+				position: absolute;
+				top: 30%;
+				left: 10%
+			}
+			
+			.nHeader {
+				text-align: left;
+				border-bottom: 1px solid #DDDDDD;
+				margin-bottom: 10px;
+			}
+			
+			.nHeader h4 {
+				font-size: 18px;
+				font-weight: 200;
+				line-height: 20px;
+				margin-bottom: 10px;
+			}
+			
+			.nBody p {
+				text-align: left;
+				margin-bottom: 3px;
+				color: #555555;
+			}
+			
+			.mui-table-view-cell .mui-table-cell h4 {
+				padding-top: 3px;
+				font-weight: 200;
+			}
+		</style>
+
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/setting.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			var packNotice = function(nTitle, notifier, nContent, nTime) {
+				var noticeHtml = '<li class="mui-table-view-cell"><div class="mui-table"> <div class="mui-table-cell mui-col-xs-10" > <h4 class="mui-ellipsis">' +
+					nTitle + '</h4> <h5>发布人：' +
+					notifier + '</h5> <p class="mui-h6 mui-ellipsis">' +
+					nContent + '</p> </div> <div class="mui-table-cell mui-col-xs-2 mui-text-right"> <span class="mui-h5">' +
+					nTime + '</span> </div> </div> </li>';
+				return noticeHtml;
+			}
+			mui.plusReady(function() {
+				var self = plus.webview.currentWebview();
+				var rid = self.rid;
+				var notice = '';
+				mui.getJSON(XW.base + 'rongcloud/group/notice/' + rid, function(data) {
+					if(data.length == 0){
+						document.querySelector('.mui-content').innerHTML = '<span>小主,管理员还未发布任何广告! </span>';
+					}else{
+						data = data.reverse();
+						mui.each(data, function(index, item) {
+							notice = notice + packNotice(item.noticeName, item.userName, item.noticeContent, app.timestampToTime(item.sentTime*1000));
+							document.querySelector('ul').innerHTML = notice;
+						})
+					}
+				})
+				mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+					var pTitle = this.querySelector('.mui-table-cell h4').innerText;
+					var pNotifier = this.querySelector('.mui-table-cell h5').innerText;
+					var pTime = this.querySelector('.mui-table-cell span').innerText;
+					var pContent = this.querySelector('.mui-table-cell p').innerText;
+					document.querySelector(' .nHeader h4').innerText = pTitle;
+					document.querySelector('.nHeader h5').innerText = pNotifier.substring(4) + ' ' + pTime + '  发布';
+					document.querySelector('.nBody p').innerText = pContent;
+					mui('.mui-popover').popover('show');
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">群公告</h1>
+		</header>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed"> </ul>
+			<div class="mui-popover notice-popover">
+				<div class="nHeader">
+					<h4></h4>
+					<h5></h5>
+				</div>
+				<div class="nBody">
+					<p></p>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>

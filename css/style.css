@@ -1,0 +1,32 @@
+/*首页样式*/
+.home-content .mui-slider img{display: block;}
+.home-content .home-menu{height: 20px;background: #fff;display: table;width: 100%;padding: 10px 0px;margin-bottom: 10px;}
+.home-content .home-menu:before{height: 0px;}
+.home-content .home-menu a{display: table-cell;border-right: #ccc 1px solid;vertical-align: middle;text-align: center;font-size: 12px;}
+.home-content .home-menu a:last-child{border-right: none;}
+
+.home-content #jobList{line-height: 150%;display: none;}
+.home-content #jobList .mui-media-object{max-width: 60px;height: 60px;}
+.home-content #jobList .job-title{font-size: 14px;font-weight: bold;color: #333;}
+.home-content #jobList .job-mid{font-size: 12px;}
+.home-content #jobList .job-mid span .mui-icon{font-size: 14px;margin-left: 10px;}
+.home-content #jobList .job-mid font .mui-icon{font-size: 16px;}
+.home-content #jobList .job-btm{font-size: 12px;}
+.home-content #jobList .job-btm .job-wage{font-weight: bold;color: #db4437;}
+.home-content #jobList .job-btm .job-status{float: right;color: #ccc;height: 18px;line-height: 16px;border-radius: 2px;margin-top: 4px;border: #ccc 1px solid;font-size: 10px;padding-right: 3px;}
+.home-content #jobList .job-btm .job-status .iconfont{font-size: 14px;background: #ccc;color: #fff;height: 100%;line-height: 16px;margin-right: 3px;float: left;padding: 0px 1px;}
+.home-content #jobList .job-btm .job-status.status-apply{border-color: #f4b400;color: #f4b400;}
+.home-content #jobList .job-btm .job-status.status-apply .iconfont{background: #f4b400;}
+.home-content #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+.home-content #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 50px 0px 0px;}
+
+/*团队列表样式*/
+.team-content #teamList{margin: 35px 0px 15px;display: none;}
+.team-content #teamList img{max-width: 60px;height: 60px;}
+.team-content #teamList .team-title{font-size: 16px;}
+.team-content #teamList .team-title span{font-size: 12px;color: #999;margin-left: 10px;}
+.team-content #teamList .team-description{font-size: 12px;color:#333;max-height: 3em;overflow: hidden;line-height: 150%;margin: 5px 0px;}
+.team-content #teamList .mui-icon{font-size: 16px;margin-right: 5px;}
+.team-content #teamList p{font-size: 12px;}
+.team-content #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+.team-content #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 100px 0px 0px;}

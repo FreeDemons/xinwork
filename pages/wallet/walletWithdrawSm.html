@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/account.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	newBack();
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});
+	extrasval = plus.webview.currentWebview();
+	doc.querySelector("#way").value = extrasval.way == "bank" ? "银行卡" : "支付宝";
+	doc.querySelector("#account").value = extrasval.account;
+	doc.querySelector("#cash").value = extrasval.cash + " 元";
+	
+	var name;
+	plus.nativeUI.showWaiting();
+	$.getJSON(XW.base + 'entity_field_collection_item/' + JSON.parse(plus.storage.getItem('user')).field_identity_group.und[0].value,function(data){
+		doc.querySelector("#name").value = data.identity_name;
+		name = data.identity_name;
+		plus.nativeUI.closeWaiting();
+	});
+	
+	
+	doc.querySelector("#saveBtn").addEventListener("tap",function(){
+		plus.nativeUI.showWaiting( "正在提交..." );
+		$.ajax(XW.base + 'customize/wallet/withdraw',{
+  			data:{name:name,way:extrasval.way,account:extrasval.account,cash:extrasval.cash},
+  			type:'post',
+  			dataType: 'json',
+  			success:function(data){
+  				plus.nativeUI.closeWaiting();
+  				if(data == 0){
+  					$.alert("提现金额超出余额","温馨提示");
+  				}else{
+  					app.setUser();
+  					$.fire(plus.webview.getWebviewById('wallet'),'refresh',{userpoints:data});
+  					$.alert("提交成功，管理员将在1个工作日内完成审核并打款","温馨提示","",function(){
+  						plus.webview.getWebviewById("walletWithdraw").close();
+	  					plus.webview.currentWebview().close();
+	  				});
+  				}
+  			},
+  			error:function(){
+  				plus.nativeUI.closeWaiting();
+  				$.alert("提交失败，请稍后再试","温馨提示");
+  			}
+		});
+	});
+});
+//覆写返回按钮
+function newBack(){
+	var old_back = $.back;
+	$.back = function(){
+	  var btnArray = ["取消","确定"];
+	  $.confirm('返回将终止本次积分提现','',btnArray,function(e){
+	    if(e.index==1){
+	    	old_back();
+	    }
+	  });
+	}
+}
+}(mui, document));
+</script>
+<style type="text/css">
+#tips{margin: 10px 15px 5px;color: #DB4437;}
+.mui-input-group{margin-top: 0px;}
+.mui-input-group i{display: inline-block;width: 2em;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">提现审核</h1>
+	</header>
+	<div class="mui-content">
+		<p id="tips">请确认本次积分提现信息无误</p>
+		<form class="mui-input-group">
+			<div class="mui-input-row"><label>提现方式</label><input id="way" type="text" readonly="readonly"></div>
+			<div class="mui-input-row"><label>账<i></i>号</label><input id="account" type="text" readonly="readonly"></div>
+			<div class="mui-input-row"><label>开户姓名</label><input id="name" type="text" readonly="readonly"></div>
+			<div class="mui-input-row"><label>金<i></i>额</label><input id="cash" type="text" readonly="readonly"></div>
+		</form>
+		<div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">确定</button></div>
+	</div>
+</body>
+</html>
