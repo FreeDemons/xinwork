@@ -2,7 +2,6 @@
 //初始化融云
 RongIMClient.init('4z3hlwrv3v23t');
 RongIMLib.RongIMVoice.init();
-console.log("连接融云");
 RongIMClient.setConnectionStatusListener({
 	onChanged: function(status) {
 		switch(status) {

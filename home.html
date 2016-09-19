@@ -37,9 +37,11 @@ mui.init({
 
 var page=0;
 var city='';
+var currentCity = '';
 mui.plusReady(function() {
 
-	
+	getCityByLoc();
+	mui.fire(plus.webview.getLaunchWebview(),'showCurCity',{city:currentCity})
 //读取本地存储，检查是否为首次启动
 	var showGuide = plus.storage.getItem("lauchFlag");
 	if(showGuide){
@@ -63,15 +65,6 @@ mui.plusReady(function() {
 	}
 	
 	
-	if(plus.storage.getItem('job') != null){
-		showJob(JSON.parse(plus.storage.getItem('job')));
-	}else{
-		document.body.querySelector('#noneTips').style.display="block";
-	}
-	
-	showBanner(JSON.parse(plus.storage.getItem('banner')));
-	city = plus.storage.getItem('city') != null ? plus.storage.getItem('city') : '';
-
 	if(plus.storage.getItem('job')){
 		showJob(JSON.parse(plus.storage.getItem('job')));
 	}else{
@@ -79,8 +72,8 @@ mui.plusReady(function() {
 	}
 	
 	showBanner(JSON.parse(plus.storage.getItem('banner')));
-	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
-	homeLoad();
+//	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
+//	homeLoad();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
 	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
@@ -138,6 +131,7 @@ mui.plusReady(function() {
 			});
 		}
 	});
+	
 	//点击空白区域隐藏城市选择
 	document.getElementById("menu-backdrop").addEventListener('tap', toggleMenu);
 	//城市选择下沉菜单中的点击事件
@@ -145,7 +139,6 @@ mui.plusReady(function() {
 		toggleMenu();
 		//改变标题栏的文字
 		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+this.innerHTML+"'");
-		
 		city = this.getAttribute("data-cid");
 		plus.storage.setItem('city',city);
 		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
@@ -157,6 +150,21 @@ mui.plusReady(function() {
 	});
 });
 
+//获取定位城市从而刷新兼职列表
+function getCityByLoc(){
+	plus.geolocation.getCurrentPosition(function(a){
+				currentCity = a.address.city;
+				mui.toast('当前定位为'+a.address.city);
+				city = XW.curCity[currentCity];
+				plus.storage.setItem('city',JSON.stringify(city));
+				homeLoad();
+				//加载团队页
+				plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
+			},function(e){
+				mui.toast(e.message)
+				homeLoad();
+			})
+}
 function homeLoad() {
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
