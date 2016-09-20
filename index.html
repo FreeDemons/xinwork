@@ -18,12 +18,6 @@ mui.init({
 mui.plusReady(function() {
 	
 	console.log(plus.navigator.isImmersedStatusbar());
-	//读取本地存储，检查是否为首次启动
-	if(plus.storage.getItem("lauchFlag")){
-		setTimeout(function() {plus.navigator.closeSplashscreen();}, 2000);
-	}else{
-		mui.openWindow({id:'guide',url:'guide.html',show:{aniShow:'none'}});
-	}
 	//检查更新
 	mui.getJSON(XW.base + 'appversion/1',function(data){
 		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
@@ -54,19 +48,6 @@ mui.plusReady(function() {
 		}
 		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
-	//显示城市
-	if(plus.storage.getItem('city') == null || plus.storage.getItem('city') == ""){
-		document.querySelector('#citySelect font').innerHTML='定位中...';
-		mui.later(function(){
-			window.addEventListener('showCurCity',function(event){
-				console.log(event.detail.city);
-				document.querySelector('#citySelect font').innerHTML = event.detail.city;
-			})
-		},10000)
-	}else{
-		var cityid = plus.storage.getItem('city');
-		document.querySelector('#citySelect font').innerHTML=XW.city[cityid];
-	}
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
@@ -121,9 +102,16 @@ mui.plusReady(function() {
 		}
 	};
 });
-//定位城市刷新兼职信息
-var refreshAsGeolocation = function(){
-	
+//第一次打开显示定位城市
+var showCurCity = function(curCity){
+	//显示城市
+	if(plus.storage.getItem('city') == null || plus.storage.getItem('city') == ""){
+		document.querySelector('#citySelect font').innerHTML= curCity;
+		
+	}else{
+		var cityid = plus.storage.getItem('city');
+		document.querySelector('#citySelect font').innerHTML=XW.city[cityid];
+	}
 }
 </script>
 <style type="text/css">

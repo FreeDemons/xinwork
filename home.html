@@ -40,8 +40,6 @@ var city='';
 var currentCity = '';
 mui.plusReady(function() {
 
-	getCityByLoc();
-	mui.fire(plus.webview.getLaunchWebview(),'showCurCity',{city:currentCity})
 //读取本地存储，检查是否为首次启动
 	var showGuide = plus.storage.getItem("lauchFlag");
 	if(showGuide){
@@ -49,7 +47,9 @@ mui.plusReady(function() {
 		//关闭splash页面；
 		plus.navigator.closeSplashscreen();
 		plus.navigator.setFullscreen(false);
-		
+		getCityByLoc();
+		mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
+		mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
 	}else{
 		//显示启动导航
 		mui.openWindow({
@@ -62,6 +62,11 @@ mui.plusReady(function() {
 				autoShow:false
 			}
 		});
+		mui.later(function(){
+			getCityByLoc();
+			mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
+			mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
+		},300)
 	}
 	
 	
@@ -72,14 +77,11 @@ mui.plusReady(function() {
 	}
 	
 	showBanner(JSON.parse(plus.storage.getItem('banner')));
-//	city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
-//	homeLoad();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
 	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
 	
 	//打开banner页
-	mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
 	mui('.mui-slider-group').on('tap', 'a', function() {
 		mui.fire(plus.webview.getWebviewById('bannerPage'),'load_node',{
 		    nid:this.getAttribute("data-nid"),
@@ -88,7 +90,6 @@ mui.plusReady(function() {
 		mui.openWindow({id:'bannerPage',show:{duration:200}});
 	});
 	//打开兼职详情页
-	mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
 	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
 		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
 		    nid:this.getAttribute("data-nid"),
@@ -156,12 +157,15 @@ function getCityByLoc(){
 				currentCity = a.address.city;
 				mui.toast('当前定位为'+a.address.city);
 				city = XW.curCity[currentCity];
+				console.log('当前定位为'+JSON.stringify(a));
 				plus.storage.setItem('city',JSON.stringify(city));
 				homeLoad();
 				//加载团队页
 				plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
+				//主页显示当前城市
+				plus.webview.currentWebview().parent().evalJS("showCurCity('" + currentCity.substring(0,2) + "')");
 			},function(e){
-				mui.toast(e.message)
+				console.log(e.message)
 				homeLoad();
 			})
 }
@@ -285,7 +289,7 @@ function toggleMenu() {
 				<a id="homeSignin"><span class="iconfont icon-signin"></span> 每日签到</a>
 			</div>
 			<ul class="mui-table-view" id="jobList"></ul>
-			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>可怜，啥都没有 !</div>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>小窝正在积极拓展中ლ(╹◡╹ლ)</div>
 		</div>
 	</div>
 	<div id="menu-wrapper" class="menu-wrapper hidden">

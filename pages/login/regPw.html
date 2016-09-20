@@ -86,13 +86,11 @@ function login(username,password){
 			
 			$.toast('注册成功');
       		$.fire(plus.webview.getWebviewById('account'),'refresh',{user:data.user});
-      		plus.webview.getWebviewById('chat').evalJS('isLogined()');
-      		
       		plus.webview.getWebviewById("login").close();
       		plus.webview.getWebviewById("reg").close();
       		plus.webview.getWebviewById("regCode").close();
 		
-		plus.webview.getWebviewById('chat').evalJS('refreshPage()');//刷新薪息页面
+			plus.webview.getWebviewById('chat').evalJS('refreshPage()');//刷新薪息页面
 			$.back();
 		},
 		error: function() {
