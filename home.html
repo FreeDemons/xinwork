@@ -147,27 +147,33 @@ mui.plusReady(function() {
 		plus.nativeUI.showWaiting();
 		homeLoad();
 		//加载团队页
-		plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
+		plus.webview.getWebviewById("team").evalJS("mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);loadTeam();");
 	});
 });
 
 //获取定位城市从而刷新兼职列表
 function getCityByLoc(){
 	plus.geolocation.getCurrentPosition(function(a){
-				currentCity = a.address.city;
-				mui.toast('当前定位为'+a.address.city);
-				city = XW.curCity[currentCity];
-				console.log('当前定位为'+JSON.stringify(a));
-				plus.storage.setItem('city',JSON.stringify(city));
-				homeLoad();
-				//加载团队页
-				plus.webview.getWebviewById("team").evalJS("loadTeam('"+city+"')");
-				//主页显示当前城市
-				plus.webview.currentWebview().parent().evalJS("showCurCity('" + currentCity.substring(0,2) + "')");
-			},function(e){
-				console.log(e.message)
-				homeLoad();
-			})
+		currentCity = a.address.city.substring(0,2);
+		if(XW.curCity[currentCity]){
+			mui.toast('当前定位为'+a.address.city);
+			city = XW.curCity[currentCity];
+		}else{
+			mui.toast('当前定位城市未开通');
+			city = '';
+			currentCity = '全部';
+		}
+		console.log('当前定位为'+JSON.stringify(a));
+		plus.storage.setItem('city',city);
+		homeLoad();
+		//加载团队页
+		plus.webview.getWebviewById("team").evalJS("loadTeam()");
+		//主页显示当前城市
+		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
+	},function(e){
+		console.log(e.message)
+		homeLoad();
+	})
 }
 function homeLoad() {
 	if(app.checkNetwork() != true){return false;}

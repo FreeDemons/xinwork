@@ -24,21 +24,18 @@ mui.plusReady(function() {
 	mui.back = function(){
 		if(Dweb.length != 0 && Dweb.length != 2){
 			Dweb.pop().close();
-		}else if(Dweb.length == 2){//只剩下两个页面时
+		}else if(Dweb.length == 2){
 			Dweb.pop().close();
 			Dweb.pop().close();
-		}
-		else{
+		}else{
 			plus.webview.currentWebview().close();
-			mallPage.close();//qqqq
+			mallPage.close();
 		}
 	}
-	console.log("成真改动");
 	mui.later(function(){
 			listenLoad(mallPage);
 	},500)
 })
-console.log("chengzhen改的");
 //拦截页面资源
 var listenLoad = function(thisWeb){
 	thisWeb.overrideUrlLoading({mode:"reject"},function(e){

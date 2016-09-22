@@ -31,5 +31,6 @@
 
 /*nameListPage兼职名单*/
 #nameListPage .mui-table-view{margin-top: 15px;display: none;}
+#nameListPage .mui-table-view .mui-table-view-cell{background: #fff;}
 #nameListPage #noneTips{text-align: center;color: #666;font-size: 16px;display: none;}
 #nameListPage #noneTips .mui-icon{font-size: 120px;color: #ccc;margin: 70px 0px 0px;}
