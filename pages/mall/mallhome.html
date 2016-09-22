@@ -33,16 +33,13 @@ mui.plusReady(function() {
 			mallPage.close();//qqqq
 		}
 	}
-	console.log("成真改动");
 	mui.later(function(){
 			listenLoad(mallPage);
 	},500)
 })
-console.log("chengzhen改的");
 //拦截页面资源
 var listenLoad = function(thisWeb){
 	thisWeb.overrideUrlLoading({mode:"reject"},function(e){
-		//var page = plus.webview.create({e.url,});
 		console.log("reject url:"+e.url);
 		var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
 		console.log(JSON.stringify(web));
