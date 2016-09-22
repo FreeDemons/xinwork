@@ -11,20 +11,50 @@
 <link href="../../css/job.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init();
+var Dweb = [];
 mui.plusReady(function() {
-	//plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
+	var mallPage;
 	mui.get(XW.base + 'customize/duiba/login',function(data){
-		//location.href = data;
-		mui.openWindow({url:data,id:'mallpage',styles:{top: 44,bottom: 0}});
-		//plus.webview.create(data,'mallpage',{top: 44,bottom: 0}).show();
+//		mallPage = plus.webview.create(data,'mallpage',{top: 44,bottom: 0});
+//		plus.webview.currentWebview().append(mallPage);
+		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:46,bottom:0}})
+		mallPage.show();
 	});
+	//逐一返回上级页面
+	mui.back = function(){
+		if(Dweb.length != 0 && Dweb.length != 2){
+			Dweb.pop().close();
+		}else if(Dweb.length == 2){
+			Dweb.pop().close();
+			Dweb.pop().close();
+		}
+		else{
+			plus.webview.currentWebview().close();
+			mallPage.close();
+		}
+	}
+	mui.later(function(){
+			listenLoad(mallPage);
+	},500)
 })
+//拦截页面资源
+var listenLoad = function(thisWeb){
+	thisWeb.overrideUrlLoading({mode:"reject"},function(e){
+		//var page = plus.webview.create({e.url,});
+		console.log("reject url:"+e.url);
+		var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
+		console.log(JSON.stringify(web));
+		Dweb.push(web);
+		listenLoad(web);
+	})
+}
 </script>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">积分商城</h1>
+		<!--<iframe></iframe>-->
 	</header>
 </body>
 </html>
