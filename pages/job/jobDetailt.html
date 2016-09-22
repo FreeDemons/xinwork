@@ -109,7 +109,7 @@ function setData(){
 		else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
 		else{$("#jobApply button").text("已结束报名");}
 
-		if(data.status == 2){$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>')}
+		if(data.status != 0){$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>')}
 	});
 }
 //点击报名

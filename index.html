@@ -60,24 +60,26 @@ mui.plusReady(function() {
 	    var targetTab = this.getAttribute('data-tab');
 	    if (targetTab == activeTab) {
 	        return;
-	    }
-	    //刷新账号页
-	    if(targetTab == "account"){
-	    	app.setUser();
-	    	var user = plus.storage.getItem('user');
-	    	if(user != null){
-				user = JSON.parse(user);
-				mui.fire(plus.webview.getWebviewById('account'),'refresh',{user:user});
-			}else{
-				plus.webview.getWebviewById('account').evalJS("noUser()");
-			}
-	    }
-	    //首页显示城市选择按钮
-	    if(targetTab == "home"){
+	    }else if(targetTab == "home"){
+	    	//首页显示城市选择按钮
 	    	document.getElementById("citySelect").style.display = "block";
+	    	plus.webview.getWebviewById('home').evalJS("homeLoad()");
 	    }else{
 	    	document.getElementById("citySelect").style.display = "none";
+		    if(targetTab == "account"){
+		    	app.setUser();
+		    	var user = plus.storage.getItem('user');
+		    	if(user != null){
+					user = JSON.parse(user);
+					mui.fire(plus.webview.getWebviewById('account'),'refresh',{user:user});
+				}else{
+					plus.webview.getWebviewById('account').evalJS("noUser()");
+				}
+		    }else if(targetTab == "team"){
+		    	plus.webview.getWebviewById('team').evalJS("loadTeam()");
+		    }
 	    }
+	    
 	    //更换标题
 	    title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
 	    //显示目标选项卡
@@ -103,7 +105,7 @@ mui.plusReady(function() {
 	};
 });
 //第一次打开显示定位城市
-var showCurCity = function(curCity){
+/*var showCurCity = function(curCity){
 	//显示城市
 	if(plus.storage.getItem('city') == null || plus.storage.getItem('city') == ""){
 		document.querySelector('#citySelect font').innerHTML= curCity;
@@ -112,7 +114,7 @@ var showCurCity = function(curCity){
 		var cityid = plus.storage.getItem('city');
 		document.querySelector('#citySelect font').innerHTML=XW.city[cityid];
 	}
-}
+}*/
 </script>
 <style type="text/css">
 .tab-home .iconfont:before { content: "\e621";}
