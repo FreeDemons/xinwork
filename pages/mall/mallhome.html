@@ -12,12 +12,14 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 var Dweb = [];
+var mallPage;
 mui.plusReady(function() {
-	var mallPage;
+	document.querySelector('header').addEventListener('tap',function(){
+		console.log(thisPage.children().length);
+	})
 	mui.get(XW.base + 'customize/duiba/login',function(data){
-//		mallPage = plus.webview.create(data,'mallpage',{top: 44,bottom: 0});
-//		plus.webview.currentWebview().append(mallPage);
 		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:46,bottom:0}})
+		plus.webview.currentWebview().append(mallPage);
 		mallPage.show();
 	});
 	//逐一返回上级页面
@@ -41,7 +43,8 @@ var listenLoad = function(thisWeb){
 	thisWeb.overrideUrlLoading({mode:"reject"},function(e){
 		console.log("reject url:"+e.url);
 		var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
-		console.log(JSON.stringify(web));
+		
+		plus.webview.currentWebview().append(web);
 		Dweb.push(web);
 		listenLoad(web);
 	})

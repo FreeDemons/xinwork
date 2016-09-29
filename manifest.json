@@ -67,9 +67,7 @@
 
 
 
-		"Speech": {
-			"description": "管理语音识别插件"
-		},
+
 		"Webview": {
 			"description": "窗口管理"
 		},
@@ -85,7 +83,10 @@
 		"Device": {},
 		"File": {},
 		"Push": {},
-		"Downloader": {},"Geolocation":{},"Maps":{}
+		"Downloader": {},
+		"Geolocation": {},
+		"Maps": {},
+		"Share": {}
 	},
 	"plus": {
 		"splashscreen": {
@@ -97,12 +98,29 @@
 		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
-			"plugins": {"maps":{"amap":{"appkey_ios":"472d66229159b52b67584e4f35b3387c","appkey_android":"5036189552ed6f3481d78f529c03ba9e","description":""}},
+			"plugins": {
+				"maps": {
+					"amap": {
+						"appkey_ios": "472d66229159b52b67584e4f35b3387c",
+						"appkey_android": "5036189552ed6f3481d78f529c03ba9e",
+						"description": ""
+					}
+				},
 				"push": {
 					"igexin": {
 						"appid": "LyJ55foPFt5Xqb6n8LHrK8",
 						"appkey": "wqeCFwes3TAuZDXQZF6aZA",
 						"appsecret": "MmJrO4Ea5o54DNyf7CX2W2"
+					}
+				},
+				"share": {
+					"weixin": {
+						"appid": "wx74d47b964bbb66cd",
+						"appsecret": "aa2f20944c34befb22c7f5d95c3f23db"
+					},
+					"qq": {
+						"appid": "1105497965",
+						"description": "QQ分享"
 					}
 				}
 			},
@@ -121,9 +139,32 @@
 				"keystore": "",/*Android应用打包使用的密钥库文件*/
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-				"ImmersedStatusbar":true,/*Android沉浸式状态栏*/
+				"ImmersedStatusbar": true,/*Android沉浸式状态栏*/
 				//"theme":"@android:style/Theme.DeviceDefault.Light",
-				"permissions": ["<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>","<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>"]
+				"permissions": [
+					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+					"<uses-permission android:name=\"android.permission.GET_TASKS\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>"
+				]
 			},
 			"orientation": [
 				"portrait-primary"
@@ -258,7 +299,9 @@
 					"js/app.js",
 					"js/setting.js",
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/share.css",
+					"js/share.js"
 				],
 				"refer": [
 					"pages/login/login.html",
@@ -308,7 +351,9 @@
 					"css/mui.min.css",
 					"js/jquery.min.js",
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/share.css",
+					"js/share.js"
 				],
 				"refer": [
 					"pages/job/jobNameList.html",

@@ -7,9 +7,11 @@
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/jquery.min.js"></script>
 <script src="../../js/setting.js"></script>
+<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>	
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/job.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../css/share.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init({
 	beforeback: function(){
@@ -19,7 +21,9 @@ mui.init({
 });
 
 var nid,title,tid,date_select;
+var share = null,eventDetail = null,shareContent = null;
 mui.plusReady(function() {
+	updateSerivces();
 	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
 	//添加下边线
 	var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
@@ -27,12 +31,12 @@ mui.plusReady(function() {
 	
 	//执行打开窗口的load_node事件
 	window.addEventListener("load_node",function(event){
+		eventDetail = event.detail;
 		mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);
 		nid = event.detail.nid;
 		title = event.detail.title;
 		setData(event);
 	});
-	
 	//点击招聘情况
 	mui.preload({id:'jobNameList',url:'jobNameList.html'});
 	//mui.preload({id:'teamDetailt',url:'../team/teamDetailt.html'});
@@ -70,6 +74,31 @@ mui.plusReady(function() {
 			if(e.index == 1){plus.device.dial("0756-6958831", true);}
 		});
 	})
+	//打开分享列表
+	document.querySelector(".icon-fenxiang").addEventListener("tap",function(){
+    var msgwx={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneSession'}};
+	var msgpy ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneTimeline'}};
+	var msgqq ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title};
+	mui('body').on('tap', '.mui-popover-action .shareItem', function() {
+			mui('#shareJob').popover('toggle');
+			if (share['weixin'] ||share['qq']) {
+				switch (this.id){
+							case 'weixin':
+								shareAction(share['weixin'], msgwx);
+								break;
+							case 'pengyouquan':
+								shareAction(share['weixin'], msgpy);
+								break;
+							case 'qq':
+								shareAction(share['qq'],msgqq)
+								break;
+						}
+			}
+			else{
+				mui.toast('系统发生错误，无法分享。');
+			}
+		})
+	})
 });
 
 //初始化页面数据
@@ -104,6 +133,7 @@ function setData(){
 		$("#applyList b").text(data.apply_count);
 		$("#enrolList b").text(data.enrol_count);
 		date_select = data.date_select;
+		shareContent = data.remark;
 		
 		if(data.apply_status == 1){$("#jobApply button").text("您已报名本兼职");}
 		else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
@@ -139,11 +169,19 @@ function apply(){
 	}
 }
 </script>
+<style type="text/css">
+	.icon-fenxiang{
+		font-size: 18px;
+		vertical-align: middle;
+		margin: 14px 3px;
+	}
+</style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">兼职详情</h1>
+		<a href = '#shareJob' class="mui-pull-right iconfont icon-fenxiang"></a>
 	</header>
 	
 	<div class="mui-content mui-scroll-wrapper" id="jobDetaitPage">
@@ -189,5 +227,30 @@ function apply(){
 		</div>
 		<div class="mui-bar" id="jobApply"><button type="button" class="mui-btn mui-btn-block mui-btn-success" disabled="disabled">加载中...</button></div>
 	</div>
+	
+	
+		<div id="shareJob" class="mui-popover mui-popover-action mui-popover-bottom">
+			<div class="share">
+				<div class="shareList" >
+					<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
+						<span class="mui-icon mui-icon-weixin icon"></span>
+					</div>
+					<p>微信</p>
+				</div>
+				<div class="shareList" >
+					<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
+						<span class="mui-icon mui-icon-pengyouquan icon"></span>
+					</div>
+					<p >朋友圈</p>
+				</div>
+				<div class="shareList">
+					<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
+						<span class="mui-icon mui-icon-qq icon"></span>
+						<p>QQ</p>
+					</div>
+				</div>
+			</div>
+			
+		</div>
 </body>
 </html>
