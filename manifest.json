@@ -84,7 +84,7 @@
 		"Push": {},
 		"Downloader": {},
 		"Geolocation": {},
-		"Maps": {}
+		"Maps": {},"Share":{}
 	},
 	"plus": {
 		"splashscreen": {
