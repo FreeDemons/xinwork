@@ -37,51 +37,24 @@ mui.init({
 
 var page=0;
 var city='';
-var currentCity = '';
 mui.plusReady(function() {
-
-//读取本地存储，检查是否为首次启动
-	var showGuide = plus.storage.getItem("lauchFlag");
-	if(showGuide){
-		//有值，说明已经显示过了，无需显示；
-		//关闭splash页面；
-		plus.navigator.closeSplashscreen();
-		plus.navigator.setFullscreen(false);
-		getCityByLoc();
-		mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
-		mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
-	}else{
-		//显示启动导航
-		mui.openWindow({
-			id:'guide',
-			url:'guide.html',
-			show:{
-				aniShow:'none'
-			},
-			waiting:{
-				autoShow:false
-			}
-		});
-		mui.later(function(){
-			getCityByLoc();
-			mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
-			mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
-		},300)
-	}
-	
-	
+	//显示缓存的工作列表
 	if(plus.storage.getItem('job')){
 		showJob(JSON.parse(plus.storage.getItem('job')));
-	}else{
+	}
+	else{
 		document.body.querySelector('#noneTips').style.display="block";
 	}
-	
-	showBanner(JSON.parse(plus.storage.getItem('banner')));
+	//显示缓存的banner
+	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}
+	//自动定位
+	getCityByLoc();
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
 	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
 	
 	//打开banner页
+	mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
 	mui('.mui-slider-group').on('tap', 'a', function() {
 		mui.fire(plus.webview.getWebviewById('bannerPage'),'load_node',{
 		    nid:this.getAttribute("data-nid"),
@@ -90,6 +63,7 @@ mui.plusReady(function() {
 		mui.openWindow({id:'bannerPage',show:{duration:200}});
 	});
 	//打开兼职详情页
+	mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
 	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
 		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
 		    nid:this.getAttribute("data-nid"),
@@ -154,16 +128,15 @@ mui.plusReady(function() {
 //获取定位城市从而刷新兼职列表
 function getCityByLoc(){
 	plus.geolocation.getCurrentPosition(function(a){
-		currentCity = a.address.city.substring(0,2);
+		var currentCity = a.address.city.replace("市","");
 		if(XW.curCity[currentCity]){
-			mui.toast('当前定位为'+a.address.city);
+			mui.toast('当前定位为'+currentCity+'市');
 			city = XW.curCity[currentCity];
 		}else{
 			mui.toast('当前定位城市未开通');
 			city = '';
 			currentCity = '全部';
 		}
-		console.log('当前定位为'+JSON.stringify(a));
 		plus.storage.setItem('city',city);
 		homeLoad();
 		//加载团队页

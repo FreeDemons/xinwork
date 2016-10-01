@@ -65,7 +65,7 @@ function hasUser(data){
 			$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-success mui-badge-inverted").text("已认证");
 		}
 		
-		$(".mui-table-view-cell[data-wid='wallet'] .mui-badge").show().find("font").text(data.userpoints.withdraw);
+		$(".mui-table-view-cell[data-wid='wallet'] .mui-badge").show().find("font").text(data.userpoints.balance);
 		$("#accountUser .mui-media-body").text(app.interceptionStr(data.name));
 	}
 	

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-<title></title>
+<title>1111</title>
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
@@ -15,36 +15,71 @@ var Dweb = [];
 mui.plusReady(function() {
 	var mallPage;
 	mui.get(XW.base + 'customize/duiba/login',function(data){
-//		mallPage = plus.webview.create(data,'mallpage',{top: 44,bottom: 0});
-//		plus.webview.currentWebview().append(mallPage);
-		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:46,bottom:0}})
+		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:44,bottom:0}});
 		mallPage.show();
+		
+		mallPage.setStyle({'popGesture':'none'});//关闭ios侧滑返回
+		Dweb.push(mallPage);
+		listenLoad(mallPage);
 	});
 	//逐一返回上级页面
 	mui.back = function(){
-		if(Dweb.length != 0 && Dweb.length != 2){
+		//删除重定向产生的空白页
+		if(mui.os.android){
+			for(var i=0;i<Dweb.length;i++){
+				if(Dweb[i].id.indexOf('dbclicked-url') != -1){
+					Dweb[i].close();
+					Dweb.splice(i,1);
+				}
+			}
+		}
+		
+		if(Dweb.length <= 1){
+			//最好有办法删除所有子窗口
 			Dweb.pop().close();
-		}else if(Dweb.length == 2){
-			Dweb.pop().close();
-			Dweb.pop().close();
-		}else{
 			plus.webview.currentWebview().close();
-			mallPage.close();
+		}else{
+			Dweb.pop().close();
 		}
 	}
-	mui.later(function(){
-			listenLoad(mallPage);
-	},500)
 })
 //拦截页面资源
 var listenLoad = function(thisWeb){
 	thisWeb.overrideUrlLoading({mode:"reject"},function(e){
-		//var page = plus.webview.create({e.url,});
-		console.log("reject url:"+e.url);
-		var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
-		console.log(JSON.stringify(web));
-		Dweb.push(web);
-		listenLoad(web);
+		if(e.url.indexOf('http://www.duiba.com.cn/chome/index?spm=') != -1){
+			var web = plus.webview.getWebviewById("mallpage").loadURL(e.url);
+			listenLoad(web);
+		}else if(e.url.indexOf('dbbackrefresh') != -1){
+			Dweb.pop().close();
+			Dweb[Dweb.length-1].reload();
+			if(mui.os.ios){
+				Dweb.pop().close();
+				for(var i=0;i<Dweb.length;i++){
+					if(unescape(Dweb[i].id).indexOf(e.url.replace('&dbbackrefresh','')) != -1){
+						Dweb[i].close();
+						Dweb.splice(i,1);
+					}
+				}
+			}
+		}else if(e.url.indexOf('dbbackrootrefresh') != -1 || e.url.indexOf('dbbackroot') != -1){
+			var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
+			web.onloaded=function(){
+				mui.later(function(){
+					for(var i=0;i<Dweb.length;i++){
+						Dweb[i].close("none");
+					}
+					Dweb = [];
+					Dweb.push(web);
+					listenLoad(web);
+				},300)
+			};
+		}else if(e.url.indexOf('dbback') != -1){
+			Dweb.pop().close();
+		}else{
+			var web = mui.openWindow({url:e.url,styles:{top: 44,bottom: 0}});
+			Dweb.push(web);
+			listenLoad(web);
+		}
 	})
 }
 </script>
@@ -53,7 +88,6 @@ var listenLoad = function(thisWeb){
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">积分商城</h1>
-		<!--<iframe></iframe>-->
 	</header>
 </body>
 </html>

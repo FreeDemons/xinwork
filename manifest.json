@@ -5,7 +5,6 @@
 		"iPad"
 	],
 	"id": "xinwork",/*应用的标识，创建应用时自动生成，勿手动修改*/
-	"name": "薪窝兼职",/*应用名称，程序桌面图标名称*/
 	"version": {
 		"name": "1.1.0",/*应用版本名称*/
 		"code": "85"
@@ -85,7 +84,9 @@
 		"Device": {},
 		"File": {},
 		"Push": {},
-		"Downloader": {},"Geolocation":{},"Maps":{}
+		"Downloader": {},
+		"Geolocation": {},
+		"Maps": {}
 	},
 	"plus": {
 		"splashscreen": {
@@ -97,7 +98,14 @@
 		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
-			"plugins": {"maps":{"amap":{"appkey_ios":"472d66229159b52b67584e4f35b3387c","appkey_android":"5036189552ed6f3481d78f529c03ba9e","description":""}},
+			"plugins": {
+				"maps": {
+					"amap": {
+						"appkey_ios": "472d66229159b52b67584e4f35b3387c",
+						"appkey_android": "5036189552ed6f3481d78f529c03ba9e",
+						"description": ""
+					}
+				},
 				"push": {
 					"igexin": {
 						"appid": "LyJ55foPFt5Xqb6n8LHrK8",
@@ -121,9 +129,32 @@
 				"keystore": "",/*Android应用打包使用的密钥库文件*/
 				"password": "",/*Android应用打包使用密钥库中证书的密码*/
 				"aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-				"ImmersedStatusbar":true,/*Android沉浸式状态栏*/
+				"ImmersedStatusbar": true,/*Android沉浸式状态栏*/
 				//"theme":"@android:style/Theme.DeviceDefault.Light",
-				"permissions": ["<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>","<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>","<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>","<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>","<uses-permission android:name=\"android.permission.GET_TASKS\"/>","<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.READ_LOGS\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>","<uses-feature android:name=\"android.hardware.camera\"/>","<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>","<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>","<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>","<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>","<uses-permission android:name=\"android.permission.CAMERA\"/>"]
+				"permissions": [
+					"<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.INSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+					"<uses-permission android:name=\"android.permission.GET_TASKS\"/>",
+					"<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+					"<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+					"<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+					"<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>",
+					"<uses-feature android:name=\"android.hardware.camera\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>",
+					"<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+					"<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+					"<uses-permission android:name=\"android.permission.RECEIVE_BOOT_COMPLETED\"/>",
+					"<uses-permission android:name=\"com.android.launcher.permission.UNINSTALL_SHORTCUT\"/>",
+					"<uses-permission android:name=\"android.permission.CAMERA\"/>"
+				]
 			},
 			"orientation": [
 				"portrait-primary"
@@ -169,30 +200,31 @@
 				"ios": {
 					"iphone": {
 						/*iPhone3启动图片选，分辨率：320x480*/
-						"retina35": "unpackage/res/splash/640×960.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
-						"retina40": "unpackage/res/splash/640×1136.png",
-						"default": "unpackage/res/splash/320×442.png",
-						"retina55": "unpackage/res/splash/1242×2208.png",
-						"retina47": "unpackage/res/splash/750×1334.png",
-						"retina55l": "unpackage/res/splash/1242×2208.png"
+						"retina35": "unpackage/res/splash/640-960.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+						"retina40": "unpackage/res/splash/640-1136.png",
+
+						"retina55": "unpackage/res/splash/1242-2208.png",
+						"retina47": "unpackage/res/splash/750-1334.png",
+						"retina55l": "unpackage/res/splash/2208-1242.png",
+						"default": "unpackage/res/splash/320-480.png"
 					},
 					"ipad": {
-						"portrait": "unpackage/res/splash/750×1334.png", /*iPad竖屏启动图片，分辨率：768x1004*/
-						"portrait-retina": "unpackage/res/splash/1242×2208.png",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
-						"landscape": "unpackage/res/splash/1080×1882.png", /*iPad横屏启动图片，分辨率：1024x748*/
-						"landscape-retina": "unpackage/res/splash/1242×2208.png", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
-						"portrait7": "unpackage/res/splash/750×1334.png", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
-						"portrait-retina7": "unpackage/res/splash/1242×2208.png",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
-						"landscape7": "unpackage/res/splash/1080×1882.png", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
-						"landscape-retina7": "unpackage/res/splash/1242×2208.png"
+						"portrait": "unpackage/res/splash/768-1004.png", /*iPad竖屏启动图片，分辨率：768x1004*/
+						"portrait-retina": "unpackage/res/splash/1242-2208.png",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
+						"landscape": "unpackage/res/splash/768-1004.png", /*iPad横屏启动图片，分辨率：1024x748*/
+						"landscape-retina": "unpackage/res/splash/2208-1242.png", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+						"portrait7": "unpackage/res/splash/768-1004.png", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+						"portrait-retina7": "unpackage/res/splash/1242-2208.png",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+						"landscape7": "unpackage/res/splash/768-1004.png", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+						"landscape-retina7": "unpackage/res/splash/2208-1242.png"
 					}
 				},
 				"android": {
-					"mdpi": "unpackage/res/splash/320×442.png", /*普通屏启动图片，分辨率：240x282*/
-					"ldpi": "unpackage/res/splash/320×442.png", /*大屏启动图片，分辨率：320x442*/
-					"hdpi": "unpackage/res/splash/480×762.png", /*高分屏启动图片，分辨率：480x762*/
-					"xhdpi": "unpackage/res/splash/720×1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
-					"xxhdpi": "unpackage/res/splash/1080×1882.png"
+					"mdpi": "unpackage/res/splash/240-320.png", /*普通屏启动图片，分辨率：240x282*/
+					"ldpi": "unpackage/res/splash/320-480.png", /*大屏启动图片，分辨率：320x442*/
+					"hdpi": "unpackage/res/splash/480-800.png", /*高分屏启动图片，分辨率：480x762*/
+					"xhdpi": "unpackage/res/splash/720-1280.png", /*720P高分屏启动图片，分辨率：720x1242*/
+					"xxhdpi": "unpackage/res/splash/1080-1920.png"
 				}
 			},
 			"debug": false
@@ -604,7 +636,8 @@
 					"css/account.css",
 					"css/mui.min.css",
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/offcanvas-drag-down.css"
 				],
 				"refer": [
 					"pages/wallet/walletDetailsPage.html"
@@ -613,7 +646,12 @@
 			},
 			"pages/wallet/walletDetailsPage.html": {
 				"resources": [
-					"js/app.js"
+					"js/app.js",
+					"js/setting.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/account.css",
+					"css/mui.min.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -835,5 +873,5 @@
 			]
 		}
 	},
-	"fullscreen": true
+	"fullscreen": true,"name":"薪窝兼职"
 }

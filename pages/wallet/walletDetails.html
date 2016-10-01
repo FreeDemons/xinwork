@@ -9,6 +9,7 @@
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/account.css" rel="stylesheet"/>
+<link href="../../css/offcanvas-drag-down.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
 $.init({
@@ -35,19 +36,24 @@ $.plusReady(function() {
 			points:this.querySelector("div").innerHTML,
 			tid:this.querySelector("h3").textContent,
 			time:this.getAttribute("data-time"),
-			details:this.getAttribute("data-details"),
 			nid:this.getAttribute("data-nid"),
 			expirydate:this.getAttribute("data-expirydate"),
-			stutas:this.getAttribute("data-stutas")
+			stutas:this.getAttribute("data-stutas"),
+			description:this.getAttribute("data-description"),
+			reference:this.getAttribute("data-reference")
 		});
 		mui.openWindow({id:'walletDetailsPage',show:{duration:200}});
 	});
+	
+	doc.querySelector('#sortBtn').addEventListener('tap', toggleMenu);//点击筛选按钮
+	doc.querySelector("#menu-backdrop").addEventListener('tap', toggleMenu);//点击空白区域隐藏城市选择
 	//筛选收支明细
-	mui('#topPopover').on('tap', '.mui-table-view-cell', function() {
+	mui('#sortMenu').on('tap', '.mui-table-view-cell', function() {
+		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
 		page=0;
 		url = XW.base + 'wallet/details' + this.getAttribute('data-stutas');
 		getData();
-		mui('#topPopover').popover('hide');
+		toggleMenu();
 	});
 });
 //获取数据
@@ -89,6 +95,8 @@ function showDetails(data){
 		li.setAttribute("data-time",n.time_stamp_2);
 		li.setAttribute("data-stutas",n.status);
 		li.setAttribute("data-expirydate",n.expirydate);
+		li.setAttribute("data-description",n.description);
+		li.setAttribute("data-reference",n.reference);
 		
 		var points = parseInt(n.points) > 0 ? '+'+n.points : n.points;
 		if(n.status == "1") points = '<span class="gray">'+points+'</span>';
@@ -112,6 +120,34 @@ function showDetails(data){
 		ul.appendChild(li);
 	});
 }
+
+//筛选菜单的显示与隐藏
+var busying = false;
+function toggleMenu() {
+	if (busying) {return;}
+	busying = true;
+	
+	var menuWrapper = document.getElementById("menu-wrapper");
+	var menu = document.getElementById("sortMenu");
+	var menuWrapperClassList = menuWrapper.classList;
+	var backdrop = document.getElementById("menu-backdrop");
+	
+	if (menuWrapperClassList.contains('mui-active')) {
+		document.body.classList.remove('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-out-up animated';
+		menu.className = 'menu bounce-out-up animated';
+		setTimeout(function() {
+			backdrop.style.opacity = 0;
+			menuWrapper.classList.add('hidden');
+		}, 500);
+	} else {
+		document.body.classList.add('menu-open');
+		menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
+		menu.className = 'menu bounce-in-down animated';
+		backdrop.style.opacity = 1;
+	}
+	setTimeout(function() {busying = false;}, 500);
+}
 }(mui, document));
 </script>
 <style type="text/css">
@@ -130,14 +166,15 @@ function showDetails(data){
 #detailsList .mui-table-view-cell.month div{top: 40px;}
 #noneTips{text-align: center;color: #666;font-size: 16px;display: none;}
 #noneTips .mui-icon{font-size: 120px;color: #ccc;margin: 70px 0px 0px;}
-#topPopover{width: 100px;font-size: 14px;}
+.menu-wrapper{top:44px;}
+.menu-open .menu-backdrop{top:44px;}
 </style>
 </head>
 <body>
-	<header class="mui-bar mui-bar-nav">
+	<header class="mui-bar mui-bar-nav" style="z-index: 1000;">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">收支明细</h1>
-		<a class="mui-action-menu mui-icon iconfont icon-filter mui-pull-right" href="#topPopover"></a>
+		<a class="mui-action-menu mui-icon iconfont icon-filter mui-pull-right" id="sortBtn"></a>
 	</header>
 	<div class="mui-scroll-wrapper mui-content" id="refreshContainer">
 		<div class="mui-scroll">
@@ -145,14 +182,18 @@ function showDetails(data){
 			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
 		</div>
 	</div>
-	<div id="topPopover" class="mui-popover">
-		<ul class="mui-table-view">
-			<li class="mui-table-view-cell" data-stutas=""><a>全部</a></li>
-		    <li class="mui-table-view-cell" data-stutas="/0">兼职工资</li>
-		    <li class="mui-table-view-cell" data-stutas="/3">网赚工资</li>
-		    <li class="mui-table-view-cell" data-stutas="/2">工资提现</li>
-		    <li class="mui-table-view-cell" data-stutas="/1">兑换积分</li>
-		</ul>
+	<div id="menu-wrapper" class="menu-wrapper hidden">
+		<div id="sortMenu" class="menu">
+			<ul class="mui-table-view mui-table-view-inverted">
+				<li class="mui-table-view-cell" data-stutas="">全部</li>
+			    <li class="mui-table-view-cell" data-stutas="/0">兼职工资</li>
+			    <li class="mui-table-view-cell" data-stutas="/2">工资提现</li>
+			    <li class="mui-table-view-cell" data-stutas="/1">签到奖励</li>
+			    <li class="mui-table-view-cell" data-stutas="/4">积分兑换</li>
+			    <li class="mui-table-view-cell" data-stutas="/3">网赚工资</li>
+			</ul>
+		</div>
 	</div>
+	<div id="menu-backdrop" class="menu-backdrop"></div>
 </body>
 </html>

@@ -68,7 +68,7 @@ $.plusReady(function() {
 					$.openWindow({
 						url:'walletWithdraw.html',
 						id:'walletWithdraw',
-						extras:{bank:data.wage_bank,alipay:data.wage_alipay,cash:(userpoints.withdraw/100).toFixed(2)}
+						extras:{bank:data.wage_bank,alipay:data.wage_alipay,cash:(userpoints.balance/100).toFixed(2)}
 					})
 				}
 			});
@@ -77,11 +77,11 @@ $.plusReady(function() {
 });
 
 function showPoints(userpoints){
-	plus.webview.getWebviewById('account').evalJS('$(".mui-table-view-cell[data-wid=\'wallet\'] .mui-badge font").text("'+userpoints.withdraw+'")');
-	doc.querySelector('#pointsWithdraw h5').innerText = userpoints.withdraw;
-	doc.querySelector('#withdraw .mui-badge').innerText = "可提现 " + (userpoints.withdraw/100).toFixed(2) + " 元";
-	doc.querySelector('#pointsExchange span').innerText = userpoints.exchange;
-	doc.querySelector('#pointsWait span').innerText = userpoints.wait;
+	plus.webview.getWebviewById('account').evalJS('$(".mui-table-view-cell[data-wid=\'wallet\'] .mui-badge font").text("'+userpoints.balance+'")');
+	doc.querySelector('#pointsBalance h5').innerText = userpoints.balance;
+	doc.querySelector('#withdraw .mui-badge').innerText = "可提现 " + (userpoints.balance/100).toFixed(2) + " 元";
+	doc.querySelector('#pointsWage span').innerText = (userpoints.wage/100).toFixed(2);
+	doc.querySelector('#pointsWait span').innerText = (userpoints.wait/100).toFixed(2);
 }
 }(mui, document));
 </script>
@@ -97,10 +97,10 @@ function showPoints(userpoints){
 	<div class="mui-scroll-wrapper mui-content" id="walletPage">
 		<div class="mui-scroll">
 			<div class="wallet_points">
-				<div id="pointsWithdraw"><p>可提现积分</p><h5>0</h5></div>
+				<div id="pointsBalance"><p>积分余额</p><h5>0</h5></div>
 				<div class="points_bottom">
-					<div id="pointsExchange">兑换商城<span>0</span>积分</div>
-					<div id="pointsWait">待结<span>0</span>积分</div>
+					<div id="pointsWage">兼职收入<span>0.00</span>元</div>
+					<div id="pointsWait">待结工资<span>0.00</span>元</div>
 				</div>
 			</div>
 			<ul class="mui-table-view">
@@ -117,7 +117,7 @@ function showPoints(userpoints){
 					<a class="mui-navigate-right"><span class="mui-icon iconfont icon-details"></span>收支明细</a>
 				</li>
 			</ul>
-			<div class="tips">目前签到奖励的积分不可提现，可在后续版本提供的积分兑换商城中使用，待结积分到达指定的生效日期后自动生效</div>
+			<div class="tips">签到积分已并入账户余额，所有积分均可用于消费与提现！</div>
 		</div>
 	</div>
 </body>

@@ -28,13 +28,13 @@
 mui.init({keyEventBind: {backbutton: false}});
 mui.plusReady(function() {
 	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
-	if(mui.os.ios) {plus.navigator.setFullscreen(true);}
+	if(mui.os.ios) {plus.navigator.setFullscreen(true);}//隐藏状态栏；
 	plus.navigator.closeSplashscreen();
 	
 	//立即体验按钮点击事件
 	document.getElementById("close").addEventListener('tap', function(event) {
 		plus.storage.setItem("lauchFlag", "true");
-		plus.navigator.setFullscreen(false);
+		plus.navigator.setFullscreen(false);//显示状态栏；
 		plus.webview.close(plus.webview.currentWebview(),'fade-out',200);
 	});
 	//图片切换时，触发动画

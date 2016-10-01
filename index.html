@@ -16,20 +16,21 @@ mui.init({
 	gestureConfig:{doubletap:true}
 });
 mui.plusReady(function() {
-	
-	console.log(plus.navigator.isImmersedStatusbar());
+	//读取本地存储，检查是否为首次启动
+	if(!plus.storage.getItem("lauchFlag")){
+		mui.openWindow({id:'guide',url:'guide.html',show:{aniShow:'none'},waiting:{autoShow:false}});
+	}else{
+		mui.later(function(){
+			plus.navigator.closeSplashscreen();//关闭splash页面；
+			plus.navigator.setFullscreen(false);//显示状态栏；
+		},1500)
+	}
 	//检查更新
 	mui.getJSON(XW.base + 'appversion/1',function(data){
 		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
 	});
 	
 	app.setUser();//刷新用户状态
-	if(plus.storage.getItem('msgUser') != null){
-		var msgUser = JSON.parse(plus.storage.getItem('msgUser'));
-		console.log(JSON.stringify(msgUser));
-	}else{
-		console.log("msgUser不存在");
-	}
     var self = plus.webview.currentWebview();
     var subpages = ['home','team','chat','account'];
     for(var i=0;i<subpages.length;i++){

@@ -33,6 +33,10 @@ $.plusReady(function() {
 		}else if(data.tid == '工资提现' && data.nid != ''){
 			plus.nativeUI.showWaiting();
 			cashLoad(data.nid);
+		}else if(data.tid == '积分兑换'){
+			var html = '<p>订单编号<span>'+data.reference+'</span></p><p>备<i></i>注<span>'+data.description+'</span></p>'
+			doc.querySelector("#details").innerHTML=html;
+			doc.querySelector('#details').style.display = "block";
 		}
 	});
 });
@@ -96,6 +100,7 @@ function cashLoad(nid){
 #points font{font-size: 24px;font-weight: 200;color: #000;margin-left: 15px;}
 #points font span.green{color: #0F9D58;}
 #points font span.gray{color: #ccc;}
+#points font span.red{color: #db4437;}
 #jobLink{text-align: center;color: #0F9D58;}
 </style>
 </head>
