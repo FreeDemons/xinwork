@@ -12,8 +12,11 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 var Dweb = [];
+var mallPage;
 mui.plusReady(function() {
-	var mallPage;
+	document.querySelector('header').addEventListener('tap',function(){
+		console.log(thisPage.children().length);
+	})
 	mui.get(XW.base + 'customize/duiba/login',function(data){
 		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:44,bottom:0}});
 		mallPage.show();
@@ -46,6 +49,7 @@ mui.plusReady(function() {
 //拦截页面资源
 var listenLoad = function(thisWeb){
 	thisWeb.overrideUrlLoading({mode:"reject"},function(e){
+
 		if(e.url.indexOf('http://www.duiba.com.cn/chome/index?spm=') != -1){
 			var web = plus.webview.getWebviewById("mallpage").loadURL(e.url);
 			listenLoad(web);
