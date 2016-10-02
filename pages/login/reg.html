@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/job.css" rel="stylesheet"/>
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	var phoneNumber=doc.querySelector("#phoneNumber");
+	var regBtn=doc.querySelector("#regBtn");
+	
+    changeBtn(); //改变按钮状态
+	regBtn.addEventListener('tap',function(){regSubmit();});//提交注册
+});
+//改变按钮状态
+function changeBtn(){
+	phoneNumber.addEventListener('input',function(){
+		var regphone = /^1\d{10}$/;
+		if(regphone.test(this.value)){
+			regBtn.removeAttribute("disabled");
+		}else{
+			regBtn.setAttribute("disabled","disabled");
+		}
+	});
+	doc.querySelector(".mui-icon-clear").addEventListener('tap',function(){
+		regBtn.setAttribute("disabled","disabled");
+	});
+}
+//提交注册
+function regSubmit(){
+	plus.nativeUI.showWaiting( "请稍候..." );
+	$.ajax(XW.base+'customize/user_used',{
+		data:{phone:encodeURIComponent(phoneNumber.value)},
+		type:'post',
+		success:function(data){
+			plus.nativeUI.closeWaiting();
+			if(data == 1){
+				var btnArray = ['更换号码','直接登录'];
+      			var confirmText = '手机号码 '+phoneNumber.value+' 已被注册';
+      			$.confirm(confirmText,'',btnArray, function(e){
+      				if(e.index == 1){
+      					plus.webview.getWebviewById('login').evalJS('document.querySelector("#phone").value="'+phoneNumber.value+'"');
+      					$.back();
+      				}
+      			});
+			}else{
+				var btnArray = ['取消','确定'];
+      			var confirmText = '向手机号码 '+phoneNumber.value+' 发送确认码';
+      			$.confirm(confirmText,'',btnArray, function(e){
+      				if(e.index == 1){
+      					$.openWindow({url: 'regCode.html',id:'regCode',extras:{phoneNumber:phoneNumber.value}});
+      				}
+      			});
+			}
+		},
+		error:function(){
+			plus.nativeUI.closeWaiting();
+			$.alert("注册信息获取失败，请稍后再试","温馨提示");
+		}
+  	});
+}
+}(mui, document));
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">注册</h1>
+	</header>
+	<div class="mui-content">
+		<form id='reg-form' class="mui-input-group">
+			<div class="mui-input-row">
+				<label for="phoneNumber">手机号码</label>
+				<input id="phoneNumber" maxlength="11" type="tel" class="mui-input-clear mui-input" placeholder="请填写手机号">
+			</div>
+		</form>
+		<div class="mui-content-padded">
+			<button id="regBtn" class="mui-btn mui-btn-block mui-btn-success" disabled="disabled">发送手机验证码</button>
+		</div>
+	</div>
+</body>
+</html>

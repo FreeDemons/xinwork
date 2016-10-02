@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/job.css" rel="stylesheet"/>
+<script type="text/javascript" charset="utf-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	//关闭侧滑返回
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});
+	//跳转注册和忘记密码
+	mui(".link-area").on("tap","a",function(){
+		var id = this.getAttribute("id");
+		$.openWindow({url: id + '.html',id: id});
+	});
+	//点击登录
+	doc.querySelector('#loginBtn').addEventListener("tap", function() {
+		loginSubmit();
+	});
+});
+
+//与后台登录接口的对接
+function loginSubmit() {
+	var phone = doc.querySelector("#phone").value;
+	var password = doc.querySelector("#password").value;
+	if(!/^1\d{10}$/.test(phone)){
+		$.alert("请输入正确的手机号码","温馨提示");
+	}else if(password == ""){
+		$.alert("请输入密码","温馨提示");
+	}else{
+		plus.nativeUI.showWaiting( "正在登录..." );
+		$.ajax(XW.base + 'user/login', {
+			data: {
+				username:encodeURIComponent(phone),
+				password:encodeURIComponent(password)
+			},
+			dataType: 'json',
+			type: 'post',
+			success: function(data) {
+				//同步个推cid
+				mui.post(XW.base + 'customize/user_edit/getuiCid',{'cid':plus.push.getClientInfo().clientid});
+				//设置登录后的会话验证
+				var login_session = {'sessid':data.sessid,'session_name':data.session_name,'token':data.token};
+				plus.storage.setItem('login_session',JSON.stringify(login_session));
+				//获取当前登录状态，state是个object对象
+				plus.storage.setItem('user',JSON.stringify(data.user));
+				
+				$.toast('登录成功');
+	      		$.fire(plus.webview.getWebviewById('account'),'refresh',{user:data.user});
+	      		plus.webview.getWebviewById('chat').evalJS('refreshPage()');
+	      		plus.nativeUI.closeWaiting();
+				$.back();
+			},
+			error: function(a,b,c) {
+				plus.nativeUI.closeWaiting();
+				$.alert("手机号码或密码错误","温馨提示");
+			}
+		});
+	}
+}
+
+}(mui, document));
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title">登录</h1>
+		<a class="mui-action-back mui-btn-link mui-pull-right">取消</a>
+	</header>
+	<div class="mui-content">
+		<form id='login-form' class="mui-input-group">
+			<div class="mui-input-row">
+				<label for="phone">手机号码</label>
+				<input id="phone" maxlength="11" type="tel" class="mui-input-clear mui-input" placeholder="请输入手机号码">
+			</div>
+			<div class="mui-input-row mui-password">
+				<label for="password">密<span style="width: 2em;display: inline-block;"></span>码</label>
+				<input id="password" type="password" class="mui-input-password" placeholder="请输入密码">
+			</div>
+		</form>
+		<div class="mui-content-padded">
+			<button id="loginBtn" class="mui-btn mui-btn-block mui-btn-success">登录</button>
+			<div class="link-area" style="text-align: center;margin-top: 15px;font-size: 14px;">
+				<a id="reg">注册账号</a>
+				<span class="spliter">|</span>
+				<a id="forget">忘记密码</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link href="../../css/account.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	pullRefresh : {
+	    container:"#collectPage",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    up : {
+	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	      callback :pullUpfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    }
+  	}
+});
+var page=0;
+mui.plusReady(function(){
+	plus.webview.currentWebview().setStyle({'popGesture':'close'});
+	//打开加载
+	plus.nativeUI.showWaiting();
+	collectLoad();
+	//打开兼职详情页
+	mui('#collectPage').on('tap', '.mui-table-view-cell', function() {
+		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
+		    nid:this.getAttribute("data-nid"),
+		    created:this.getAttribute("data-created"),
+		    date:this.getAttribute("data-date"),
+		    time:this.getAttribute("data-time"),
+		    title:this.querySelector(".job-title").textContent,
+		    wage:this.querySelector(".job-wage").textContent,
+		    sort:this.querySelector(".job-mid font").textContent,
+		    place:this.querySelector(".job-mid span").textContent,
+		    number:this.querySelector(".job-number").textContent,
+		    status:this.querySelector(".job-status").textContent
+		});
+		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+	});
+})
+//打开加载
+function collectLoad(){
+	document.body.querySelector('#collectPage .mui-table-view').innerHTML = "";
+	document.body.querySelector('#collectPage .mui-table-view').style.display="none";
+	document.body.querySelector('#noneTips').style.display="none";
+	mui.getJSON(XW.base + 'joblist?flag_collect=1',function(data){
+		plus.nativeUI.closeWaiting();
+		if(data.length > 0){
+			document.body.querySelector('.mui-table-view').style.display="block";
+			showJob(data)
+		}else{
+			document.body.querySelector('#noneTips').style.display="block";
+			mui('#collectPage').pullRefresh().disablePullupToRefresh();
+		}
+	});
+}
+//上拉加载
+function pullUpfresh(){
+	page += 1;
+    mui.getJSON(XW.base + 'joblist?flag_collect=1&page=' + page,function(data){
+		showJob(data);
+		setTimeout(function() {
+			var refb = data.length < 20 ? true : false;
+			mui('#collectPage').pullRefresh().endPullupToRefresh(refb);
+		}, 1000);
+	});
+}
+//显示兼职列表
+function showJob(data){
+	var jobList = document.body.querySelector('.mui-table-view');
+	mui.each(data, function(i, n) {
+		var place = n.field_team_address.split("\n  ").pop();
+		var statusclass= n.field_job_status == "正在报名" ? " status-apply" : "";
+		var li = document.createElement('li');
+		li.className = 'mui-table-view-cell mui-media';
+		li.setAttribute("data-nid",n.nid);
+		li.setAttribute("data-created",n.created);
+		li.setAttribute("data-date",n.field_date);
+		li.setAttribute("data-time",n.field_time);
+		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="job-title mui-ellipsis">' + n.title + '</div><p class="mui-ellipsis job-mid"><font>'
+						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
+						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';
+		jobList.appendChild(li);
+	});
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">收藏兼职</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="collectPage">
+		<div class="mui-scroll">
+			<ul class="mui-table-view"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
+		</div>
+	</div>
+</body>
+</html>

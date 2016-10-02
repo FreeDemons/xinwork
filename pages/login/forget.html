@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	var phoneNumber=document.querySelector("#phoneNumber");
+	var forgetBtn=document.querySelector("#forgetBtn");
+	
+	changeBtn(); //改变按钮状态
+	forgetBtn.addEventListener('tap',function(){forgetSubmit()});//提交
+});
+//改变按钮状态
+function changeBtn(){
+	phoneNumber.addEventListener('input',function(){
+		var regphone = /^1\d{10}$/;
+		if(regphone.test(this.value)){
+			forgetBtn.removeAttribute("disabled");
+		}else{
+			forgetBtn.setAttribute("disabled","disabled");
+		}
+	});
+	doc.querySelector(".mui-icon-clear").addEventListener('tap',function(){
+		regBtn.setAttribute("disabled","disabled");
+	});
+}
+//提交
+function forgetSubmit(){
+	plus.nativeUI.showWaiting( "请稍候..." );
+	$.ajax(XW.base+'customize/user_used',{
+		data:{phone:encodeURIComponent(phoneNumber.value)},
+		type:'post',
+		success:function(data){
+			plus.nativeUI.closeWaiting();
+			if(data == 1){
+				var btnArray = ['取消','确定'];
+      			var confirmText = '向手机号码 '+phoneNumber.value+' 发送确认码';
+      			$.confirm(confirmText,'',btnArray, function(e){
+      				if(e.index == 1){
+      					$.openWindow({url: 'forgetCode.html',id:'forgetCode',extras:{phoneNumber:phoneNumber.value}});
+      				}
+      			});
+			}else{
+      			$.alert('手机号码 '+phoneNumber.value+' 尚未注册',"温馨提示");
+			}
+		},
+		error:function(){
+			plus.nativeUI.closeWaiting();
+			$.alert("数据获取失败，请稍后再试","温馨提示");
+		}
+  	});
+}
+}(mui, document));
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">找回密码</h1>
+	</header>
+	<div class="mui-content">
+	    <form id='forget-form' class="mui-input-group">
+			<div class="mui-input-row">
+				<label for="phoneNumber">手机号码</label>
+				<input id="phoneNumber" maxlength="11" type="tel" class="mui-input-clear mui-input" placeholder="注册的手机号">
+			</div>
+		</form>
+		<div class="mui-content-padded">
+			<button id="forgetBtn" class="mui-btn mui-btn-block mui-btn-success" disabled="disabled">发送手机确认码</button>
+		</div>
+	</div>
+</body>
+</html>
