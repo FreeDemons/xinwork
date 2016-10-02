@@ -26,9 +26,7 @@ mui.plusReady(function() {
 		},1500)
 	}
 	//检查更新
-	mui.getJSON(XW.base + 'appversion/1',function(data){
-		app.checkUpdate(data[0].field_remark,data[0].field_version_file);
-	});
+	app.checkUpdate();
 	
 	app.setUser();//刷新用户状态
     var self = plus.webview.currentWebview();
@@ -64,7 +62,11 @@ mui.plusReady(function() {
 	    }else if(targetTab == "home"){
 	    	//首页显示城市选择按钮
 	    	document.getElementById("citySelect").style.display = "block";
-	    	plus.webview.getWebviewById('home').evalJS("homeLoad()");
+	    	
+	    	//距离上次刷新超过10分钟，重新载入数据
+	    	if(new Date().getTime()-plus.storage.getItem('homeUpdateTime')>600000){
+	    		plus.webview.getWebviewById('home').evalJS("homeLoad()");
+	    	}
 	    }else{
 	    	document.getElementById("citySelect").style.display = "none";
 		    if(targetTab == "account"){
@@ -77,7 +79,10 @@ mui.plusReady(function() {
 					plus.webview.getWebviewById('account').evalJS("noUser()");
 				}
 		    }else if(targetTab == "team"){
-		    	plus.webview.getWebviewById('team').evalJS("loadTeam()");
+		    	//距离上次刷新超过10分钟，重新载入数据
+		    	if(new Date().getTime()-plus.storage.getItem('teamUpdateTime')>600000){
+		    		plus.webview.getWebviewById('team').evalJS("loadTeam()");
+		    	}
 		    }
 	    }
 	    

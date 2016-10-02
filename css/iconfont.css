@@ -25,6 +25,7 @@
 .icon-biaoqing:before { content: "\e60c"; }
 .icon-description:before { content: "\e605"; }
 .icon-nothing:before { content: "\e617"; }
+.icon-collect:before { content: "\e61e"; }
 .icon-wallet:before { content: "\e60e"; }
 .icon-lists:before { content: "\e619"; }
 .icon-matter2:before { content: "\e626"; }
@@ -49,5 +50,6 @@
 .icon-feedback:before { content: "\e60f"; }
 .icon-summary:before { content: "\e62b"; }
 .icon-my:before { content: "\e630"; }
+.icon-more:before { content: "\e623"; }
 .icon-zhongxinfasong:before { content: "\e615"; }
 .icon-clock:before { content: "\e618"; }

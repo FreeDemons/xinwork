@@ -65,6 +65,8 @@ mui.plusReady(function() {
 	});
 	//点击报名
 	mui("#jobApply").on('tap', 'button', function() {apply()});
+	//点击收藏
+	document.getElementById("collectBtn").addEventListener('tap',function(){collect();})
 	
 	//拨打投诉电话
 	document.querySelector(".job-detail-care a").addEventListener("tap",function(){
@@ -132,6 +134,7 @@ function setData(){
 		$("#team").attr({"data-phone":data.team.phone,"data-banner":data.team.banner,"data-place":data.team.place,"data-description":data.team.description});
 		$("#applyList b").text(data.apply_count);
 		$("#enrolList b").text(data.enrol_count);
+		$("#collectBtn").removeClass("green");
 		date_select = data.date_select;
 		shareContent = data.remark;
 		
@@ -140,8 +143,31 @@ function setData(){
 		else{$("#jobApply button").text("已结束报名");}
 
 		if(data.status != 0){$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>')}
+		if(data.flag_collect == true){$("#collectBtn").addClass("green");}
 	});
 }
+//点击收藏
+function collect(){
+	if(!plus.storage.getItem('user')){
+		mui.openWindow({url: "../login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+	}else{
+		$("#collectBtn").attr("disabled","disabled").toggleClass("green");
+		mui.ajax(XW.base + 'customize/node_collect/' + nid, {
+			dataType: 'json',
+			type: 'POST',
+			success: function(data) {
+				$("#collectBtn").removeAttr("disabled");
+				if(data == "0"){
+					plus.nativeUI.toast('取消收藏',{'verticalAlign':'center'});
+				}else{
+					plus.nativeUI.toast('已收藏',{'verticalAlign':'center'});
+				}
+				if(plus.webview.getWebviewById("collect")){plus.webview.getWebviewById("collect").evalJS("collectLoad()");}
+			}
+		});
+	}
+}
+
 //点击报名
 function apply(){
 	var user = JSON.parse(plus.storage.getItem('user'));
@@ -181,6 +207,7 @@ function apply(){
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">兼职详情</h1>
+		<a class="mui-pull-right iconfont icon-collect" id="collectBtn"></a>
 		<a href = '#shareJob' class="mui-pull-right iconfont icon-fenxiang"></a>
 	</header>
 	

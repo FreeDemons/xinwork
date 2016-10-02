@@ -173,16 +173,35 @@ owner.picUpload=function(lacalpath,s){
 }
  
  //监测更新
-owner.checkUpdate = function(checkUrl,wgtUrl){
+owner.checkUpdate = function(){
+	//先获取本地版本号
 	plus.runtime.getProperty(plus.runtime.appid,function(inf){
-		if(inf.version != checkUrl){
-			var btnArray=["下次再说","立即升级"];
-			mui.confirm('小主，让我升级一下为您更好服务(●'+'◡'+'●)', '版本更新', btnArray, function(e) {
-				if (e.index == 1) {
-					app.downWgt(wgtUrl);
-				}
-			});
-		}
+		var currentVersionStr = inf.version;
+		var currentVersion = currentVersionStr.split('.');
+		//先判断整包下载，再判断资源升级
+		mui.getJSON(XW.base + 'appversion/0',function(data){
+			//field_remark是版本号，body是升级备注
+			var apkVersion = data[0].field_remark.split('.');
+			if(currentVersion[0] == apkVersion[0] && currentVersion[1] == apkVersion[1]){
+				mui.getJSON(XW.base + 'appversion/1',function(datas){
+					if(currentVersionStr != datas[0].field_remark){
+						app.downWgt(datas[0].field_version_file);
+					}
+				});
+			}else{
+				var btnArray = ['立即更新', '以后更新'];
+				mui.confirm(data[0].body, '新版本更新', btnArray, function(e) {
+					//点击不更新，不需要做任何提示
+					if (e.index == 0) {
+						if(mui.os.android){
+							app.downWgt(data[0].field_version_file);
+						}else{
+							plus.runtime.openURL("itms-apps://itunes.apple.com/cn/app/xin-wo-jian-zhi/id1148908099?mt=8")
+						}
+					}
+				})
+			}
+		});
    });
 }
 
