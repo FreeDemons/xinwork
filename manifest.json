@@ -93,7 +93,7 @@
 			"delay": "500"
 		},
 		"popGesture": "hide",/*none:新建webview窗口无侧滑返回功能；close：新建webview窗口默认侧滑返回关闭；hide：新建webview窗口默认侧滑返回隐藏。暂时仅iOS平台支持"*/
-		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
 			"plugins": {
@@ -885,5 +885,5 @@
 			]
 		}
 	},
-	"fullscreen": false,"name":"薪窝兼职"
+	"fullscreen": true,"name":"薪窝兼职"
 }
