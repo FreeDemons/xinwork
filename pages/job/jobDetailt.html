@@ -78,24 +78,24 @@ mui.plusReady(function() {
 		});
 	})
 	//打开分享列表
-	document.querySelector(".icon-fenxiang").addEventListener("tap",function(){
-    var msgwx={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneSession'}};
-	var msgpy ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneTimeline'}};
-	var msgqq ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title};
-	mui('body').on('tap', '.mui-popover-action .shareItem', function() {
+	document.getElementById("shareBtn").addEventListener("tap",function(){
+	    var msgwx={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneSession'}};
+		var msgpy ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneTimeline'}};
+		var msgqq ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title};
+		mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 			mui('#shareJob').popover('toggle');
 			if (share['weixin'] ||share['qq']) {
 				switch (this.id){
-							case 'weixin':
-								shareAction(share['weixin'], msgwx);
-								break;
-							case 'pengyouquan':
-								shareAction(share['weixin'], msgpy);
-								break;
-							case 'qq':
-								shareAction(share['qq'],msgqq)
-								break;
-						}
+					case 'weixin':
+						shareAction(share['weixin'], msgwx);
+						break;
+					case 'pengyouquan':
+						shareAction(share['weixin'], msgpy);
+						break;
+					case 'qq':
+						shareAction(share['qq'],msgqq)
+						break;
+				}
 			}
 			else{
 				mui.toast('系统发生错误，无法分享。');
@@ -197,23 +197,17 @@ function apply(){
 }
 </script>
 <style type="text/css">
-	.mui-bar-nav .mui-pull-right.green{color: #0F9D58;}
-	.icon-fenxiang,.icon-collect{
-		font-size: 18px;
-		vertical-align: middle;
-		margin: 14px 6px;
-		position: relative;
-		top:-5px;
-		float: right;
-	}
+.mui-bar-nav .iconfont{line-height: 44px;font-size: 18px;z-index: 20;position: relative;float: right;padding: 0px 5px;}
+.mui-bar-nav .iconfont.green{color: #0F9D58;}
 </style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">兼职详情</h1>
-		<a href = '#shareJob' class=" iconfont icon-fenxiang"></a>
-		<a class=" iconfont icon-collect"  id="collectBtn"></a>
+		<a class="iconfont icon-collect" id="collectBtn" style="margin-right: -5px;"></a>
+		<a class="iconfont icon-share" id="shareBtn" href="#shareJob"></a>
+		
 	</header>
 	
 	<div class="mui-content mui-scroll-wrapper" id="jobDetaitPage">

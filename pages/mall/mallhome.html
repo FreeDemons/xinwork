@@ -14,9 +14,6 @@ mui.init();
 var Dweb = [];
 var mallPage;
 mui.plusReady(function() {
-	document.querySelector('header').addEventListener('tap',function(){
-		console.log(thisPage.children().length);
-	})
 	mui.get(XW.base + 'customize/duiba/login',function(data){
 		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:44,bottom:0}});
 		mallPage.show();

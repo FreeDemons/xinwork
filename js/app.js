@@ -146,13 +146,13 @@ owner.picUpload=function(lacalpath,s){
 }
 
 //下载在线升级包wgt文件
- owner.downWgt = function(wgtUrl){
-    plus.nativeUI.showWaiting("下载更新文件...");
+owner.downWgt = function(wgtUrl){
+    plus.nativeUI.showWaiting("稍等，马上就好...");//不要提示下载
     plus.downloader.createDownload( wgtUrl, {filename:"_doc/update/"}, function(d,status){
         if ( status == 200 ) {
             app.installWgt(d.filename); // 安装wgt包
         } else {
-            plus.nativeUI.alert("下载更新失败！");
+            plus.nativeUI.alert("更新失败！");
         }
         plus.nativeUI.closeWaiting();
     }).start();
