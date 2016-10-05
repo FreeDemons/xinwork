@@ -204,7 +204,6 @@ owner.checkUpdate = function(){
 		});
    });
 }
-
 //时间戳转时分,参数为十三位时间戳
 owner.timestampToTime = function(timestamp) {
 				var t = new Date(timestamp);
