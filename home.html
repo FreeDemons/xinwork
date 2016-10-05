@@ -38,15 +38,8 @@ mui.init({
 var page=0;
 var city='';
 mui.plusReady(function() {
-	//显示缓存的工作列表
-	if(plus.storage.getItem('job')){
-		showJob(JSON.parse(plus.storage.getItem('job')));
-	}
-	else{
-		document.body.querySelector('#noneTips').style.display="block";
-	}
-	//显示缓存的banner
-	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}
+	if(plus.storage.getItem('job')){showJob(JSON.parse(plus.storage.getItem('job')));}//显示缓存的工作列表
+	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}//显示缓存的banner
 	//自动定位
 	getCityByLoc();
 	//获得slider插件对象
@@ -149,6 +142,7 @@ function getCityByLoc(){
 	})
 }
 function homeLoad() {
+	plus.storage.setItem('homeUpdateTime',JSON.stringify(new Date().getTime()));
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
 	mui.getJSON(XW.base + 'joblist?city=' + city,function(data){

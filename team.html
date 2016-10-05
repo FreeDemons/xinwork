@@ -45,6 +45,7 @@ mui.plusReady(function() {
 });
 //加载团队数据
 function loadTeam(){
+	plus.storage.setItem('teamUpdateTime',JSON.stringify(new Date().getTime()));
 	var city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
 	mui.getJSON(XW.base + 'teamlist?city=' + city,function(data){
 		plus.storage.setItem('team',JSON.stringify(data));

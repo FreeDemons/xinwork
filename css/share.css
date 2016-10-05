@@ -2,17 +2,18 @@
 		background-color: #FFFFFF;
 		height: 100px;
 		width;auto;
-		padding: 10px 20px;
+		padding: 10px 15px;
 	}
 	.share .shareList{
 		display: inline-block;
-		width: 25%;
+		margin-right: 10px;
 	}
 	.share .shareItem{
 		width: 60px;
 		height: 60px;
 		border-radius: 50px;
 		padding: 10px;
+		margin: auto;
 	}
 	.share .shareItem .icon{
 		color: #fff;
@@ -20,5 +21,5 @@
 		margin-bottom: 10px;
 	}
 	.share .shareList p{
-		margin: 0px 12px;
+		text-align: center;
 	}

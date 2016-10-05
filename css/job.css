@@ -15,6 +15,7 @@
 
 #jobDetaitPage .job-detail-description #jobDescription{color:#999 !important;font-size: 14px;min-height: 150px;}
 #jobDetaitPage .job-detail-description #jobDescription p{color:#999 !important;font-size: 14px;}
+#jobDetaitPage .job-detail-description #jobDescription p img{width: auto;max-width: 100%;height: auto;}
 #jobDetaitPage .mui-table-view:before,#jobDetaitPage .mui-table-view:after{height: 0px;}
 
 #jobDetaitPage .job-detail-recruitment .job-block-header{padding: 15px 15px 10px;margin-bottom: 0px;}
