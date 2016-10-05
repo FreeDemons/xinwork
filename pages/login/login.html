@@ -12,6 +12,7 @@
 (function($, doc) {
 $.init();
 $.plusReady(function() {
+	adjustImmerse();
 	//关闭侧滑返回
 	plus.webview.currentWebview().setStyle({'popGesture':'none'});
 	//跳转注册和忘记密码
