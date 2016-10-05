@@ -7,6 +7,7 @@
 <script src="js/mui.min.js"></script>
 <script src="js/setting.js"></script>
 <script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+<!--<script src="js/immersed.js" type="text/javascript" charset="utf-8"></script>-->
 <link href="css/mui.min.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
 <script type="text/javascript" charset="utf-8">
@@ -32,7 +33,7 @@ mui.plusReady(function() {
     var self = plus.webview.currentWebview();
     var subpages = ['home','team','chat','account'];
     for(var i=0;i<subpages.length;i++){
-    	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44,bottom: 51});
+    	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44+immersed,bottom: 51});
     	if(subpages[i] == "home"){
     		self.append(sub);
     	}else{
@@ -94,6 +95,7 @@ mui.plusReady(function() {
     	plus.webview.hide(activeTab);
     	activeTab = targetTab;
 	});
+	
 	//首页返回键处理,处理逻辑：1秒内，连续两次按返回键，则退出应用；
 	var backfirst = null;
 	mui.back = function() {

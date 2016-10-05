@@ -6,6 +6,32 @@ window.XW={
 	curCity:{'珠海':96,'中山':95,'佛山':80,'江门':83,'东莞':79,'湛江':93}
 }
 
+//沉浸式处理
+var immersed = 0;
+function adjustImmerse(){
+		var topoffset = 44;
+		var ms = (/Html5Plus\/.+\s\(.*(Immersed\/(\d+\.?\d*).*)\)/gi).exec(navigator.userAgent);
+		if(ms && ms.length >= 3) { // 当前环境为沉浸式状态栏模式
+			immersed = parseFloat(ms[2]); // 获取状态栏的高度
+			topoffset = topoffset + immersed;
+			var t = document.getElementsByTagName('header')[0];
+			if(t) {
+				t.style.paddingTop = immersed + 'px';
+				t.style.height = topoffset + 'px';
+			}
+			var mc = document.getElementsByClassName('mui-content')[0];
+			if(mc&&t) {
+				var newpt = 44 + immersed + 'px';
+				mc.style.paddingTop = newpt;
+			}
+			//下拉刷新位置
+			var mptp = document.getElementsByClassName('mui-pull-top-pocket')[0];
+			if(mptp) {
+				mptp.style.top = immersed + 'px';
+			}
+		}
+	}
+
 //添加下边线
 function smallLine(){
 	if(mui.os.ios){
@@ -20,6 +46,9 @@ function smallLine(){
 		}
 	}
 }
+
+
 window.onload=function(){
 	smallLine();
+	adjustImmerse();
 }
