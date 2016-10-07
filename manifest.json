@@ -284,7 +284,8 @@
 					"pages/other/teamwork.html",
 					"pages/login/login.html",
 					"pages/mall/mallhome.html",
-					"guide.html"
+					"guide.html",
+					"pages/mall/onlineIncome.html"
 				],
 				"priority": 0
 			},
@@ -873,6 +874,22 @@
 					"css/iconfont.css",
 					"css/job.css",
 					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/mall/onlineIncome.html": {
+				"resources": [
+					"images/default.jpg",
+					"js/mui.imageViewer.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/mui.min.css",
+					"css/mui.imageviewer.css",
+					"images/index.png",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf",
+					"js/setting.js"
 				],
 				"refer": [],
 				"priority": 0
