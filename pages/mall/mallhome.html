@@ -12,14 +12,10 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 var Dweb = [];
-var mallPage;
 mui.plusReady(function() {
 	mui.get(XW.base + 'customize/duiba/login',function(data){
-		mallPage = mui.preload({url:data,id:'mallpage',styles:{top:44,bottom:0}});
-		mallPage.show();
-		
-		mallPage.setStyle({'popGesture':'none'});//关闭ios侧滑返回
-		Dweb.push(mallPage);
+		var mallPage = mui.preload({url:data,id:'mallpage',styles:{top:44,bottom:0}});
+		plus.webview.currentWebview().append(mallPage);
 		listenLoad(mallPage);
 	});
 	//逐一返回上级页面
@@ -34,9 +30,8 @@ mui.plusReady(function() {
 			}
 		}
 		
-		if(Dweb.length <= 1){
+		if(Dweb.length <= 0){
 			//最好有办法删除所有子窗口
-			Dweb.pop().close();
 			plus.webview.currentWebview().close();
 		}else{
 			Dweb.pop().close();

@@ -45,32 +45,17 @@ mui.plusReady(function() {
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
 	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
-	
 	//打开banner页
-	mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
 	mui('.mui-slider-group').on('tap', 'a', function() {
-		mui.fire(plus.webview.getWebviewById('bannerPage'),'load_node',{
-		    nid:this.getAttribute("data-nid"),
-		    title:this.getAttribute("data-title")
+		mui.openWindow({
+			id:'bannerPage',
+			url:"pages/other/bannerPage.html",
+			extras:{nid:this.getAttribute("data-nid"),title:this.getAttribute("data-title")}
 		});
-		mui.openWindow({id:'bannerPage',show:{duration:200}});
 	});
 	//打开兼职详情页
-	mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
 	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
-		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
-		    nid:this.getAttribute("data-nid"),
-		    created:this.getAttribute("data-created"),
-		    date:this.getAttribute("data-date"),
-		    time:this.getAttribute("data-time"),
-		    title:this.querySelector(".job-title").textContent,
-		    wage:this.querySelector(".job-wage").textContent,
-		    sort:this.querySelector(".job-mid font").textContent,
-		    place:this.querySelector(".job-mid span").textContent,
-		    number:this.querySelector(".job-number").textContent,
-		    status:this.querySelector(".job-status").textContent
-		});
-		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+		mui.openWindow({id:'jobDetailt',url:"pages/job/jobDetailt.html",extras:{nid:this.getAttribute("data-nid")}});
 	});
 	//点击商家合作
 	document.querySelector('#homeTeamwork').addEventListener("tap",function(){
@@ -201,9 +186,6 @@ function showJob(data){
 		var li = document.createElement('li');
 		li.className = 'mui-table-view-cell mui-media';
 		li.setAttribute("data-nid",n.nid);
-		li.setAttribute("data-created",n.created);
-		li.setAttribute("data-date",n.field_date);
-		li.setAttribute("data-time",n.field_time);
 		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="job-title mui-ellipsis">' + n.title + '</div><p class="mui-ellipsis job-mid"><font>'
 						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
 						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';

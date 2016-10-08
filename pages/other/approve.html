@@ -15,7 +15,6 @@
 mui.init();
 mui.plusReady(function(){
 	mui('.mui-scroll-wrapper').scroll();
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	
 	//加载认证数据
 	var fieldId = JSON.parse(plus.storage.getItem('user')).field_identity_group//显示初始值

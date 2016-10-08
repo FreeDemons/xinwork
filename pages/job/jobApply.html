@@ -13,7 +13,6 @@
 mui.init();
 mui.plusReady(function() {
 	mui('.mui-scroll-wrapper').scroll();
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	//获得传递值
 	var extrasval = plus.webview.currentWebview();
 	var title = extrasval.title;
@@ -66,7 +65,7 @@ mui.plusReady(function() {
 		  			success:function(){
 		  				plus.nativeUI.closeWaiting();
 		  				mui.alert("恭喜您已成功报名本兼职！录取结果我们将会以短信方式通知","温馨提示","",function(){
-		  					plus.webview.getWebviewById('jobDetailt').evalJS('$("#jobApply button").text("您已报名本兼职").attr("disabled","disabled")');
+		  					plus.webview.getWebviewById('jobDetailt').reload();
 		  					mui.back();
 		  				});
 		  			},
