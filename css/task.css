@@ -1,0 +1,24 @@
+.mui-bar .iconfont{font-size: 20px;font-weight: 400;padding: 10px 0px;position: relative;line-height: 1;}
+.mui-content{padding-bottom: 60px;}
+.task_outline{width: auto;height: 150px;background-color: #fff;padding: 20px 0px 20px 20px;margin-bottom: 15px;overflow: hidden;}
+.task_outline h4{font-weight: 500;font-size: 22px;}
+.outline_bottom{color: #404040;position:absolute;top:110px;font-size: 14px;}
+.outline_income{width: 100px;height: 40px;background-color: #FE6700;border-radius: 25px;padding: 8px 15px;float: right;position: absolute;right: -35px;top:25px}
+.outline_income span{color: #FFF;}
+.outline_income #income{font-size: 28px;}
+.task_detail{width: auto;height: auto;background-color: #fff;padding: 20px;margin-bottom: 15px;}
+.lineclass-android,.lineclass-ios{position: relative;}
+.lineclass-android:after,.lineclass-ios:after{background-color:#C0C0C0;}
+.task_detail .detail-up{padding-bottom: 5px;}
+.task_detail .detail-up span,.task_detail .detail-down p{color: #404040;font-weight: 600;}
+.task_detail .detail-down h5{margin: 15px 0px;}
+.task_step{height: auto;width: auto;background-color: #fff;margin-bottom: 10px;}
+.task_step .step_title{height: 50px;padding: 10px 20px;}
+.task_step .step_title h4{font-weight: 400;color: #C0C0C0;font-size: 18px;}
+.task_step .step_main{padding: 20px;}
+.task_step .step_item{padding: 0px 10px;}
+.task_step .step_item .step_content{border-left: 1px dashed #C0C0C0;padding: 15px;}
+.badge{position: relative;left: -10px;}
+.content_image{max-width: 100px;max-height: 200px;min-width: 50px;min-height: 100px;}
+#getTaskBtn{height: 60px;background-color:#F1F1F1;padding: 0px 15px;bottom: 0;}
+#getTaskBtn button{top:10px;height: 40px;}

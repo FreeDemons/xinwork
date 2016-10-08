@@ -17,6 +17,7 @@ mui.init({
 	gestureConfig:{doubletap:true}
 });
 mui.plusReady(function() {
+	document.addEventListener('netchange',app.checkNetwork,false);
 	//读取本地存储，检查是否为首次启动
 	if(!plus.storage.getItem("lauchFlag")){
 		mui.openWindow({id:'guide',url:'guide.html',show:{aniShow:'none'},waiting:{autoShow:false}});
