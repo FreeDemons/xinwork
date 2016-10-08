@@ -43,6 +43,7 @@ function loginSubmit() {
 			},
 			dataType: 'json',
 			type: 'post',
+			timeout:10000,
 			success: function(data) {
 				//同步个推cid
 				mui.post(XW.base + 'customize/user_edit/getuiCid',{'cid':plus.push.getClientInfo().clientid});
@@ -61,6 +62,9 @@ function loginSubmit() {
 			error: function(a,b,c) {
 				plus.nativeUI.closeWaiting();
 				$.alert("手机号码或密码错误","温馨提示");
+				if (b == 'timeout') {
+					$.toast('登录超时，请重新登录')					
+				}
 			}
 		});
 	}

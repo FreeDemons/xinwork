@@ -889,7 +889,8 @@
 					"images/index.png",
 					"css/iconfont.css",
 					"fonts/iconfont.ttf",
-					"js/setting.js"
+					"js/setting.js",
+					"css/task.css"
 				],
 				"refer": [],
 				"priority": 0

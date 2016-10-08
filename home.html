@@ -38,6 +38,7 @@ mui.init({
 var page=0;
 var city='';
 mui.plusReady(function() {
+	
 	if(plus.storage.getItem('job')){showJob(JSON.parse(plus.storage.getItem('job')));}//显示缓存的工作列表
 	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}//显示缓存的banner
 	//自动定位
@@ -123,25 +124,30 @@ mui.plusReady(function() {
 //获取定位城市从而刷新兼职列表
 function getCityByLoc(){
 	plus.geolocation.getCurrentPosition(function(a){
-		var currentCity = a.address.city.replace("市","");
-		if(XW.curCity[currentCity]){
-			mui.toast('当前定位为'+currentCity+'市');
-			city = XW.curCity[currentCity];
-		}else{
-			mui.toast('当前定位城市未开通');
-			city = '';
+			var currentCity = a.address.city.replace("市","");
+			if(XW.curCity[currentCity]){
+				mui.toast('当前定位为'+currentCity+'市');
+				city = XW.curCity[currentCity];
+			}else{
+				mui.toast('当前定位城市未开通');
+				city = '';
+				currentCity = '全部';
+			}
+			plus.storage.setItem('city',JSON.parse(city));
+			homeLoad();
+			//加载团队页
+			plus.webview.getWebviewById("team").evalJS("loadTeam()");
+			//主页显示当前城市
+			plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
+
+		},function(e){
+			console.log(e.message)
 			currentCity = '全部';
-		}
-		plus.storage.setItem('city',city);
-		homeLoad();
-		//加载团队页
-		plus.webview.getWebviewById("team").evalJS("loadTeam()");
-		//主页显示当前城市
-		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
-	},function(e){
-		console.log(e.message)
-		homeLoad();
-	})
+			//主页显示当前城市
+			plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
+			homeLoad();
+			mui.toast('定位失败');
+		})
 }
 function homeLoad() {
 	plus.storage.setItem('homeUpdateTime',JSON.stringify(new Date().getTime()));
@@ -175,13 +181,22 @@ function homeLoad() {
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-    mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
-		showJob(data);
-		setTimeout(function() {
-			var refb = data.length < 20 ? true : false;
-			mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
-		}, 1000);
-	});
+    mui.ajax(XW.base + 'joblist?city=' + city + '&page=' + page,{
+    	dataType:'json',
+    	type:'post',
+    	timeout:10000,
+    	success:function(data){
+					showJob(data);
+					setTimeout(function() {
+						var refb = data.length < 20 ? true : false;
+						mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
+					}, 1000);
+		},
+		error:function(xhr,type,errorThrown){
+			console.log(type);
+			mui.toast('后台的小车被挤翻了，请稍后再尝试')
+		}
+    })
 }
 //显示首页banner
 function showBanner(data){

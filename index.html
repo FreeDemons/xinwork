@@ -17,6 +17,7 @@ mui.init({
 	gestureConfig:{doubletap:true}
 });
 mui.plusReady(function() {
+	document.addEventListener('netchange',app.checkNetwork,false);
 	//读取本地存储，检查是否为首次启动
 	if(!plus.storage.getItem("lauchFlag")){
 		mui.openWindow({id:'guide',url:'guide.html',show:{aniShow:'none'},waiting:{autoShow:false}});
@@ -94,8 +95,12 @@ mui.plusReady(function() {
 	    //隐藏当前选项卡
     	plus.webview.hide(activeTab);
     	activeTab = targetTab;
+    	
+    	
 	});
-	
+	function observeNet(){
+			console.log("123");
+    	}
 	//首页返回键处理,处理逻辑：1秒内，连续两次按返回键，则退出应用；
 	var backfirst = null;
 	mui.back = function() {

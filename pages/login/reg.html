@@ -38,6 +38,7 @@ function regSubmit(){
 	$.ajax(XW.base+'customize/user_used',{
 		data:{phone:encodeURIComponent(phoneNumber.value)},
 		type:'post',
+		timeout:10000,
 		success:function(data){
 			plus.nativeUI.closeWaiting();
 			if(data == 1){
