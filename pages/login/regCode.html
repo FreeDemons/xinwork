@@ -50,6 +50,8 @@ function newBack(){
 	  var btnArray = ["取消","确定"];
 	  $.confirm('返回将终止本次注册','',btnArray,function(e){
 	    if(e.index==1){
+	    	plus.webview.getWebviewById("reg").close("none");
+	    	plus.webview.getWebviewById("login").close("none");
 	    	old_back();
 	    }
 	  });

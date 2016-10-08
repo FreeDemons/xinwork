@@ -15,7 +15,6 @@
 $.init();
 $.plusReady(function() {
 	app.setUser();
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	
 	var userpoints = JSON.parse(plus.storage.getItem('user')).userpoints;
 	showPoints(userpoints);

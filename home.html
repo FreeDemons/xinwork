@@ -38,7 +38,6 @@ mui.init({
 var page=0;
 var city='';
 mui.plusReady(function() {
-	
 	if(plus.storage.getItem('job')){showJob(JSON.parse(plus.storage.getItem('job')));}//显示缓存的工作列表
 	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}//显示缓存的banner
 	//自动定位
@@ -46,32 +45,17 @@ mui.plusReady(function() {
 	//获得slider插件对象
 	var gallery = mui('.mui-slider');
 	gallery.slider({interval:3000});//自动轮播周期，若为0则不自动播放，默认为0；
-	
 	//打开banner页
-	mui.preload({id:"bannerPage",url:"pages/other/bannerPage.html"});
 	mui('.mui-slider-group').on('tap', 'a', function() {
-		mui.fire(plus.webview.getWebviewById('bannerPage'),'load_node',{
-		    nid:this.getAttribute("data-nid"),
-		    title:this.getAttribute("data-title")
+		mui.openWindow({
+			id:'bannerPage',
+			url:"pages/other/bannerPage.html",
+			extras:{nid:this.getAttribute("data-nid"),title:this.getAttribute("data-title")}
 		});
-		mui.openWindow({id:'bannerPage',show:{duration:200}});
 	});
 	//打开兼职详情页
-	mui.preload({id:"jobDetailt",url:"pages/job/jobDetailt.html"});
 	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
-		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',{
-		    nid:this.getAttribute("data-nid"),
-		    created:this.getAttribute("data-created"),
-		    date:this.getAttribute("data-date"),
-		    time:this.getAttribute("data-time"),
-		    title:this.querySelector(".job-title").textContent,
-		    wage:this.querySelector(".job-wage").textContent,
-		    sort:this.querySelector(".job-mid font").textContent,
-		    place:this.querySelector(".job-mid span").textContent,
-		    number:this.querySelector(".job-number").textContent,
-		    status:this.querySelector(".job-status").textContent
-		});
-		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+		mui.openWindow({id:'jobDetailt',url:"pages/job/jobDetailt.html",extras:{nid:this.getAttribute("data-nid")}});
 	});
 	//点击商家合作
 	document.querySelector('#homeTeamwork').addEventListener("tap",function(){
@@ -80,9 +64,7 @@ mui.plusReady(function() {
 	//点击积分商城
 	document.querySelector('#homeMall').addEventListener("tap",function(){
 		//plus.nativeUI.toast('积分商城将在下一版本上线\n尽情期待！',{'duration':'long'});
-//		mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
-		mui.openWindow({id:'',url:"pages/mall/onlineIncome.html"});
-		
+		mui.openWindow({id:'mallhome',url:"pages/mall/mallhome.html"});
 	});
 	//点击签到
 	document.querySelector('#homeSignin').addEventListener("tap",function(){
@@ -124,30 +106,25 @@ mui.plusReady(function() {
 //获取定位城市从而刷新兼职列表
 function getCityByLoc(){
 	plus.geolocation.getCurrentPosition(function(a){
-			var currentCity = a.address.city.replace("市","");
-			if(XW.curCity[currentCity]){
-				mui.toast('当前定位为'+currentCity+'市');
-				city = XW.curCity[currentCity];
-			}else{
-				mui.toast('当前定位城市未开通');
-				city = '';
-				currentCity = '全部';
-			}
-			plus.storage.setItem('city',JSON.parse(city));
-			homeLoad();
-			//加载团队页
-			plus.webview.getWebviewById("team").evalJS("loadTeam()");
-			//主页显示当前城市
-			plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
-
-		},function(e){
-			console.log(e.message)
+		var currentCity = a.address.city.replace("市","");
+		if(XW.curCity[currentCity]){
+			mui.toast('当前定位为'+currentCity+'市');
+			city = XW.curCity[currentCity];
+		}else{
+			mui.toast('当前定位城市未开通');
+			city = '';
 			currentCity = '全部';
-			//主页显示当前城市
-			plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
-			homeLoad();
-			mui.toast('定位失败');
-		})
+		}
+		plus.storage.setItem('city',city);
+		homeLoad();
+		//加载团队页
+		plus.webview.getWebviewById("team").evalJS("loadTeam()");
+		//主页显示当前城市
+		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
+	},function(e){
+		console.log(e.message)
+		homeLoad();
+	})
 }
 function homeLoad() {
 	plus.storage.setItem('homeUpdateTime',JSON.stringify(new Date().getTime()));
@@ -181,22 +158,13 @@ function homeLoad() {
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-    mui.ajax(XW.base + 'joblist?city=' + city + '&page=' + page,{
-    	dataType:'json',
-    	type:'post',
-    	timeout:10000,
-    	success:function(data){
-					showJob(data);
-					setTimeout(function() {
-						var refb = data.length < 20 ? true : false;
-						mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
-					}, 1000);
-		},
-		error:function(xhr,type,errorThrown){
-			console.log(type);
-			mui.toast('后台的小车被挤翻了，请稍后再尝试')
-		}
-    })
+    mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
+		showJob(data);
+		setTimeout(function() {
+			var refb = data.length < 20 ? true : false;
+			mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
+		}, 1000);
+	});
 }
 //显示首页banner
 function showBanner(data){
@@ -218,9 +186,6 @@ function showJob(data){
 		var li = document.createElement('li');
 		li.className = 'mui-table-view-cell mui-media';
 		li.setAttribute("data-nid",n.nid);
-		li.setAttribute("data-created",n.created);
-		li.setAttribute("data-date",n.field_date);
-		li.setAttribute("data-time",n.field_time);
 		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="job-title mui-ellipsis">' + n.title + '</div><p class="mui-ellipsis job-mid"><font>'
 						+ '<i class="mui-icon mui-icon-paperplane"></i>' + n.field_sort + '</font><span><i class="mui-icon mui-icon-location"></i>' + place + '</span></p><p class="mui-ellipsis job-btm"><span class="job-wage">'
 						+ n.field_wage + '</span> | 招聘 <span class="job-number">' + n.field_number + '</span> 人<span class="job-status' + statusclass + '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';

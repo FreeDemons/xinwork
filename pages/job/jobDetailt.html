@@ -14,54 +14,25 @@
 <link href="../../css/job.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="../../css/share.css"/>
 <script type="text/javascript" charset="UTF-8">
-mui.init({
-	beforeback: function(){
-		$("#jobDescription").html("");
-		return true;
-	}
-});
+mui.init();
 
 var nid,title,tid,date_select;
-var share = null,eventDetail = null,shareContent = null;
+var share = null,shareContent = null;
 mui.plusReady(function() {
 	updateSerivces();
-	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
+	mui('.mui-scroll-wrapper').scroll();
+	nid = plus.webview.currentWebview().nid;
+	setData();
 	//添加下边线
 	var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
 	$("#jobCreate,.job-block-header").addClass(lineclass);
-	
-	//执行打开窗口的load_node事件
-	window.addEventListener("load_node",function(event){
-		eventDetail = event.detail;
-		mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);
-		nid = event.detail.nid;
-		title = event.detail.title;
-		setData(event);
-	});
 	//点击招聘情况
-	mui.preload({id:'jobNameList',url:'jobNameList.html'});
-	//mui.preload({id:'teamDetailt',url:'../team/teamDetailt.html'});
 	mui('.job-detail-recruitment').on('tap', '.mui-table-view-cell', function() {
 		index = $(this).index();
 		if(index ==1){
-			mui.fire(plus.webview.getWebviewById('teamDetailt'),'load_team',{
-				tid:tid,
-			    phone:this.getAttribute("data-phone"),
-			    title:this.querySelector("#teamTitle").textContent,
-			    name:this.querySelector("#teamTitle").getAttribute("data-name"),
-			    logo:this.querySelector("#team img").getAttribute("src"),
-			    place:this.getAttribute("data-place"),
-			    proof:this.querySelector("#teamProof span").textContent,
-			    description:this.getAttribute("data-description")
-			});
-			mui.openWindow({id:'teamDetailt',show:{duration:200}});
+			mui.openWindow({id:'teamDetailt',url:'../team/teamDetailt.html',extras:{tid:tid}});
 		}else{
-			mui.fire(plus.webview.getWebviewById('jobNameList'),'load_namelist',{
-				type:this.getAttribute("id"),
-				nid:nid,
-				title:this.innerText
-			});
-			mui.openWindow({id:'jobNameList',show:{duration:200}});
+			mui.openWindow({id:'jobNameList',url:'jobNameList.html',extras:{type:this.getAttribute("id"),nid:nid,title:this.innerText}});
 		}
 	});
 	//点击报名
@@ -79,9 +50,9 @@ mui.plusReady(function() {
 	})
 	//打开分享列表
 	document.getElementById("shareBtn").addEventListener("tap",function(){
-	    var msgwx={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneSession'}};
-		var msgpy ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title,extra:{scene:'WXSceneTimeline'}};
-		var msgqq ={content:shareContent,href:XW.xw+'job/'+eventDetail.nid,title:eventDetail.title};
+	    var msgwx={content:shareContent,href:XW.xw+'job/'+nid,title:title,extra:{scene:'WXSceneSession'}};
+		var msgpy ={content:shareContent,href:XW.xw+'job/'+nid,title:title,extra:{scene:'WXSceneTimeline'}};
+		var msgqq ={content:shareContent,href:XW.xw+'job/'+nid,title:title};
 		mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 			mui('#shareJob').popover('toggle');
 			if (share['weixin'] ||share['qq']) {
@@ -106,26 +77,30 @@ mui.plusReady(function() {
 
 //初始化页面数据
 function setData(){
-	$("#jobCreate font").text(event.detail.created);
-	$("#jobDate span").text(event.detail.date);
-	$("#jobTime span").text(event.detail.time);
-	$("#jobTitle span").text(event.detail.title);
-	$("#jobTitle b").text("【" + event.detail.wage + "】");
-	$("#jobNid span").text(event.detail.nid);
-	$("#jobSort span").text(event.detail.sort);
-	$("#jobNumber span").text(event.detail.number);
-	$("#jobPlace span").text(event.detail.place);
-	$("#jobApply button").text("加载中...").attr("disabled","disabled");
-	$("#enrolList a .mui-badge").remove();
-	
-	$("#jobCreate span b").text(event.detail.status);
-	if(event.detail.status == "正在报名"){
-		$("#jobCreate span").addClass('status-apply');
-	}else{
-		$("#jobCreate span").removeClass('status-apply');
-	}
-	
+	plus.nativeUI.showWaiting();
 	mui.getJSON(XW.base + 'customize/job/' + nid,function(data){
+		plus.nativeUI.closeWaiting();
+		$(".mui-content").show();
+		
+		title = data.title;
+		$("#jobCreate font").text(data.created);
+		$("#jobDate span").text(data.date);
+		$("#jobTime span").text(data.time);
+		$("#jobTitle span").text(data.title);
+		$("#jobTitle b").text("【" + data.wage + "】");
+		$("#jobNid span").text(data.nid);
+		$("#jobSort span").text(data.sort);
+		$("#jobNumber span").text(data.number);
+		$("#jobPlace span").text(data.place);
+		
+		var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
+		$("#jobCreate span b").text(statusArr[data.status]);
+		if(data.status == 0){
+			$("#jobCreate span").addClass('status-apply');
+		}else{
+			$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>');
+		}
+		
 		tid = data.team.id;
 		$("#jobDescription").html(data.body);
 		$("#teamTitle").attr("data-name",data.team.name).text(data.team.title);
@@ -143,7 +118,6 @@ function setData(){
 		else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
 		else{$("#jobApply button").text("已结束报名");}
 
-		if(data.status != 0){$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>')}
 		if(data.flag_collect == true){$("#collectBtn").addClass("green");}
 	});
 }
@@ -207,10 +181,9 @@ function apply(){
 		<h1 class="mui-title">兼职详情</h1>
 		<a class="iconfont icon-collect" id="collectBtn" style="margin-right: -5px;"></a>
 		<a class="iconfont icon-share" id="shareBtn" href="#shareJob"></a>
-		
 	</header>
 	
-	<div class="mui-content mui-scroll-wrapper" id="jobDetaitPage">
+	<div class="mui-content mui-scroll-wrapper" id="jobDetaitPage" style="display: none;">
 		<div class="mui-scroll">
 			<div class="job-detail-info job-block">
 				<div id="jobTitle"><span></span><b></b></div>
@@ -253,30 +226,28 @@ function apply(){
 		</div>
 		<div class="mui-bar" id="jobApply"><button type="button" class="mui-btn mui-btn-block mui-btn-success" disabled="disabled">加载中...</button></div>
 	</div>
-	
-	
-		<div id="shareJob" class="mui-popover mui-popover-action mui-popover-bottom">
-			<div class="share">
-				<div class="shareList" >
-					<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
-						<span class="mui-icon mui-icon-weixin icon"></span>
-					</div>
-					<p>微信</p>
+
+	<div id="shareJob" class="mui-popover mui-popover-action mui-popover-bottom">
+		<div class="share">
+			<div class="shareList" >
+				<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
+					<span class="mui-icon mui-icon-weixin icon"></span>
 				</div>
-				<div class="shareList" >
-					<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
-						<span class="mui-icon mui-icon-pengyouquan icon"></span>
-					</div>
-					<p >朋友圈</p>
+				<p>微信</p>
+			</div>
+			<div class="shareList" >
+				<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
+					<span class="mui-icon mui-icon-pengyouquan icon"></span>
 				</div>
-				<div class="shareList">
-					<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
-						<span class="mui-icon mui-icon-qq icon"></span>
-						<p>QQ</p>
-					</div>
+				<p >朋友圈</p>
+			</div>
+			<div class="shareList">
+				<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
+					<span class="mui-icon mui-icon-qq icon"></span>
+					<p>QQ</p>
 				</div>
 			</div>
-			
 		</div>
+	</div>
 </body>
 </html>

@@ -13,7 +13,6 @@
 mui.init({swipeBack:true});
 var fieldId;
 mui.plusReady(function(){
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	mui('.mui-scroll-wrapper').scroll();
 	
 	fieldId=JSON.parse(plus.storage.getItem('user')).field_user_group_idletime;

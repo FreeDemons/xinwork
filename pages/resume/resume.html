@@ -11,7 +11,6 @@
 (function($, doc) {
 $.init();
 $.plusReady(function(){
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	var user=JSON.parse(plus.storage.getItem('user'));
 	if(user.field_user_group_data != ""){doc.querySelector(".mui-navigate-right[data-path='data'] .mui-badge").style.display = 'block'}
 	if(user.field_user_group_learn != ""){doc.querySelector(".mui-navigate-right[data-path='learn'] .mui-badge").style.display = 'block'}

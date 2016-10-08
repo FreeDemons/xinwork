@@ -23,7 +23,6 @@ $.init({
 });
 var page=0;
 $.plusReady(function(){
-	plus.webview.currentWebview().setStyle({'popGesture':'close'});
 	//打开加载
 	plus.nativeUI.showWaiting();
 	$.getJSON(XW.base + 'user/jobrecord',function(data){

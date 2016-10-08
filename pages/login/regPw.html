@@ -13,6 +13,8 @@
 $.init();
 var extrasval;
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭侧滑返回
+	newBack();//返回，放弃注册
 	extrasval = plus.webview.currentWebview();
 	var email=doc.getElementById("email");
 	var password=doc.getElementById("password");
@@ -23,6 +25,22 @@ $.plusReady(function() {
 		checkInput();
 	});
 });
+//覆写返回按钮
+function newBack(){
+	//备份mui.back，$.back已将窗口关闭逻辑封装的比较完善（预加载及父子窗口），因此最好复用mui.back
+	var old_back = $.back;
+	$.back = function(){
+	  var btnArray = ["取消","确定"];
+	  $.confirm('返回将终止本次注册','',btnArray,function(e){
+	    if(e.index==1){
+	    	plus.webview.getWebviewById("regCode").close("none");
+	    	plus.webview.getWebviewById("reg").close("none");
+	    	plus.webview.getWebviewById("login").close("none");
+	    	old_back();
+	    }
+	  });
+	}
+}
 //验证邮箱和密码合法性
 function checkInput(){
 	if(email.value == ""){
@@ -86,9 +104,9 @@ function login(username,password){
 			
 			$.toast('注册成功');
       		$.fire(plus.webview.getWebviewById('account'),'refresh',{user:data.user});
-      		plus.webview.getWebviewById("login").close();
-      		plus.webview.getWebviewById("reg").close();
-      		plus.webview.getWebviewById("regCode").close();
+      		plus.webview.getWebviewById("login").close("none");
+      		plus.webview.getWebviewById("reg").close("none");
+      		plus.webview.getWebviewById("regCode").close("none");
 		
 			plus.webview.getWebviewById('chat').evalJS('refreshPage()');//刷新薪息页面
 			$.back();

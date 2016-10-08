@@ -14,17 +14,13 @@
 mui.init();
 var tid;
 mui.plusReady(function() {
-	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
+	mui('.mui-scroll-wrapper').scroll();
+	
+	tid = plus.webview.currentWebview().tid;
+	setData();
 	//添加下边线
 	var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
 	$("#teamTitle,.team-block-header").addClass(lineclass);
-	
-	//执行打开窗口的load_node事件
-	window.addEventListener("load_team",function(event){
-		mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);
-		tid = event.detail.tid;
-		setData(event);
-	});
 	//拨打电话号码
 	document.querySelector("#teamPhone").addEventListener("tap",function(){
 		var phoneNumber = $(this).find("font").text();
@@ -35,36 +31,26 @@ mui.plusReady(function() {
 		});
 	})
 	//点击招聘情况
-	var teamJobList=null;
-	mui.preload({id:'teamJobList',url:'teamJobList.html'});
 	mui('.team-detail-recruitment').on('tap', '.mui-table-view-cell', function() {
-		if(!teamJobList){teamJobList = plus.webview.getWebviewById('teamJobList')}
-		mui.fire(teamJobList,'load_joblist',{
-			type:this.getAttribute("id"),
-			tid:tid,
-			title:this.innerText
-		});
-		mui.openWindow({id:'teamJobList',show:{duration:200}});
+		mui.openWindow({id:'teamJobList',url:'teamJobList.html',extras:{type:this.getAttribute("id"),tid:tid,title:this.innerText}});
 	});
 });
 //初始化页面数据
 function setData(event){
-	$("#teamTitle b").text(event.detail.title);
-	$("#teamTitle span").text('('+event.detail.name+')');
-	$("#teamProof font").text(event.detail.proof);
-	$("#teamPlace").text(event.detail.place);
-	$("#teamLogo").attr("src",event.detail.logo);
-	$("#teamDescription").html(event.detail.description);
-	$("#applyJob b").text("0");
-	$("#allJob b").text("0");
-	//是否有电话
-	if(event.detail.phone == "" || event.detail.phone == null){
-		$("#teamPhone").hide();
-	}else{
-		$("#teamPhone").show().find("font").text(event.detail.phone);
-	}
-	
+	plus.nativeUI.showWaiting();
 	mui.getJSON(XW.base + 'customize/team/' + tid,function(data){
+		plus.nativeUI.closeWaiting();
+		$(".mui-content").show();
+		
+		$("#teamTitle b").text(data.title);
+		$("#teamTitle span").text('('+data.name+')');
+		$("#teamProof font").text(data.proof);
+		$("#teamPlace").text(data.place);
+		$("#teamLogo").attr("src",data.logo);
+		$("#teamDescription").html(data.description);
+		//是否有电话
+		if(data.phone != "" && data.phone != null){$("#teamPhone").show().find("font").text(data.phone);}
+		
 		$("#applyJob b").text(data.applyjob);
 		$("#allJob b").text(data.alljob);
 	});
@@ -77,7 +63,7 @@ function setData(event){
 		<h1 class="mui-title">团队详情</h1>
 	</header>
 	
-	<div class="mui-content mui-scroll-wrapper" id="teamDetaitPage">
+	<div class="mui-content mui-scroll-wrapper" id="teamDetaitPage" style="display: none;">
 		<div class="mui-scroll">
 			<div class="team-detail-info team-block">
 				<div class="mui-ellipsis" id="teamTitle"><b></b><span></span></div>

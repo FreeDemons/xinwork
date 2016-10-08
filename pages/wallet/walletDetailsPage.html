@@ -13,6 +13,7 @@
 (function($, doc) {
 $.init();
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'hide'});
 	window.addEventListener("load_details",function(event){
 		doc.querySelector("#details").style.display = "none";
 		doc.querySelector('#jobLink').style.display = "none";
@@ -28,10 +29,8 @@ $.plusReady(function() {
 		doc.querySelector("#stutas").innerText = stutas;
 		
 		if(data.tid == '兼职工资' && data.nid != ''){
-			plus.nativeUI.showWaiting();
 			jobLoad(data.nid);
 		}else if(data.tid == '工资提现' && data.nid != ''){
-			plus.nativeUI.showWaiting();
 			cashLoad(data.nid);
 		}else if(data.tid == '积分兑换'){
 			var html = '<p>订单编号<span>'+data.reference+'</span></p><p>备<i></i>注<span>'+data.description+'</span></p>'
@@ -42,35 +41,21 @@ $.plusReady(function() {
 });
 //兼职工资详细
 function jobLoad(nid){
-	var jobData = {};
-	$.getJSON(XW.base + 'node/' + nid,function(data){console.log(JSON.stringify(data));
-		var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
-		jobData = {
-			nid:nid,
-		    title:data.title,
-		    created:new Date(parseInt(data.created) * 1000).toLocaleString().split(' ')[0],
-		    date:data.field_date.und[0].value,
-		    time:data.field_time.und[0].value,
-		    wage:data.field_wage.und[0].value,
-		    sort:data.field_sort.und[0].value,
-		    place:data.field_team_address.und[0].detail,
-		    number:data.field_number.und[0].value,
-		    status:statusArr[data.field_job_status.und[0].value]
-		};
+	plus.nativeUI.showWaiting();
+	$.getJSON(XW.base + 'node/' + nid,function(data){
 		doc.querySelector('#jobLink').style.display = "block";
 		doc.querySelector('#details').style.display = "block";
 		doc.querySelector("#details").innerHTML='<p>兼职标题<span>'+data.title+'</span></p><p>兼职编号<span>'+nid+'</span></p>';
 		plus.nativeUI.closeWaiting();
 	});
 	
-	$.preload({id:"jobDetailt",url:'../job/jobDetailt.html'});
 	doc.querySelector("#jobLink").addEventListener("tap",function(){
-		mui.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',jobData);
-		mui.openWindow({id:'jobDetailt',show:{duration:200}});
+		mui.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:nid}});
 	});
 }
 //工资提现详细
 function cashLoad(nid){
+	plus.nativeUI.showWaiting();
 	$.getJSON(XW.base + 'entity_node/' + nid,function(data){
 		doc.querySelector('#details').style.display = "block";
 		var way = data.cash_way == "bank" ? "银行卡" : "支付宝";

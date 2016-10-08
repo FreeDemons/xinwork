@@ -92,8 +92,8 @@
 			"waiting": true,
 			"delay": "500"
 		},
-		"popGesture": "hide",/*none:新建webview窗口无侧滑返回功能；close：新建webview窗口默认侧滑返回关闭；hide：新建webview窗口默认侧滑返回隐藏。暂时仅iOS平台支持"*/
-		"runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+		"popGesture": "close",/*none:新建webview窗口无侧滑返回功能；close：新建webview窗口默认侧滑返回关闭；hide：新建webview窗口默认侧滑返回隐藏。暂时仅iOS平台支持"*/
+		"runmode": "liberate",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
 		"signature": "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==",/*可选，保留给应用签名，暂不使用*/
 		"distribute": {
 			"plugins": {
@@ -284,8 +284,7 @@
 					"pages/other/teamwork.html",
 					"pages/login/login.html",
 					"pages/mall/mallhome.html",
-					"guide.html",
-					"pages/mall/onlineIncome.html"
+					"guide.html"
 				],
 				"priority": 0
 			},
@@ -620,7 +619,9 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css"
 				],
-				"refer": [],
+				"refer": [
+					"pages/job/jobDetailt.html"
+				],
 				"priority": 0
 			},
 			"pages/wallet/wallet.html": {
@@ -877,23 +878,6 @@
 				],
 				"refer": [],
 				"priority": 0
-			},
-			"pages/mall/onlineIncome.html": {
-				"resources": [
-					"images/default.jpg",
-					"js/mui.imageViewer.js",
-					"js/mui.min.js",
-					"fonts/mui.ttf",
-					"css/mui.min.css",
-					"css/mui.imageviewer.css",
-					"images/index.png",
-					"css/iconfont.css",
-					"fonts/iconfont.ttf",
-					"js/setting.js",
-					"css/task.css"
-				],
-				"refer": [],
-				"priority": 0
 			}
 		},
 		"idle": {
@@ -903,5 +887,5 @@
 			]
 		}
 	},
-	"fullscreen": true,"name":"薪窝兼职"
+	"fullscreen": false,"name":"薪窝兼职"
 }

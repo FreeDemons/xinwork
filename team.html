@@ -20,19 +20,8 @@ mui.plusReady(function() {
 	if(plus.storage.getItem('team')){showTeam(JSON.parse(plus.storage.getItem('team')));}
 	loadTeam();
 	//打开团队详情页
-	mui.preload({id:'teamDetailt',url:'pages/team/teamDetailt.html'});
 	mui('#teamList').on('tap', '.mui-table-view-cell', function() {
-		mui.fire(plus.webview.getWebviewById('teamDetailt'),'load_team',{
-		    tid:this.getAttribute("data-tid"),
-		    phone:this.getAttribute("data-phone"),
-		    title:this.getAttribute("data-title"),
-		    name:this.querySelector(".team-title b").textContent,
-		    logo:this.querySelector("img").getAttribute("src"),
-		    place:this.querySelector(".team-place").textContent,
-		    proof:this.querySelector(".team-title span").textContent,
-		    description:this.querySelector(".team-description").textContent
-		});
-		mui.openWindow({id:'teamDetailt',show:{duration:200}});
+		mui.openWindow({id:'teamDetailt',url:'pages/team/teamDetailt.html',extras:{tid:this.getAttribute("data-tid")}});
 	});
 	//拨打加盟热线
 	document.querySelector("#affiliate").addEventListener("tap",function(){
@@ -62,8 +51,6 @@ function showTeam(data){
 		mui.each(data, function(i, n) {
 			var li = document.createElement('li');
 			li.setAttribute("data-tid",n.id);
-			li.setAttribute("data-phone",n.field_team_phone);
-			li.setAttribute("data-title",n.title);
 			li.className = 'mui-table-view-cell mui-media';
 			li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body"><div class="team-title"><b>' + n.field_team_name + '</b><span>' + n.field_team_proof + '</span>'
 							+ '</div><div class="team-description">' + n.field_team_description + '</div><p class="team-place mui-ellipsis"><span class="mui-icon mui-icon-location"></span>'
@@ -74,7 +61,6 @@ function showTeam(data){
 		document.body.querySelector('#teamList').style.display="none";
 		document.body.querySelector('#noneTips').style.display="block";
 	}
-	
 }
 </script>
 </head>

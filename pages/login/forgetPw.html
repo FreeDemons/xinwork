@@ -13,6 +13,8 @@
 $.init();
 var extrasval;
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭侧滑返回
+	newBack();//返回，放弃注册
 	extrasval = plus.webview.currentWebview();
 	var password=doc.getElementById("password");
 	var confirmPass=doc.getElementById("confirmPass");
@@ -21,6 +23,22 @@ $.plusReady(function() {
 		checkInput();
 	});
 });
+//覆写返回按钮
+function newBack(){
+	//备份mui.back，$.back已将窗口关闭逻辑封装的比较完善（预加载及父子窗口），因此最好复用mui.back
+	var old_back = $.back;
+	$.back = function(){
+	  var btnArray = ["取消","确定"];
+	  $.confirm('确定取消找回密码？','',btnArray,function(e){
+	    if(e.index==1){
+	    	plus.webview.getWebviewById("login").close("none");
+	    	plus.webview.getWebviewById("forget").close("none");
+      		plus.webview.getWebviewById("forgetCode").close("none");
+	    	old_back();
+	    }
+	  });
+	}
+}
 //验证密码合法性
 function checkInput(){
 	if(password.value == ""){
@@ -54,8 +72,8 @@ function forgetSubmit(){
 			if(data == 1){
   				mui.alert("修改成功，立即登录","温馨提示","确定",function(){
   					plus.webview.getWebviewById('login').evalJS('document.querySelector("#phone").value="'+extrasval.phoneNumber+'"');
-  					plus.webview.getWebviewById("forget").close();
-      				plus.webview.getWebviewById("forgetCode").close();
+  					plus.webview.getWebviewById("forget").close("none");
+      				plus.webview.getWebviewById("forgetCode").close("none");
 		      		$.back();
   				});
 			}else{

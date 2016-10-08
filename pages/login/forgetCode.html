@@ -49,6 +49,8 @@ function newBack(){
 	  var btnArray = ["取消","确定"];
 	  $.confirm('确定取消找回密码？','',btnArray,function(e){
 	    if(e.index==1){
+	    	plus.webview.getWebviewById("login").close("none");
+	    	plus.webview.getWebviewById("forget").close("none");
 	    	old_back();
 	    }
 	  });

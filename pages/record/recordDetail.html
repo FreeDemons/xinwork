@@ -16,13 +16,14 @@ $.init({
 	gestureConfig:{longtap:true}
 });
 $.plusReady(function() {
+	plus.webview.currentWebview().setStyle({'popGesture':'hide'});
 	$('.mui-scroll-wrapper').scroll({startY: 0,bounce: true});
 	
 	//初始化数据
-	var nadeArr = {};
-	var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
+	var jobId;
 	window.addEventListener("load_detail",function(event){
 		var data = event.detail;
+		jobId = data.jobId;
 		doc.querySelector("#recordTitle").innerHTML = data.titleHtml;
 		doc.querySelector("#jobId span").innerHTML = data.jobId;
 		doc.querySelector("#time span").innerHTML = data.time;
@@ -50,24 +51,11 @@ $.plusReady(function() {
 					doc.querySelector("#qrcode").style.display = "block";
 				});
 			}
-			
-			nadeArr.nid = data.jobId;
-			nadeArr.title = n.title;
-			nadeArr.created = new Date(parseInt(n.created) * 1000).toLocaleString().split(' ')[0];
-			nadeArr.date = n.field_date.und[0].value;
-			nadeArr.time = n.field_time.und[0].value;
-			nadeArr.wage = n.field_wage.und[0].value;
-			nadeArr.sort = n.field_sort.und[0].value;
-			nadeArr.place = n.field_team_address.und[0].detail;
-			nadeArr.number = n.field_number.und[0].value;
-			nadeArr.status = statusArr[n.field_job_status.und[0].value];
 		});
 	});
 	//点击查看兼职详情
-	$.preload({id:"jobDetailt",url:'../job/jobDetailt.html'});
 	doc.querySelector("#recordTitle").addEventListener("tap",function(){
-		$.fire(plus.webview.getWebviewById('jobDetailt'),'load_node',nadeArr);
-		$.openWindow({id:'jobDetailt',show:{duration:200}});
+		$.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:jobId}});
 	})
 	//长按保存二维码图片
 	doc.querySelector("#qrcode img").addEventListener("longtap",function(){
