@@ -8,6 +8,7 @@
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <link href="../../css/account.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
@@ -24,9 +25,9 @@ $.init({
 var page=0;
 $.plusReady(function(){
 	//打开加载
-	plus.nativeUI.showWaiting();
+	ownerLoad.show();
 	$.getJSON(XW.base + 'user/jobrecord',function(data){
-		plus.nativeUI.closeWaiting();
+		ownerLoad.close();
 		if(data.length > 0){
 			doc.body.querySelector('.mui-table-view').style.display="block";
 			jobLoad(data);

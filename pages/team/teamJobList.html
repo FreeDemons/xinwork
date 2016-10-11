@@ -9,6 +9,7 @@
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/team.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init({
 	pullRefresh : {
@@ -28,9 +29,11 @@ mui.plusReady(function() {
 	listUrl = self.type == "allJob" ? tid : tid + "/0";
 	document.querySelector(".mui-title").innerText = self.title;
 	
-	plus.nativeUI.showWaiting();
+	ownerLoad.show();
+//	plus.nativeUI.showWaiting();
 	mui.getJSON(XW.base + 'joblist/' + listUrl,function(data){
-		plus.nativeUI.closeWaiting();
+//		plus.nativeUI.closeWaiting();
+		ownerLoad.close();
 		if(data.length > 0){
 			document.body.querySelector('.mui-table-view').style.display="block";
 			loadJobList(data);

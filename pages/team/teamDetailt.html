@@ -9,13 +9,13 @@
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <link href="../../css/team.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 var tid;
 mui.plusReady(function() {
 	mui('.mui-scroll-wrapper').scroll();
-	
 	tid = plus.webview.currentWebview().tid;
 	setData();
 	//添加下边线
@@ -37,9 +37,11 @@ mui.plusReady(function() {
 });
 //初始化页面数据
 function setData(event){
-	plus.nativeUI.showWaiting();
+//	plus.nativeUI.showWaiting();
+	ownerLoad.show();
 	mui.getJSON(XW.base + 'customize/team/' + tid,function(data){
-		plus.nativeUI.closeWaiting();
+//		plus.nativeUI.closeWaiting();
+		ownerLoad.close();
 		$(".mui-content").show();
 		
 		$("#teamTitle b").text(data.title);

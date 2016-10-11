@@ -9,6 +9,7 @@
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/job.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init({
 	pullRefresh : {
@@ -28,9 +29,9 @@ mui.plusReady(function() {
 	listUrl = self.type == "applyList" ? nid : nid + "/1";
 	document.querySelector(".mui-title").innerText = self.title;
 	
-	plus.nativeUI.showWaiting();
+	ownerLoad.show();
 	mui.getJSON(XW.base + 'jobnamelist/' + listUrl,function(data){
-		plus.nativeUI.closeWaiting();
+		ownerLoad.close();
 		if(data.length > 0){
 			loadNameList(data);
 			document.body.querySelector('#nameListPage .mui-table-view').style.display="block";
