@@ -12,6 +12,7 @@
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/job.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/share.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init();
@@ -77,10 +78,10 @@ mui.plusReady(function() {
 
 //初始化页面数据
 function setData(){
-	plus.nativeUI.showWaiting();
+	ownerLoad.show();
 	mui.getJSON(XW.base + 'customize/job/' + nid,function(data){
-		plus.nativeUI.closeWaiting();
-		$(".mui-content").show();
+	ownerLoad.close();
+	$(".mui-content").show();
 		
 		title = data.title;
 		$("#jobCreate font").text(data.created);
@@ -194,6 +195,7 @@ function apply(){
 				<p id="jobDate">兼职日期：<span></span></p>
 				<p id="jobTime">上班时间：<span></span></p>
 				<p id="jobPlace">上班地点：<span></span></p>
+				
 			</div>
 			
 			<div class="job-detail-description job-block">
@@ -249,5 +251,13 @@ function apply(){
 			</div>
 		</div>
 	</div>
+	
+	<!--<div class="loading">
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>-->
 </body>
 </html>

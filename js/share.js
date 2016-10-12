@@ -20,9 +20,9 @@ function shareAction(s,msg) {
 //分享操作
 function shareMessage(s,msg){
     s.send( msg, function(){
-        mui.toast( "分享到\""+s.description+"\"成功！ " );
+        console.log( "分享到\""+s.description+"\"成功！ " );
     }, function(e){
-        mui.toast( "分享到\""+s.description+"\"失败: "+e.code+" - "+e.message );
+        console.log( "分享到\""+s.description+"\"失败: "+e.code+" - "+e.message );
     } );
 }
 

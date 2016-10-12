@@ -312,7 +312,8 @@
 					"pages/other/about.html",
 					"pages/other/question.html",
 					"pages/other/feedback.html",
-					"pages/record/record.html"
+					"pages/record/record.html",
+					"pages/record/collect.html"
 				],
 				"priority": 0
 			},
@@ -352,7 +353,8 @@
 					"css/iconfont.css",
 					"fonts/iconfont.ttf",
 					"css/share.css",
-					"js/share.js"
+					"js/share.js",
+					"css/style.css"
 				],
 				"refer": [
 					"pages/job/jobNameList.html",
@@ -554,7 +556,8 @@
 					"css/mui.min.css",
 					"css/team.css",
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/style.css"
 				],
 				"refer": [
 					"pages/team/teamJobList.html"
@@ -569,7 +572,9 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css",
 					"css/team.css",
-					"css/iconfont.css"
+					"css/iconfont.css",
+					"css/style.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"pages/job/jobDetailt.html"
@@ -617,7 +622,8 @@
 					"js/setting.js",
 					"js/mui.min.js",
 					"fonts/mui.ttf",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"css/style.css"
 				],
 				"refer": [
 					"pages/job/jobDetailt.html"
@@ -714,7 +720,8 @@
 					"images/default.jpg",
 					"js/app.js",
 					"js/setting.js",
-					"images/chatheader.png"
+					"images/chatheader.png",
+					"fonts/mui.ttf"
 				],
 				"refer": [
 					"pages/message/message.html",
@@ -841,7 +848,8 @@
 					"css/account.css",
 					"css/iconfont.css",
 					"css/mui.min.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/style.css"
 				],
 				"refer": [
 					"pages/record/recordDetail.html"
@@ -852,7 +860,9 @@
 				"resources": [
 					"js/app.js"
 				],
-				"refer": [],
+				"refer": [
+					"pages/job/jobDetailt.html"
+				],
 				"priority": 0
 			},
 			"guide.html": {
@@ -875,6 +885,20 @@
 					"css/iconfont.css",
 					"css/job.css",
 					"css/mui.min.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/record/collect.html": {
+				"resources": [
+					"js/setting.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/account.css",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0

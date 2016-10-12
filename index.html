@@ -7,7 +7,6 @@
 <script src="js/mui.min.js"></script>
 <script src="js/setting.js"></script>
 <script src="js/app.js" type="text/javascript" charset="utf-8"></script>
-<!--<script src="js/immersed.js" type="text/javascript" charset="utf-8"></script>-->
 <link href="css/mui.min.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="css/iconfont.css" />
 <script type="text/javascript" charset="utf-8">
@@ -91,9 +90,9 @@ mui.plusReady(function() {
 	    //更换标题
 	    title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
 	    //显示目标选项卡
+    	plus.webview.hide(activeTab);
 	    plus.webview.show(targetTab);
 	    //隐藏当前选项卡
-    	plus.webview.hide(activeTab);
     	activeTab = targetTab;
 	});
 	
@@ -115,6 +114,7 @@ mui.plusReady(function() {
 });
 </script>
 <style type="text/css">
+.mui-pull-top-pocket{margin-top:30px}
 .tab-home .iconfont:before { content: "\e621";}
 .tab-home.mui-active .iconfont:before { content: "\e624";}
 .tab-team .iconfont:before { content: "\e62c";}

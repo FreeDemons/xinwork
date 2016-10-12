@@ -7,15 +7,19 @@
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 mui.plusReady(function() {
+	ownerLoad.show();
 	var extrasval = plus.webview.currentWebview();
 	document.querySelector(".mui-title").innerText = extrasval.title;
-	
-	var mainPage = mui.preload({url:XW.base.replace("xinworkapp/","") + 'banner/' + extrasval.nid,id:"bannerMainPage",styles:{top:44,bottom:0}});
-	plus.webview.currentWebview().append(mainPage);
-	listenLoad(mainPage);
+	var mainPage = mui.preload({url:XW.base.replace("xinworkapp/","") + 'banner/' + extrasval.nid,id:"bannerMainPage",styles:{top:44 + immersed,bottom:0}});
+	setTimeout(function() {
+		ownerLoad.close();
+		plus.webview.currentWebview().append(mainPage);
+		listenLoad(mainPage);
+	}, 1500);
 })
 //拦截页面资源
 var listenLoad = function(thisWeb){

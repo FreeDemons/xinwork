@@ -30,3 +30,10 @@
 .team-content #teamList p{font-size: 12px;}
 .team-content #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
 .team-content #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 100px 0px 0px;}
+
+/*全局loading动画样式*/
+.loading{width:80px;height:40px;margin:0 auto;position:absolute;top:45%;left:40%}
+.loading span{display:inline-block;margin: 0px 2px;width:8px;height:100%;border-radius:4px;background:#90ee90;-webkit-animation:load 1s ease infinite}
+@-webkit-keyframes load{0%,100%{height:40px;background:#add8e6}50%{height:70px;margin:-15px 0;background:#90ee90}}
+.loading span:nth-child(2){-webkit-animation-delay:.2s}.loading span:nth-child(3){-webkit-animation-delay:.4s}
+.loading span:nth-child(4){-webkit-animation-delay:.6s}.loading span:nth-child(5){-webkit-animation-delay:.8s}

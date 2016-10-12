@@ -8,6 +8,7 @@
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <link href="../../css/account.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init({
@@ -34,9 +35,9 @@ function collectLoad(){
 	document.body.querySelector('#collectPage .mui-table-view').innerHTML = "";
 	document.body.querySelector('#collectPage .mui-table-view').style.display="none";
 	document.body.querySelector('#noneTips').style.display="none";
-	plus.nativeUI.showWaiting();
+	ownerLoad.show();
 	mui.getJSON(XW.base + 'joblist?flag_collect=1',function(data){
-		plus.nativeUI.closeWaiting();
+		ownerLoad.close();
 		if(data.length > 0){
 			document.body.querySelector('.mui-table-view').style.display="block";
 			showJob(data)

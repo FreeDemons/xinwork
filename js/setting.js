@@ -20,7 +20,7 @@ function adjustImmerse(){
 				t.style.height = topoffset + 'px';
 			}
 			var mc = document.getElementsByClassName('mui-content')[0];
-			if(mc&&t) {
+			if(mc && t) {
 				var newpt = 44 + immersed + 'px';
 				mc.style.paddingTop = newpt;
 			}
@@ -46,6 +46,24 @@ function smallLine(){
 		}
 	}
 }
+
+//插入loading动画
+window.ownerLoad = {
+	loading:document.createElement('div'),
+	init:function(){
+		this.loading.classList.add('loading');
+		this.loading.innerHTML = '<span></span><span></span><span></span><span></span><span></span>';
+		document.body.appendChild(this.loading);
+	},
+	show:function(){
+		this.init();
+		this.loading.style.display = 'block';
+	},
+	close:function(){
+		this.loading.style.display = 'none';
+	}
+}
+
 
 
 window.onload=function(){
