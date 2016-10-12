@@ -720,7 +720,8 @@
 					"images/default.jpg",
 					"js/app.js",
 					"js/setting.js",
-					"images/chatheader.png"
+					"images/chatheader.png",
+					"fonts/mui.ttf"
 				],
 				"refer": [
 					"pages/message/message.html",

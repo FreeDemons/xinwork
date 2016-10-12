@@ -103,10 +103,11 @@
 				})
 			}
 			var packListHtml = function(conName, conId, conTime, conNew) {
-				var listHtml = '<li class="mui-table-view-cell mui-media" data-gid="' +
-					conId + '"><img class="mui-media-object mui-pull-left" src="images/chatheader.png"><span class="chat-badge" hidden></span><span class="conTime">' +
-					conTime + '</span><div class="mui-media-body" ><span class="conName">' +
-					conName + '</span><p class="mui-ellipsis">' + conNew + '</p></div></li>'
+				var listHtml = '<li class="mui-table-view-cell mui-media" data-gid="'+
+								conId+'"><a class="mui-navigate-right"><span class="chat-badge" hidden="hidden"></span><img class="mui-media-object mui-pull-left" src="images/hdImg1.jpg"><div class="mui-media-body" ><div class="conName">'+
+								conName+'</div><h5 class="conTime">'+
+								conTime+'</h5><p class="mui-ellipsis">'+
+								conNew+'</p></div></a></li>'
 
 				return listHtml;
 			}
@@ -185,13 +186,13 @@
 		<style type="text/css">
 			.chat-badge {
 				position: absolute;
-				left: 90%;
-				top:45px;
+				left: 40px;
 				-webkit-transform: translateY(-50%);
-				padding:0px 8px;
+				padding:2px 5px;
 				border-radius: 100px;
 				background-color: red;
-				font-size: 10px;
+				font-size: 12px;
+				line-height: 1;
 				color: white;
 			}
 			.chat-error{
@@ -209,6 +210,7 @@
 				padding: 3px 5px;
 				float: right;
 			}
+			.mui-media img{border-radius:20px ;}
 		</style>
 	</head>
 
@@ -216,7 +218,8 @@
 		<div class="mui-content">
 			<div class="chat-content mui-scroll-wrapper">
 				<div class="mui-scroll" id="chat_body">
-					<ul class="mui-table-view" id="chatlist"> </ul>
+					<ul class="mui-table-view mui-table-view-chevron" id="chatlist">
+					</ul>
 				</div>
 			</div>
 

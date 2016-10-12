@@ -79,12 +79,7 @@ mui.plusReady(function() {
 //初始化页面数据
 function setData(){
 	ownerLoad.show();
-//	plus.nativeUI.showWaiting();
-//document.querySelector('.loading').style.display = 'block';
-//	mui.showWaiting();
 	mui.getJSON(XW.base + 'customize/job/' + nid,function(data){
-//		plus.nativeUI.closeWaiting();
-//	document.querySelector('.loading').style.display = 'none';
 	ownerLoad.close();
 	$(".mui-content").show();
 		
