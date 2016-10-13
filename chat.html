@@ -104,7 +104,7 @@
 			}
 			var packListHtml = function(conName, conId, conTime, conNew) {
 				var listHtml = '<li class="mui-table-view-cell mui-media" data-gid="'+
-								conId+'"><a class="mui-navigate-right"><span class="chat-badge" hidden="hidden"></span><img class="mui-media-object mui-pull-left" src="images/hdImg1.jpg"><div class="mui-media-body" ><div class="conName">'+
+								conId+'"><a class="mui-navigate-right"><span class="chat-badge" hidden="hidden"></span><img class="mui-media-object mui-pull-left" src="images/chatheader.jpg"><div class="mui-media-body" ><div class="conName">'+
 								conName+'</div><h5 class="conTime">'+
 								conTime+'</h5><p class="mui-ellipsis">'+
 								conNew+'</p></div></a></li>'
@@ -211,6 +211,7 @@
 				float: right;
 			}
 			.mui-media img{border-radius:20px ;}
+			.mui-media-object{max-width: 60px !important;max-height: 60px !important;}
 		</style>
 	</head>
 
@@ -219,6 +220,24 @@
 			<div class="chat-content mui-scroll-wrapper">
 				<div class="mui-scroll" id="chat_body">
 					<ul class="mui-table-view mui-table-view-chevron" id="chatlist">
+						<!--<li class="mui-table-view-cell mui-media" data-gid="">
+							<a class="mui-navigate-right">
+								<span class="chat-badge" hidden="hidden">
+								</span>
+								<img class="mui-media-object mui-pull-left" src="images/chatheader.jpg">
+								<div class="mui-media-body" >
+									<div class="conName">
+									freedemons
+								</div>
+								<h5 class="conTime">
+									12:02
+								</h5>
+								<p class="mui-ellipsis">
+									你说你爱我，我却觉得你爱我爱得不够深
+								</p>
+								</div>
+							</a>
+						</li>-->
 					</ul>
 				</div>
 			</div>

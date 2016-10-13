@@ -1,8 +1,8 @@
 /*聊天主页chat.html*/
 .chat-content{ margin-top: 5px; }
 /*.conNews{font-size: 14px;color: #CCCCCC;display:block;width: 80%;margin-top: 5px;}*/
-.conTime{display: block;font-size: 12px;color: #CCCCCC;position: absolute;top:8px;right: 5%;}
-/*.conName{text-overflow: ellipsis;overflow: hidden;}*/
+.conTime{display: block;font-size: 12px;font-weight:bold;color: #00AFC9;position: absolute;top:8px;right: 5%;}
+.conName{overflow: hidden;text-overflow:ellipsis}
 .mui-navigate-right:after{bottom: 50px;font-weight: 800;font-size: 18px;}
 .noLoginBox{ text-align:center;width: 90%;height: 100%; margin: 0% 5%;}
 .noLoginBox button{ margin-top: 20px;width:50%;border-radius: 0px; }

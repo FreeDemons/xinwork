@@ -284,7 +284,8 @@
 					"pages/other/teamwork.html",
 					"pages/login/login.html",
 					"pages/mall/mallhome.html",
-					"guide.html"
+					"guide.html",
+					"wowen.html"
 				],
 				"priority": 0
 			},
@@ -721,7 +722,8 @@
 					"js/app.js",
 					"js/setting.js",
 					"images/chatheader.png",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"images/chatheader.jpg"
 				],
 				"refer": [
 					"pages/message/message.html",
@@ -898,6 +900,19 @@
 					"css/iconfont.css",
 					"css/mui.min.css",
 					"fonts/iconfont.ttf",
+					"css/style.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"wowen.html": {
+				"resources": [
+					"images/cbd.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"css/chat.css",
+					"fonts/mui.ttf",
+					"images/chatheader.jpg",
 					"css/style.css"
 				],
 				"refer": [],
