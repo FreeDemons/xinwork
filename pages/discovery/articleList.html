@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
+		<script src="../../js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init()
+			(function($) {
+			$('.mui-scroll-wrapper').scroll({
+				indicators: true//是否显示滚动条
+			});
+		})(mui);
+		</script>
+		<style>
+			body{background-color: #FFFFFF;}
+			.icon-share{font-size: 18px !important;}
+			article{padding: 10px;}
+			article header h3{font-weight:bold;line-height: 30px;letter-spacing: 2px;}
+			article header p{font-size: 12px;letter-spacing: 1px;}
+			article header p span:first-child{margin-right: 20px;}
+			article header p span:last-child{float: right;border:1px solid #6495ED;border-radius: 10px;padding: 0px 2px;color: #6495ED;}
+			article section p{color: #000000;font-size: 18px;margin: 20px 0px;text-indent: 30px;}
+			article section img{max-width: 100%;width: auto;height: auto;margin: 10px 0px;}
+			.lineclass-android{position: relative;}
+			.lineclass-android:before{position: absolute;right: 0;bottom:130px;left: 0;height: 1px;content: '';-webkit-transform: scaleY(.3);transform: scaleY(.3);background-color:#DCDCDC;}
+			.lineclass-android:after,.lineclass-ios:after{background-color: #DCDCDC;bottom: -20px;}
+			.art_bottom{margin: 50px 0px;text-align: center;}
+			.art_bottom span{font-size: 12px;}
+			.art_bottom img{width: 60px;height: 60px;border-radius: 50px;}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <a class="iconfont icon-share mui-icon mui-pull-right" ></a>
+		</header>
+		<div class="mui-content">
+		    <article>
+		    	<header>
+		    		<h3>我也曾想过一了百了，熬过来就好</h3>
+		    		<p><span>4423次阅</span><span>2013-10-23 10:05</span><span>闲言碎语</span></p>
+		    	</header>
+		    	<section>
+		    		<p>网友老麦发微信跟我说，他失业了，在家相妻教子，也不再出去和朋友们聚会了。</p>
+					<p>他自嘲道，这叫低潮。</p>
+					<p>我能体会到，对于一个年近40的男人来说，上有老下有小，一下子，工作、朋友全没了，意味着什么。</p>
+					<p>可我只能淡淡地说，谁都会有低潮，没啥，熬过去了就好。</p>
+					<p>他说，嗯，熬着。</p>
+		    		<img src="../../images/ylbl.jpg"/>
+		    		<p>也许你觉得我太冷淡，太不会安慰人。其实，我非常有感于他的信任，没有几个人愿意把自己的伤口拨开给别人看。只是，同样经历过低潮的我知道，别人再多的安慰，对当事人也不会有实质性的帮助，能走出来的，只有靠他自己。人生在世就像是踏上了一条修行的不归路，大家都在熬。最难熬的，是自己的心，跟谁都没有关系。</p>
+		    		<p>人生犹如一条抛物线，一个高潮连着一个低潮。我们谁也无法预料生活未来的样子，也永远不知道命运会在什么时候给你一段更艰难的时光。</p>
+		    		<img src="../../images/yb.jpg"/>
+		    		
+		    	</section>
+		    	<footer class="lineclass-android">
+		    		<div class="art_bottom">
+		    			<p>我相信,总有那么一段文字可以触动你的心扉。</p>
+		    			<img src="../../images/default.jpg"/><br/>
+		    			<span>编辑：<u>逝者如厮</u></span><br/>
+		    			<!--<span>出处：<u>原创</u></span>-->
+		    		</div>
+		    	</footer>
+		    </article>
+		</div>
+	</body>
+
+</html>

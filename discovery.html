@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+	</head>
+	<style type="text/css" >
+		.mui-card{box-shadow: 3px 3px 3px rgba(0,0,0,0.2);margin-top: 10px;border-radius: 10px;}
+		.mui-card:active{box-shadow:none;opacity: 0.6;}
+		.mui-card .mui-card-content{height: 120px;background-image: url(images/cbd.jpg);background-size: 100% 120px;}
+		.mui-card-content .title{height: 30px;background-color: rgba(89,88,87,0.6);position: relative;top:45px;text-align: center;padding: 2px;}
+		.title h4{color: #FFF5EE;text-overflow: ellipsis;overflow: hidden;}
+		.mui-card-footer .guide{padding: 4px;font-size: 12px;}
+		.guide p{font-size: 12px;margin-bottom: -2px;}
+		.mui-card-footer .readCount{float: left}
+		.mui-card-footer .readBtn{float: right;display: block;}
+	</style>
+	<script src="js/mui.min.js"></script>
+	<script src="js/setting.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		mui.init({
+			swipeBack: false,
+			keyEventBind: {
+					backbutton: false
+				} //关闭back按键监听
+		});
+		(function($) {
+			$('.mui-scroll-wrapper').scroll({
+				indicators: true//是否显示滚动条
+			});
+			mui.plusReady(function(){
+				document.querySelector('.mui-card').addEventListener('tap',function(){
+					mui.openWindow({url:"pages/discovery/articleList.html",id:"article"});
+			})
+			})
+		})(mui);
+	</script>
+	<body>
+
+
+		<div class="mui-content">
+			<div class="mui-card">
+				<div class="mui-card-content">
+					<div class="title">
+						<h4><nobr>我与你的世界只有一步之遥，见面却是遥遥无期</nobr></h4>
+					</div>
+				</div>
+				<div class="mui-card-footer">
+					<div class="guide">
+						<p>&nbsp;&nbsp;&nbsp;&nbsp;不曾记得我与你在毕业那年之后已有多少年月未曾见面，毕业狂欢那晚，你喝得醉醺醺的，在一群同学的起哄下，对当时的我说：
+							“毕业了......</p>
+						<span class="readCount">150人看过</span>
+						<span class="readBtn">阅读全文>></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+
+</html>

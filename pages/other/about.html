@@ -16,7 +16,7 @@ $.plusReady(function() {
 	
 	var version;
 	plus.runtime.getProperty(plus.runtime.appid,function(inf){
-		doc.querySelector(".about_version span").innerText = inf.version;
+		doc.querySelector(".about_version ins").innerText = inf.version;
 		version = inf.version;
 	});
 	
@@ -59,7 +59,7 @@ $.plusReady(function() {
 				<p>合作热线：15919187268（廖生）</p>
 			</div>
 		</div>
-		<div class="about_version"><p>当前版本 <span><u></u></span></p></div>
+		<div class="about_version"><p>当前版本 <ins></ins></p></div>
 	</div>
 </body>
 </html>

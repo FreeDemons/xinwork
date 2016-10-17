@@ -258,7 +258,8 @@
 					"team.html",
 					"chat.html",
 					"pages/login/login.html",
-					"guide.html"
+					"guide.html",
+					"discovery.html"
 				]
 			},
 			"home.html": {
@@ -914,6 +915,34 @@
 					"fonts/mui.ttf",
 					"images/chatheader.jpg",
 					"css/style.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"discovery.html": {
+				"resources": [
+					"images/cbd.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/setting.js",
+					"css/style.css"
+				],
+				"refer": [
+					"pages/discovery/articleList.html"
+				],
+				"priority": 0
+			},
+			"pages/discovery/articleList.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"images/ylbl.jpg",
+					"images/yb.jpg",
+					"images/dm-n.jpg",
+					"images/default.jpg"
 				],
 				"refer": [],
 				"priority": 0

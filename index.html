@@ -31,7 +31,7 @@ mui.plusReady(function() {
 	
 	app.setUser();//刷新用户状态
     var self = plus.webview.currentWebview();
-    var subpages = ['home','team','chat','account'];
+    var subpages = ['home','team','discovery','account'];
     for(var i=0;i<subpages.length;i++){
     	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44+immersed,bottom: 51});
     	if(subpages[i] == "home"){
@@ -142,9 +142,9 @@ mui.plusReady(function() {
             <span class="mui-icon iconfont"></span>
             <span class="mui-tab-label">团队</span>
         </a>
-        <a class="mui-tab-item tab-chat" data-tab="chat">
+        <a class="mui-tab-item tab-chat" data-tab="discovery">
             <span class="mui-icon iconfont"></span>
-            <span class="mui-tab-label">消息</span>
+            <span class="mui-tab-label">发现</span>
         </a>
         <a class="mui-tab-item tab-account" data-tab="account">
             <span class="mui-icon iconfont"></span>
