@@ -28,14 +28,14 @@ mui.plusReady(function() {
 	}
 	//检查更新
 	app.checkUpdate();
-	
 	app.setUser();//刷新用户状态
     var self = plus.webview.currentWebview();
     var subpages = ['home','team','discovery','account'];
     for(var i=0;i<subpages.length;i++){
     	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44+immersed,bottom: 51});
+    	self.append(sub);
     	if(subpages[i] == "home"){
-    		self.append(sub);
+    		sub.show();
     	}else{
     		sub.hide();
     	}
@@ -48,9 +48,18 @@ mui.plusReady(function() {
 		}
 		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
+	
+	
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
+    })
+    
+    //选择文章种类
+    document.getElementById("articleSelect").addEventListener('tap',function(){
+    	plus.webview.getWebviewById("discovery").evalJS("toggleMenu()");
+    	this.classList.toggle('mui-icon-arrowdown');
+		this.classList.toggle('mui-icon-arrowup');
     })
     //选项卡点击事件
     var activeTab = 'home';
@@ -63,13 +72,17 @@ mui.plusReady(function() {
 	    }else if(targetTab == "home"){
 	    	//首页显示城市选择按钮
 	    	document.getElementById("citySelect").style.display = "block";
-	    	
+	    	document.getElementById("articleSelect").style.display ="none";
 	    	//距离上次刷新超过10分钟，重新载入数据
 	    	if(new Date().getTime()-plus.storage.getItem('homeUpdateTime')>600000){
 	    		plus.webview.getWebviewById('home').evalJS("homeLoad()");
 	    	}
+	    }else if(targetTab == "discovery"){
+	    	document.getElementById("citySelect").style.display = 'none';
+	    	document.getElementById("articleSelect").style.display = "block";
 	    }else{
 	    	document.getElementById("citySelect").style.display = "none";
+	    	document.getElementById("articleSelect").style.display = "none";
 		    if(targetTab == "account"){
 		    	app.setUser();
 		    	var user = plus.storage.getItem('user');
@@ -111,6 +124,11 @@ mui.plusReady(function() {
 			}
 		}
 	};
+	
+//	document.querySelector('#articleSelect').addEventListener('tap',function(){
+//		this.classList.toggle('mui-icon-arrowdown');
+//		this.classList.toggle('mui-icon-arrowup');
+//	})
 });
 </script>
 <style type="text/css">
@@ -123,6 +141,7 @@ mui.plusReady(function() {
 .tab-chat.mui-active .iconfont:before { content: "\e61a";}
 .tab-account .iconfont:before { content: "\e630";}
 .tab-account.mui-active .iconfont:before { content: "\e62f";}
+.roatate180{-webkit-transform: rotate(180deg) ;transform: rotate(180deg);}
 </style>
 </head>
 <body>
@@ -131,7 +150,8 @@ mui.plusReady(function() {
 			<font></font> 
 			<span class="mui-icon mui-icon-arrowdown" style="font-size: 16px;"></span>
 		</a>
-		<h1 class="mui-title">首页</h1>
+		<h1 class="mui-title"> 首页 </h1>
+		<span class="mui-icon mui-icon-arrowdown" id='articleSelect' style="font-size: 18px;display: none;position: relative;left:55%;top:10%"></span>
 	</header>
 	<nav class="mui-bar mui-bar-tab">
         <a class="mui-tab-item mui-active tab-home" data-tab="home">

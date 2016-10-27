@@ -925,10 +925,16 @@
 					"js/mui.min.js",
 					"css/mui.min.css",
 					"js/setting.js",
-					"css/style.css"
+					"css/style.css",
+					"css/offcanvas-drag-down.css",
+					"fonts/mui.ttf"
 				],
 				"refer": [
-					"pages/discovery/articleList.html"
+					"pages/discovery/articleList.html",
+					"pages/job/jobDetailt.html",
+					"pages/login/login.html",
+					"pages/other/teamwork.html",
+					"pages/discovery/article.html"
 				],
 				"priority": 0
 			},
@@ -942,7 +948,27 @@
 					"images/ylbl.jpg",
 					"images/yb.jpg",
 					"images/dm-n.jpg",
-					"images/default.jpg"
+					"images/default.jpg",
+					"css/share.css",
+					"js/share.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/discovery/article.html": {
+				"resources": [
+					"css/share.css",
+					"images/yb.jpg",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"js/share.js",
+					"images/default.jpg",
+					"fonts/iconfont.ttf",
+					"images/ylbl.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/setting.js",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0
