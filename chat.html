@@ -52,7 +52,10 @@
 						}
 					});
 				})
-
+				//点击返回触发
+				document.querySelector(".mui-action-back").addEventListener("tap",function(){
+					plus.webview.getWebviewById('Hbuilder').evalJS("document.querySelector('.mui-pull-right span').style.display = 'none';");
+				})
 			});
 			
 			 var refreshPage = function(){
@@ -82,10 +85,11 @@
 						haveGroup = 'Yes';
 					}
 					mui.each(data, function(index, item) {
-						var conName = item.groupName,
-							conId = item.groupId,
-							newMsg;
-							gidArray[index] = item.groupId;
+						var conName = item.groupName;
+						var conId = item.groupId;
+						var newMsg;
+						gidArray[index] = item.groupId;
+						console.log(conId);
 							getNewMsg(item.groupId, function(data) {
 							newMsg = (data == null ? '' :data[0]);
 							if(newMsg.messageType == 'TextMessage') {
@@ -124,6 +128,8 @@
 			}
 			
 			var checkNewMsg = function(groupId,unread) {
+				
+				plus.webview.getWebviewById('Hbuilder').evalJS("document.querySelector('.mui-pull-right span').style.display = 'block';");
 				var group_li = document.querySelector(".mui-table-view li[data-gid='" + groupId + "']");
 				if(group_li){
 					var badge = group_li.querySelector('.chat-badge');
@@ -216,7 +222,11 @@
 	</head>
 
 	<body>
-		<div class="mui-content">
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">消息</h1>
+		</header>
+		<div class="mui-content" >
 			<div class="chat-content mui-scroll-wrapper">
 				<div class="mui-scroll" id="chat_body">
 					<ul class="mui-table-view mui-table-view-chevron" id="chatlist">

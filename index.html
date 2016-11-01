@@ -26,6 +26,7 @@ mui.plusReady(function() {
 			plus.navigator.setFullscreen(false);//显示状态栏；
 		},1500)
 	}
+	
 	//检查更新
 	app.checkUpdate();
 	app.setUser();//刷新用户状态
@@ -48,13 +49,16 @@ mui.plusReady(function() {
 		}
 		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
-	
-	
+	//点击打开消息页
+	var chatPage = mui.preload({id:'chat',url:"chat.html"});
+	document.querySelector('.icon-bubble').addEventListener('tap',function(){
+		chatPage.show();
+		document.querySelector('.mui-pull-right span').style.display = 'none';
+	})
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
     })
-    
     //选择文章种类
     document.getElementById("articleSelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("discovery").evalJS("toggleMenu()");
@@ -79,7 +83,7 @@ mui.plusReady(function() {
 	    	}
 	    }else if(targetTab == "discovery"){
 	    	document.getElementById("citySelect").style.display = 'none';
-	    	document.getElementById("articleSelect").style.display = "block";
+	    	document.getElementById("articleSelect").style.display = "";
 	    }else{
 	    	document.getElementById("citySelect").style.display = "none";
 	    	document.getElementById("articleSelect").style.display = "none";
@@ -124,12 +128,8 @@ mui.plusReady(function() {
 			}
 		}
 	};
-	
-//	document.querySelector('#articleSelect').addEventListener('tap',function(){
-//		this.classList.toggle('mui-icon-arrowdown');
-//		this.classList.toggle('mui-icon-arrowup');
-//	})
 });
+
 </script>
 <style type="text/css">
 .mui-pull-top-pocket{margin-top:30px}
@@ -137,11 +137,11 @@ mui.plusReady(function() {
 .tab-home.mui-active .iconfont:before { content: "\e624";}
 .tab-team .iconfont:before { content: "\e619";}
 .tab-team.mui-active .iconfont:before { content: "\e600";}
-.tab-chat .iconfont:before { content: "\e616"; }
-.tab-chat.mui-active .iconfont:before { content: "\e61a";}
+.tab-chat .iconfont:before { content: "\e63a"; }
+.tab-chat.mui-active .iconfont:before { content: "\e622";}
 .tab-account .iconfont:before { content: "\e630";}
 .tab-account.mui-active .iconfont:before { content: "\e62f";}
-.roatate180{-webkit-transform: rotate(180deg) ;transform: rotate(180deg);}
+.icon-qipao{position: absolute;top:6px;right:12px;font-size: 12px;color: #2E8B57;display: none;}
 </style>
 </head>
 <body>
@@ -152,6 +152,9 @@ mui.plusReady(function() {
 		</a>
 		<h1 class="mui-title"> 首页 </h1>
 		<span class="mui-icon mui-icon-arrowdown" id='articleSelect' style="font-size: 18px;display: none;position: relative;left:55%;top:10%"></span>
+		<a class="iconfont icon-bubble mui-icon mui-pull-right" style="color: #0F9D58;font-size: 22px;">
+			<span class="iconfont icon-qipao"></span>
+		</a>
 	</header>
 	<nav class="mui-bar mui-bar-tab">
         <a class="mui-tab-item mui-active tab-home" data-tab="home">

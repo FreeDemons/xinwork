@@ -12,44 +12,122 @@
   -moz-osx-font-smoothing: grayscale;
 }
 .icon-global:before { content: "\e600"; }
+
 .icon-23:before { content: "\e614"; }
+
 .icon-share:before { content: "\e61d"; }
+
 .icon-details:before { content: "\e601"; }
+
 .icon-ren:before { content: "\e606"; }
+
 .icon-image:before { content: "\e602"; }
+
 .icon-address:before { content: "\e607"; }
+
+.icon-bubble:before { content: "\e8d6"; }
+
 .icon-question:before { content: "\e60d"; }
+
 .icon-filter:before { content: "\e611"; }
+
 .icon-yirenzheng:before { content: "\e60a"; }
+
 .icon-yuyin:before { content: "\e608"; }
+
 .icon-biaoqing:before { content: "\e60c"; }
+
 .icon-description:before { content: "\e605"; }
+
+.icon-other:before { content: "\e603"; }
+
 .icon-nothing:before { content: "\e617"; }
+
 .icon-collect:before { content: "\e61e"; }
+
+.icon-dushu1:before { content: "\e622"; }
+
 .icon-wallet:before { content: "\e60e"; }
+
+.icon-download:before { content: "\e634"; }
+
 .icon-lists:before { content: "\e619"; }
+
+.icon-computer:before { content: "\e62c"; }
+
+.icon-team:before { content: "\e61f"; }
+
+.icon-shujiyuedu:before { content: "\e63a"; }
+
+.icon-magnifier:before { content: "\e636"; }
+
 .icon-matter2:before { content: "\e626"; }
+
 .icon-about:before { content: "\e613"; }
+
 .icon-withdraw:before { content: "\e610"; }
+
+.icon-images:before { content: "\e6cc"; }
+
+.icon-29:before { content: "\e62d"; }
+
 .icon-recruitment:before { content: "\e620"; }
+
 .icon-mall:before { content: "\e625"; }
+
 .icon-signin:before { content: "\e609"; }
+
+.icon-step:before { content: "\e67c"; }
+
 .icon-qunshezhi:before { content: "\e60b"; }
+
 .icon-chat:before { content: "\e616"; }
+
 .icon-chats:before { content: "\e61a"; }
+
 .icon-resume:before { content: "\e62a"; }
+
 .icon-teamwork:before { content: "\e627"; }
+
 .icon-approve:before { content: "\e612"; }
+
 .icon-bankcard:before { content: "\e604"; }
+
 .icon-homes:before { content: "\e624"; }
+
 .icon-camera:before { content: "\e61c"; }
+
 .icon-home:before { content: "\e621"; }
+
 .icon-warning:before { content: "\e61b"; }
+
+.icon-attention:before { content: "\e638"; }
+
 .icon-mys:before { content: "\e62f"; }
+
 .icon-jobrecord:before { content: "\e628"; }
+
 .icon-feedback:before { content: "\e60f"; }
+
 .icon-summary:before { content: "\e62b"; }
+
 .icon-my:before { content: "\e630"; }
+
+.icon-cup:before { content: "\e629"; }
+
+.icon-computers:before { content: "\e632"; }
+
+.icon-qipao:before { content: "\e667"; }
+
 .icon-more:before { content: "\e623"; }
+
 .icon-zhongxinfasong:before { content: "\e615"; }
+
 .icon-clock:before { content: "\e618"; }
+
+.icon-heiban:before { content: "\e78c"; }
+
+.icon-mingpai:before { content: "\e78f"; }
+
+.icon-xiaoyu:before { content: "\e790"; }
+

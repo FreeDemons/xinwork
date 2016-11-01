@@ -11,6 +11,7 @@
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="css/mui.min.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css"/>
 		<link rel="stylesheet" type="text/css" href="css/offcanvas-drag-down.css"/>
 		<!--App自定义的css-->
 		<link rel="stylesheet" type="text/css" href="css/app.css" />
@@ -90,6 +91,7 @@
 					}
 				})
 				autoPulldown();
+//				articlesLoad();
 			})
 			function autoPulldown(){
 				if (mui.os.plus) {
@@ -190,7 +192,7 @@
 			 								+artBanner+');"><div class="title"> <h4><nobr>'
 			 								+artTitle+'</nobr></h4> </div> </div> <div class="mui-card-footer"> <div class="guide"> <p>&nbsp;&nbsp;&nbsp;&nbsp;'
 			 								+artSummary+'</p> <span class="readCount">'
-			 								+artNumber+'人看过</span> <span class="readBtn">阅读全文>></span> </div> </div> </div>';
+			 								+artNumber+'人看过</span></span> <span class="readBtn">阅读全文>></span> </div> </div> </div>';
 			 	})
 			 }
 		</script>
@@ -198,7 +200,7 @@
 	<body>
 				<div id="articleDiv" class="mui-content mui-scroll-wrapper" >
 				  <div id='articleList' class="mui-scroll">
-				  	<!--<div class="mui-card">
+				  	<div class="mui-card">
 					<div class="mui-card-content" style="background-image: url(images/cbd.jpg);">
 						<div class="title">
 							<h4><nobr>我与你的世界只有一步之遥，见面却是遥遥无期</nobr></h4>
@@ -208,11 +210,11 @@
 						<div class="guide">
 							<p>&nbsp;&nbsp;&nbsp;&nbsp;不曾记得我与你在毕业那年之后已有多少年月未曾见面，毕业狂欢那晚，你喝得醉醺醺的，在一群同学的起哄下，对当时的我说：
 								“毕业了......</p>
-							<span class="readCount">150人看过</span>
+							<span class="readCount">150<span class="iconfont icon-29"></span></span>
 							<span class="readBtn">阅读全文>></span>
 						</div>
 					</div>
-				</div>-->
+				</div>
 				  </div>
 				</div>
 		<div id="menu-wrapper" class="menu-wrapper hidden">

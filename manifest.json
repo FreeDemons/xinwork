@@ -927,7 +927,9 @@
 					"js/setting.js",
 					"css/style.css",
 					"css/offcanvas-drag-down.css",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"pages/discovery/articleList.html",
