@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css"/>
+<link href="../../css/task.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	pullRefresh : {
+	    container:"#myTaskPage",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+	    up : {
+	      contentdown: "",//无操作状态下显示的文字
+	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+	      callback :pullUpfresh //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+	    }
+  	},
+});
+var uid,page=0;
+mui.plusReady(function() {
+	mui('.mui-scroll-wrapper').scroll();
+	uid = JSON.parse(plus.storage.getItem('user')).uid;
+	getData();
+	
+	//打开网赚收入
+	document.querySelector("#taskPoint").addEventListener("tap",function(){
+		mui.openWindow({id:'walletDetails',url:"../wallet/walletDetails.html",extras:{tid:'/3',title:"网赚工资"}});
+	});
+	//打开任务详情页
+	mui('.mui-table-view').on('tap', '.mui-table-view-cell', function() {
+		mui.openWindow({id:'taskDetailt',url:"taskDetailt.html",extras:{tid:this.getAttribute("data-tid")}});
+	});
+});
+
+function getData(){
+	ownerLoad.show();
+	mui.getJSON(XW.base + 'taskrefer/' + uid,function(data){
+		ownerLoad.close();
+		if(data.length == 0){
+    		document.querySelector('#noneTips').style.display="block";
+    		mui('#myTaskPage').pullRefresh().endPullupToRefresh(true);
+    	}else{
+    		document.querySelector('.mui-table-view').style.display="block";
+    		showTask(data);
+    	}
+	});
+}
+
+//上拉加载
+function pullUpfresh(){
+	page += 1;
+    mui.getJSON(XW.base + 'taskrefer/' + uid + '?page=' + page,function(data){
+    	showTask(data);
+	});
+}
+
+function showTask(data){
+	mui.each(data, function(i, n) {
+		var typeArr = ["下载注册","微信关注","调查问卷","其它"];
+		var iconArr = ["download","attention","magnifier","other"];
+		var statusArr = ["进行中","审核中","已完成","不通过"];
+		var remark = n.field_remark ? '<p class="task-remark">备注：' + n.field_remark + '</p>' : "";
+		var number = n.flagged == 1 ? '0' : n.field_number-n.count;
+		//状态文本颜色
+		var statusColor = "";
+		if(n.field_task_refer_status == 0){
+			statusColor = "yellow";
+		}else if(n.field_task_refer_status == 1){
+			statusColor = "green";
+		}else if(n.field_task_refer_status == 3){
+			statusColor = "red";
+		}
+		
+		var li = document.createElement('li');
+		li.className = 'mui-table-view-cell mui-media';
+		li.setAttribute("data-tid",n.tid);
+		li.innerHTML = '<div class="mui-media-object mui-pull-left"><span class="iconfont icon-' + iconArr[n.field_task_type] + ' mui-block"></span>' + typeArr[n.field_task_type]
+						+ '</div><div class="mui-media-body"><div class="task-title mui-ellipsis">' + n.title + '</div><p class="task-btm"><span class="task-wage">'+ n.field_wage + '</span> | 剩余 ' 
+						+ number + ' 次<span class="task-status ' + statusColor + '"><i class="iconfont icon-clock"></i>' + statusArr[n.field_task_refer_status] + '</span></p>' + remark +'</div>';
+		document.querySelector(".mui-table-view").appendChild(li);
+	});
+	
+	var refb = data.length < 20 ? true : false;
+	mui('#myTaskPage').pullRefresh().endPullupToRefresh(refb);
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">我的任务</h1>
+		<a class="mui-pull-right mui-btn-link" id="taskPoint" style="font-size: 14px;margin-right: 5px;">收入</a>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="myTaskPage">
+		<div class="mui-scroll">
+			<ul class="mui-table-view"></ul>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>心碎了！啥都没有</div>
+		</div>
+	</div>
+</body>
+</html>

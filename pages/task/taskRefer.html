@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/app.js" type="text/javascript"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<link href="../../css/previewimage.css" rel="stylesheet" type="text/css"/>
+<link href="../../css/style.css" rel="stylesheet" type="text/css"/>
+<link href="../../css/iconfont.css" rel="stylesheet" type="text/css"/>
+<link href="../../css/task.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+mui.init({gestureConfig:{longtap: true}});
+var rid,checktime,hasImage=0,countDownTime=0;
+mui.plusReady(function() {
+	mui.previewImage();//图片预览插件
+	mui('.mui-scroll-wrapper').scroll();
+	rid = plus.webview.currentWebview().rid;
+	setData();
+	newBack();
+	//上传图片
+	document.querySelector("#addImage").addEventListener('tap',function(){app.addPicture("task")});
+	//删除图片
+	mui("#referImage").on('longtap','img',function(){
+		var that = this;//直接用this不行
+		plus.nativeUI.actionSheet({
+			cancel:"取消",
+			buttons:[{title:"删除"}]
+		}, function(e){
+			if(e.index == 1){
+				var fid = that.getAttribute("data-fid");
+				that.parentNode.removeChild(that);
+				mui.ajax(XW.base + 'entity_file/' + fid,{
+					headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+					type: "delete",
+					contentType:"application/json",
+					dataType:'JSON',
+				});
+			}
+		});
+	});
+	//点击提交
+	document.querySelector("#saveBtn").addEventListener('tap',function(){save()});
+});
+//初始化页面数据
+function setData(){
+	ownerLoad.show();
+	mui.getJSON(XW.base + 'customize/task/refer/' + rid,function(data){
+		document.querySelector(".mui-content").style.display = "block";
+		ownerLoad.close();
+		checktime = data.checktime;
+		document.querySelector(".tips .tips_text").textContent = data.directions_body;
+		document.querySelector("#referTitle .block-header").textContent = data.directions_title;
+		document.querySelector("#referTitle input").value = data.title;
+		//是否需要上传图片
+		if(data.directions_images){
+			hasImage = 1;
+			document.querySelector(".tips .tips_image").style.display = "block";
+			document.querySelector("#referImage").style.display = "block";
+			document.querySelector("#warning span").style.display = "inline";
+			for(var i=0;i<data.directions_images.length;i++){
+				var img = document.createElement('img');
+				img.setAttribute("data-preview-src",data.directions_images[i].url);
+				img.setAttribute("src",data.directions_images[i].style);
+				img.setAttribute("data-preview-group","1");
+				document.querySelector(".tips .tips_image div").appendChild(img);
+			}
+			//草稿图片
+			if(data.images){
+				for(var i=0;i<data.images.length;i++){
+					if(data.images[i].fid){
+						var img = document.createElement('img');
+						img.setAttribute("data-preview-src",data.images[i].url);
+						img.setAttribute("src",data.images[i].style);
+						img.setAttribute("data-fid",data.images[i].fid);
+						img.setAttribute("data-preview-group","2");
+						document.querySelector("#addImage").parentNode.insertBefore(img,document.querySelector("#addImage"));
+					}
+				}
+			}
+		}
+		countDownTime = data.countDownTime;
+		countDown();
+	});
+}
+//覆写返回按钮，返回保存草稿
+var old_back = mui.back;
+function newBack(){
+	mui.back = function(){
+		var dataArr = {"title":document.querySelector("#referTitle input").value};
+		if(mui("#referImage img").length > 0){
+			dataArr['task_images'] = [];
+			for(var i=0;i<mui("#referImage img").length;i++){
+				dataArr['task_images'].push({"fid":mui("#referImage img")[i].getAttribute("data-fid")});
+			}
+		}
+		mui.ajax(XW.base + 'entity_wangzhuan/' + rid,{
+			headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+  			data:dataArr,
+  			type:'put',
+  			dataType: 'json'
+		});
+		mui.toast("草稿已保存");
+		old_back();
+	}
+}
+//倒计时
+function countDown(){
+	var now = Math.ceil(new Date().getTime()/1000);
+	var time = countDownTime-now;
+	if(time > 0){
+		var hours = Math.floor(time/3600);
+		var minutes = Math.floor((time-hours*3600)/60);
+		var seconds = Math.floor(time%60);
+		
+		hours = hours<10 ? '0' + hours : hours;
+		minutes = minutes<10 ? '0' + minutes : minutes;
+		seconds = seconds<10 ? '0' + seconds : seconds;
+		document.querySelector("#saveBtn font").textContent = hours+':'+minutes+':'+seconds;
+		setTimeout("countDown()",1000);
+	}else{
+		document.querySelector("#saveBtn").textContent = '已过期';
+		document.querySelector("#saveBtn").setAttribute("disabled","disabled");
+	}
+}
+//图片上传成功后的回调函数
+function photoCallback(data,localpath){
+	data = JSON.parse(data);
+	var img = document.createElement('img');
+	img.setAttribute("src",localpath);
+	img.setAttribute("data-preview-src",localpath);
+	img.setAttribute("data-fid",data.fid);
+	img.setAttribute("data-preview-group","2");
+	document.querySelector("#addImage").parentNode.insertBefore(img,document.querySelector("#addImage"));
+}
+//点击提交
+function save(){
+	var title = document.querySelector("#referTitle input").value;
+	if(!title){
+		mui.toast("填写内容不能为空！");
+	}else if(hasImage == 1 && mui("#referImage img").length <= 0){
+		mui.toast("请按要求上传图片！");
+	}else{
+		var dataArr = {"title":title};
+		if(mui("#referImage img").length > 0){
+			dataArr['task_images'] = [];
+			for(var i=0;i<mui("#referImage img").length;i++){
+				dataArr['task_images'].push({"fid":mui("#referImage img")[i].getAttribute("data-fid")});
+			}
+		}
+		mui.confirm('确定提交任务?','',['取消','确定'], function(e){
+			if(e.index == 1){
+				plus.nativeUI.showWaiting("正在提交...");
+				mui.ajax(XW.base + 'customize/task/refer/submit/' + rid,{
+		  			data:dataArr,
+		  			type:'post',
+		  			success:function(data){
+		  				plus.nativeUI.closeWaiting();
+		  				if(data == 1){
+		  					mui.alert("提交成功，管理员会在" + checktime + "小时内完成审核","温馨提示","",function(){
+			  					plus.webview.getWebviewById('taskDetailt').reload();
+			  					old_back();
+			  				});
+		  				}else{
+		  					mui.alert("提交失败","温馨提示");
+		  				}
+		  			},
+		  			error:function(a){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("提交失败，请重试","温馨提示");
+		  			}
+				});
+			}
+		});
+	}
+}
+//打开QQ客服
+function openQQ() {
+    if (plus.os.name == "Android") {
+	    var main = plus.android.runtimeMainActivity();
+	    var Intent = plus.android.importClass('android.content.Intent');
+	    var Uri = plus.android.importClass('android.net.Uri');
+	    var intent = new Intent(Intent.ACTION_VIEW, Uri.parse("mqqwpa://im/chat?chat_type=wpa&uin=1036393384"));
+	    main.startActivity(intent);
+    }else if(plus.os.name == "iOS") {
+        plus.runtime.launchApplication({
+            action: "mqq://im/chat?chat_type=wpa&uin=1036393384&version=1&src_type=web"
+        }, function(e) {
+            plus.nativeUI.confirm("检查到您未安装QQ，请先到appstore搜索下载？", function(i) {
+                if (i.index == 0) {
+                    plus.runtime.openURL( "itms-apps://itunes.apple.com/cn/app/qq/id444934666?mt=8&ign-mpt=uo%3D2");
+                }
+            });
+        });
+    }
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">提交任务</h1>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="taskReferPage" style="display: none;">
+		<div class="mui-scroll">
+			<form class="mui-input-group tips">
+				<p><span class="mui-icon iconfont icon-description" style="color: #0F9D58;"></span>&nbsp;提交说明</p>
+				<div class="tips_text"></div>
+				<div class="tips_image">
+					<p><span class="mui-icon iconfont icon-images" style="color: #F4B400;"></span>&nbsp;示例图片</p>
+					<div></div>
+				</div>
+			</form>
+			<div id="referTitle">
+				<p class="block-header"></p>
+				<form class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}" style="padding: 0px;">
+					<input type="text"></input>
+				</form>
+			</div>
+			
+			<div id="referImage" style="display: none;">
+				<p class="block-header">上传图片</p>
+				<form class="mui-input-group"><div id="addImage">+</div></form>	
+			</div>
+			<p id="warning">
+				随意填写会被限制使用网赚功能
+				<span style="display: none;">；如果手机无法上传图片，请联系管理员 QQ<a onclick="openQQ()">1036393384</a></span>
+			</p>
+			
+			<div class="mui-content-padded">
+				<button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">提交<span>(请在<font></font>内完成)</span></button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
