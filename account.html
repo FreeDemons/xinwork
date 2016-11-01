@@ -7,22 +7,19 @@
 <script src="js/mui.min.js"></script>
 <script src="js/jquery.min.js"></script>
 <script src="js/setting.js"></script>
-<script src="js/share.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/app.js" type="text/javascript" charset="utf-8"></script>
 <link href="css/mui.min.css" rel="stylesheet"/>
 <link href="css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="css/account.css" rel="stylesheet"/>
-<link rel="stylesheet" type="text/css" href="css/share.css"/>
 <script type="text/javascript" charset="utf-8">
 mui.init({
 	keyEventBind: {
 		backbutton: false  //关闭back按键监听
 	}
 });
-var user,share = null;
+var user;
 mui.plusReady(function() {
 	app.setUser();
-	updateSerivces();
 	mui('.mui-scroll-wrapper').scroll({startY: 0,deceleration:0.001,bounce: true});
 	plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
 	//加载用户信息
@@ -54,33 +51,6 @@ mui.plusReady(function() {
 			}
 		}
 	});
-	
-	//分享app
-	var shareContent = '找兼职，不奔波，上薪窝。你来或不来，我都在这里，一起下载薪窝兼职APP玩转大学生活吧'
-	var title = '对方撤回了一条信息并向你分享一个赚钱神器';
-	var shareUrl = 'http://2bai.co/1000561';
-	var msgwx={content:shareContent,href:shareUrl,title:title,extra:{scene:'WXSceneSession'}};
-	var msgpy ={content:shareContent,href:shareUrl,title:title,extra:{scene:'WXSceneTimeline'}};
-	var msgqq ={content:shareContent,href:shareUrl,title:title};
-	mui('body').on('tap', '.mui-popover-action .shareItem', function() {
-			mui('#shareJob').popover('toggle');
-			if (share['weixin'] ||share['qq']) {
-				switch (this.id){
-							case 'weixin':
-								shareAction(share['weixin'], msgwx);
-								break;
-							case 'pengyouquan':
-								shareAction(share['weixin'], msgpy);
-								break;
-							case 'qq':
-								shareAction(share['qq'],msgqq)
-								break;
-						}
-			}
-			else{
-				mui.toast('系统发生错误，无法分享。');
-			}
-		})
 });
 //显示当前用户
 function hasUser(data){
@@ -147,48 +117,11 @@ function noUser(){
 			</ul>
 			
 			<ul class="mui-table-view">
-				<li class="mui-table-view-cell mui-collapse">
+				<li class="mui-table-view-cell" data-path="pages/other/more.html" data-wid="more">
 	            	<a class="mui-navigate-right"><span class="mui-icon iconfont icon-more"></span>更多</a>
-	           </li>
-	           <div>
-		           	<li class="mui-table-view-cell" id = 'share'>
-						<a class="mui-navigate-right" href="#shareApp"><span class="mui-icon iconfont icon-share"></span>分享有礼</a>
-					</li>
-		           <li class="mui-table-view-cell" data-path="pages/other/question.html" data-wid="question">
-						<a class="mui-navigate-right"><span class="mui-icon iconfont icon-question"></span>常见问题</a>
-					</li>
-					<li class="mui-table-view-cell" data-path="pages/other/feedback.html" data-wid="feedback">
-						<a class="mui-navigate-right"><span class="mui-icon iconfont icon-feedback"></span>意见反馈</a>
-					</li>
-					<li class="mui-table-view-cell" data-path="pages/other/about.html" data-wid="about">
-						<a class="mui-navigate-right"><span class="mui-icon iconfont icon-about"></span>关于薪窝</a>
-					</li>
-	           	</div>
+	          	</li>
 			</ul>
 		</div>
 	</div>
-	<div id="shareApp" class="mui-popover mui-popover-action mui-popover-bottom">
-			<div class="share">
-				<div class="shareList" >
-					<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
-						<span class="mui-icon mui-icon-weixin icon"></span>
-					</div>
-					<p>微信</p>
-				</div>
-				<div class="shareList" >
-					<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
-						<span class="mui-icon mui-icon-pengyouquan icon"></span>
-					</div>
-					<p >朋友圈</p>
-				</div>
-				<div class="shareList">
-					<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
-						<span class="mui-icon mui-icon-qq icon"></span>
-						<p>QQ</p>
-					</div>
-				</div>
-			</div>
-			
-		</div>
 </body>
 </html>

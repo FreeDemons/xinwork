@@ -55,7 +55,7 @@ $.plusReady(function() {
 		<h1 class="mui-title">修改密码</h1>
 	</header>
 	<div class="mui-content">
-		<form id='accountPw-form1' class="mui-input-group">
+		<form id='accountPw-form1' class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row mui-password">
 				<label for="currentPw">当前密码</label>
 				<input type="password" id="currentPw" class="mui-input-password" maxlength="16">

@@ -66,7 +66,7 @@ function forgetSubmit(){
 		<h1 class="mui-title">找回密码</h1>
 	</header>
 	<div class="mui-content">
-	    <form id='forget-form' class="mui-input-group">
+	    <form id='forget-form' class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row">
 				<label for="phoneNumber">手机号码</label>
 				<input id="phoneNumber" maxlength="11" type="tel" class="mui-input-clear mui-input" placeholder="注册的手机号">

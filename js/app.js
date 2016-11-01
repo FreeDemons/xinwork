@@ -92,6 +92,9 @@ owner.picUpload=function(lacalpath,s){
 		case "avatar":
 			filepath = "public://avatar/";
 			break;
+		case "task":
+			filepath = "public://task/";
+			break;
 		default:
 			break;
 	}
@@ -118,7 +121,8 @@ owner.picUpload=function(lacalpath,s){
         var filedata = {
         	"file":base64.split(",")[1],
         	"filepath":filepath+user.uid + "-" + timestamp +".jpg",
-        	"filename":user.uid+ "-" + timestamp +".jpg"
+        	"filename":user.uid+ "-" + timestamp +".jpg",
+        	"type":"image"
         };
 		var login_session=JSON.parse(plus.storage.getItem('login_session'));
 		plus.nativeUI.showWaiting( "正在上传..." );

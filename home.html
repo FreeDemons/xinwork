@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<!--<meta http-equiv="refresh" content="1800" />隔30分钟刷新页面-->
 <title>首页</title>
 <script src="js/mui.min.js"></script>
 <script src="js/setting.js"></script>
@@ -57,9 +58,9 @@ mui.plusReady(function() {
 	mui('#jobList').on('tap', '.mui-table-view-cell', function() {
 		mui.openWindow({id:'jobDetailt',url:"pages/job/jobDetailt.html",extras:{nid:this.getAttribute("data-nid")}});
 	});
-	//点击商家合作
+	//点击团队列表
 	document.querySelector('#homeTeamwork').addEventListener("tap",function(){
-		mui.openWindow({url: "pages/other/teamwork.html",id: "teamwork"});
+		mui.openWindow({url: "pages/team/teamList.html",id: "teamList"});
 	});
 	//点击积分商城
 	document.querySelector('#homeMall').addEventListener("tap",function(){
@@ -98,8 +99,6 @@ mui.plusReady(function() {
 		
 		plus.nativeUI.showWaiting();
 		homeLoad();
-		//加载团队页
-		plus.webview.getWebviewById("team").evalJS("mui('.mui-scroll-wrapper').scroll().scrollTo(0,0,0);loadTeam();");
 	});
 });
 
@@ -117,8 +116,6 @@ function getCityByLoc(){
 		}
 		plus.storage.setItem('city',city);
 		homeLoad();
-		//加载团队页
-		plus.webview.getWebviewById("team").evalJS("loadTeam()");
 		//主页显示当前城市
 		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
 	},function(e){
@@ -158,7 +155,7 @@ function homeLoad() {
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-    mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
+	mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
 		showJob(data);
 		setTimeout(function() {
 			var refb = data.length < 20 ? true : false;
@@ -239,8 +236,7 @@ function toggleMenu() {
 			  	</div>
 			</div>
 			<div class="home-menu mui-table-view">
-				<a id="wangzhuan"><span class="iconfont icon-teamwork"></span> 网赚列表</a>
-				<a id="homeTeamwork"><span class="iconfont icon-teamwork"></span> 商家合作</a>
+				<a id="homeTeamwork"><span class="iconfont icon-team"></span> 团队列表</a>
 				<a id="homeMall"><span class="iconfont icon-mall"></span> 积分商城</a>
 				<a id="homeSignin"><span class="iconfont icon-signin"></span> 每日签到</a>
 			</div>

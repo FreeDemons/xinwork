@@ -8,7 +8,7 @@
 <script src="../../js/jquery.min.js"></script>
 <script src="../../js/setting.js"></script>
 <!--<script src="../../js/immersed.js" type="text/javascript" charset="utf-8"></script>-->
-<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>	
+<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/job.css" rel="stylesheet"/>
@@ -80,8 +80,8 @@ mui.plusReady(function() {
 function setData(){
 	ownerLoad.show();
 	mui.getJSON(XW.base + 'customize/job/' + nid,function(data){
-	ownerLoad.close();
-	$(".mui-content").show();
+		ownerLoad.close();
+		$(".mui-content").show();
 		
 		title = data.title;
 		$("#jobCreate font").text(data.created);
@@ -115,7 +115,7 @@ function setData(){
 		date_select = data.date_select;
 		shareContent = data.remark;
 		
-		if(data.apply_status == 1){$("#jobApply button").text("您已报名本兼职");}
+		if(data.apply_status == 1){$("#jobApply button").text("您已报名本兼职").attr("disabled","disabled");}
 		else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
 		else{$("#jobApply button").text("已结束报名");}
 
@@ -195,7 +195,6 @@ function apply(){
 				<p id="jobDate">兼职日期：<span></span></p>
 				<p id="jobTime">上班时间：<span></span></p>
 				<p id="jobPlace">上班地点：<span></span></p>
-				
 			</div>
 			
 			<div class="job-detail-description job-block">

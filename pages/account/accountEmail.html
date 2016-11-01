@@ -55,7 +55,7 @@ $.plusReady(function() {
 		<h1 class="mui-title">邮箱地址</h1>
 	</header>
 	<div class="mui-content">
-       <form id='email-form' class="mui-input-group">
+       <form id='email-form' class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row">
 				<label for="email">邮箱地址</label>
 				<input type="email" id="email" class="mui-input-clear mui-input"></input>

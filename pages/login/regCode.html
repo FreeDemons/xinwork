@@ -103,7 +103,7 @@ function regSubmit(){
 		<h1 class="mui-title">填写确认码</h1>
 	</header>
 	<div class="mui-content">
-		<form id='regCode-form' class="mui-input-group">	
+		<form id='regCode-form' class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">	
 			<div class="mui-input-row" style="position: relative;">
 				<label for="confirmCode">确认码</label>
 				<input id="confirmCode" maxlength="6" type="tel" class="mui-input">

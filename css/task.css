@@ -1,24 +1,75 @@
-.mui-bar .iconfont{font-size: 20px;font-weight: 400;padding: 10px 0px;position: relative;line-height: 1;}
-.mui-content{padding-bottom: 60px;}
-.task_outline{width: auto;height: 150px;background-color: #fff;padding: 20px 0px 20px 20px;margin-bottom: 15px;overflow: hidden;}
-.task_outline h4{font-weight: 500;font-size: 22px;}
-.outline_bottom{color: #404040;position:absolute;top:110px;font-size: 14px;}
-.outline_income{width: 100px;height: 40px;background-color: #FE6700;border-radius: 25px;padding: 8px 15px;float: right;position: absolute;right: -35px;top:25px}
-.outline_income span{color: #FFF;}
-.outline_income #income{font-size: 28px;}
-.task_detail{width: auto;height: auto;background-color: #fff;padding: 20px;margin-bottom: 15px;}
-.lineclass-android,.lineclass-ios{position: relative;}
-.lineclass-android:after,.lineclass-ios:after{background-color:#C0C0C0;}
-.task_detail .detail-up{padding-bottom: 5px;}
-.task_detail .detail-up span,.task_detail .detail-down p{color: #404040;font-weight: 600;}
-.task_detail .detail-down h5{margin: 15px 0px;}
-.task_step{height: auto;width: auto;background-color: #fff;margin-bottom: 10px;}
-.task_step .step_title{height: 50px;padding: 10px 20px;}
-.task_step .step_title h4{font-weight: 400;color: #C0C0C0;font-size: 18px;}
-.task_step .step_main{padding: 20px;}
-.task_step .step_item{padding: 0px 10px;}
-.task_step .step_item .step_content{border-left: 1px dashed #C0C0C0;padding: 15px;}
-.badge{position: relative;left: -10px;}
-.content_image{max-width: 100px;max-height: 200px;min-width: 50px;min-height: 100px;}
-#getTaskBtn{height: 60px;background-color:#F1F1F1;padding: 0px 15px;bottom: 0;}
-#getTaskBtn button{top:10px;height: 40px;}
+/*任务详情页样式*/
+#taskDetaitPage{padding-bottom: 60px;}
+#taskDetaitPage .task-block-header{font-size: 16px;font-weight: normal;position: relative;padding-bottom: 10px;margin-bottom: 10px;}
+#taskDetaitPage .task-block-header .mui-icon{color:#0F9D58;font-size: 18px;}
+#taskDetaitPage .task-block{padding: 15px;margin-bottom: 15px;background: #fff;}
+#taskDetaitPage .lineclass-ios:after,#taskDetaitPage .lineclass-android:after{background-color: #e1e1e1;}
+
+#taskDetaitPage .task-detail-info #taskTitle b{font-size: 16px;color: #db4437;margin-left: 10px;white-space:nowrap;}
+#taskDetaitPage .task-detail-info #taskLave{font-size: 14px;color:#666;padding: 10px 0px;position: relative;margin-bottom: 10px;}
+#taskDetaitPage .task-detail-info #taskLave span{float: right;color: #ccc;height: 18px;line-height: 16px;border-radius: 2px;margin-top: 2px;border: #ccc 1px solid;font-size: 10px;padding-right: 3px;}
+#taskDetaitPage .task-detail-info #taskLave span .iconfont{font-size: 14px;background: #ccc;color: #fff;height: 100%;line-height: 16px;margin-right: 3px;float: left;padding: 0px 1px;}
+#taskDetaitPage .task-detail-info #taskLave span.yellow{border-color: #f4b400;color: #f4b400;}
+#taskDetaitPage .task-detail-info #taskLave span.yellow .iconfont{background: #f4b400;}
+#taskDetaitPage .task-detail-info p{margin-bottom: 5px;color:#666;text-indent: -5em;padding-left: 5em;}
+
+#taskDetaitPage .task-detail-body #taskBody{color:#999 !important;font-size: 14px;min-height: 80px;}
+#taskDetaitPage .task-detail-body #taskBody p{color:#999 !important;font-size: 14px;}
+#taskDetaitPage .task-detail-body #taskBody p img{width: auto;max-width: 100%;height: auto;}
+#taskDetaitPage .task-detail-body #taskBody a{text-decoration: underline;}
+
+#taskDetaitPage .task-detail-step{margin-bottom: 0px;display: none;}
+#taskDetaitPage .task-detail-step .step_number{line-height: 16px;color: #333;}
+#taskDetaitPage .task-detail-step .step_number span{display: inline-block;width: 16px;height: 16px;text-align: center;background: #eaeaea;border-radius: 10px;font-size: 12px;float: left;margin-right: 8px;}
+#taskDetaitPage .task-detail-step .step_item{margin-top: 20px;}
+#taskDetaitPage .task-detail-step .step_item .step_content{border-left: 1px dashed #ddd;padding: 0px 15px;margin: 8px;}
+#taskDetaitPage .task-detail-step .step_item .step_content a{text-decoration: underline;}
+#taskDetaitPage .task-detail-step .step_item:last-child .step_content{border-left-color: #fff;}
+#taskDetaitPage .task-detail-step .content_image img{width: 60px;height: 60px;margin: 0px 5px 5px 0px;border-radius: 2px;}
+
+#taskDetaitPage #getTaskBtn{height: 60px;background-color:#F1F1F1;padding: 0px 15px;bottom: 0;}
+#taskDetaitPage #getTaskBtn button{top:10px;height: 40px;}
+#taskDetaitPage #getTaskBtn button span{font-size: 12px;margin-left: 10px;}
+
+/*任务提交页面*/
+#taskReferPage .mui-input-group{margin: 0px;padding: 10px 15px;}
+#taskReferPage .block-header{margin-bottom: 0px;padding: 5px 15px;font-size: 14px;color: #333;margin-top: 10px;}
+#taskReferPage .tips{margin-top: 15px;}
+#taskReferPage .tips p{font-size: 14px;color: #333;}
+#taskReferPage .tips .tips_text{font-size: 12px;color: #666;}
+#taskReferPage .tips .tips_image{margin-top: 10px;display: none;}
+#taskReferPage .tips .tips_image img{width: 60px;height: 60px;margin: 0px 5px 5px 0px;border-radius: 2px;}
+
+#taskReferPage #referImage .mui-input-group{display: table;width: 100%;color: #666;font-size: 24px;}
+#taskReferPage #referImage img{width: 60px;height: 60px;margin: 5px 5px 5px 0px;border-radius: 2px;float: left;}
+#taskReferPage #referImage #addImage{width: 60px;height: 60px;margin: 5px 5px 5px 0px;background: #eaeaea;line-height: 55px;text-align: center;border-radius: 2px;float: left;}
+#taskReferPage #warning{margin: 0px 15px;font-size: 12px;}
+#taskReferPage #warning a{text-decoration: underline;color: #0F9D58;}
+#taskReferPage #saveBtn span{font-size: 12px;margin-left: 10px;}
+
+/*我的任务页面*/
+#myTaskPage .mui-table-view{margin: 0px;border-top: #f1f1f1 15px solid;display: none;}
+#myTaskPage .mui-table-view .mui-media-object{max-width: 50px;width: 50px;height: 50px;border-radius: 3px;font-size: 8px;text-align: center;line-height: 100%;}
+#myTaskPage .mui-table-view .mui-media-object .iconfont{font-size: 28px;line-height: 100%;margin-top: 3px;}
+#myTaskPage .mui-table-view .mui-media-object .iconfont.icon-download{color: #f4b400;}
+#myTaskPage .mui-table-view .mui-media-object .iconfont.icon-attention{color: #4285f4;}
+#myTaskPage .mui-table-view .mui-media-object .iconfont.icon-magnifier{color: #0F9D58;}
+#myTaskPage .mui-table-view .mui-media-object .iconfont.icon-other{color: #db4437;}
+
+#myTaskPage .mui-table-view .task-title{font-size: 14px;font-weight: bold;color: #333;margin-bottom: 5px;}
+#myTaskPage .mui-table-view .task-btm{font-size: 12px;}
+#myTaskPage .mui-table-view .task-btm .task-wage{font-weight: bold;color: #db4437;}
+
+#myTaskPage .mui-table-view .task-btm .task-status{float: right;color: #ccc;height: 18px;line-height: 16px;border-radius: 2px;border: #ccc 1px solid;font-size: 10px;padding-right: 3px;}
+#myTaskPage .mui-table-view .task-btm .task-status .iconfont{font-size: 14px;background: #ccc;color: #fff;height: 100%;line-height: 16px;margin-right: 3px;float: left;padding: 0px 1px;}
+#myTaskPage .mui-table-view .task-btm .task-status.green{border-color: #0F9D58;color: #0F9D58;}
+#myTaskPage .mui-table-view .task-btm .task-status.green .iconfont{background: #0F9D58;}
+#myTaskPage .mui-table-view .task-btm .task-status.yellow{border-color: #f4b400;color: #f4b400;}
+#myTaskPage .mui-table-view .task-btm .task-status.yellow .iconfont{background: #f4b400;}
+#myTaskPage .mui-table-view .task-btm .task-status.red{border-color: #db4437;color: #db4437;}
+#myTaskPage .mui-table-view .task-btm .task-status.red .iconfont{background: #db4437;}
+
+#myTaskPage .mui-table-view .task-remark{font-size: 12px;color: #666;background: #eaeaea;padding: 0px 5px;margin-top: 5px;border-radius: 3px;}
+#myTaskPage .mui-table-view .task-expired .task-title,#myTaskPage .mui-table-view .task-expired .task-wage{color: #8f8f94;}
+#myTaskPage #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+#myTaskPage #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 100px 0px 0px;}

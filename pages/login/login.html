@@ -56,6 +56,9 @@ function loginSubmit() {
 	      		$.fire(plus.webview.getWebviewById('account'),'refresh',{user:data.user});
 	      		plus.webview.getWebviewById('chat').evalJS('refreshPage()');
 	      		plus.nativeUI.closeWaiting();
+	      		//如果是兼职详情页或任务详情页唤醒登录的，则重新加载页面数据
+	      		if(plus.webview.getWebviewById("jobDetailt")){plus.webview.getWebviewById("jobDetailt").evalJS("setData()")}
+	      		if(plus.webview.getWebviewById("taskDetailt")){plus.webview.getWebviewById("taskDetailt").evalJS("setData()")}
 				$.back();
 			},
 			error: function(a,b,c) {

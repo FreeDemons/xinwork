@@ -258,7 +258,8 @@
 					"team.html",
 					"chat.html",
 					"pages/login/login.html",
-					"guide.html"
+					"guide.html",
+					"task.html"
 				]
 			},
 			"home.html": {
@@ -901,6 +902,72 @@
 					"css/style.css"
 				],
 				"refer": [],
+				"priority": 0
+			},
+			"pages/task/taskDetailt.html": {
+				"resources": [
+					"css/share.css",
+					"js/mui.zoom.js",
+					"js/setting.js",
+					"js/mui.min.js",
+					"css/previewimage.css",
+					"js/share.js",
+					"js/mui.previewimage.js",
+					"css/task.css",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [
+					"pages/login/login.html",
+					"pages/task/taskRefer.html"
+				],
+				"priority": 0
+			},
+			"task.html": {
+				"resources": [
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css",
+					"js/setting.js",
+					"fonts/mui.ttf",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [
+					"pages/task/taskDetailt.html",
+					"pages/login/login.html",
+					"pages/task/myTask.html"
+				],
+				"priority": 0
+			},
+			"pages/task/taskRefer.html": {
+				"resources": [
+					"css/job.css",
+					"js/app.js",
+					"js/mui.zoom.js",
+					"js/setting.js",
+					"css/previewimage.css",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css",
+					"js/mui.previewimage.js",
+					"fonts/iconfont.ttf",
+					"css/task.css"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/task/myTask.html": {
+				"resources": [],
+				"refer": [
+					"pages/task/taskDetailt.html",
+					"pages/wallet/walletDetails.html"
+				],
 				"priority": 0
 			}
 		},

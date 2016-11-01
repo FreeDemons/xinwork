@@ -24,8 +24,12 @@ $.init({
   	},
 });
 var page=0;
-var url = XW.base + 'wallet/details';
+var tid="";
 $.plusReady(function() {
+	if(plus.webview.currentWebview().tid){
+		tid = plus.webview.currentWebview().tid;
+		document.querySelector(".mui-bar-nav .mui-title span").innerText = plus.webview.currentWebview().title;
+	}
 	getData();
 	
 	//打开明细详情页
@@ -50,15 +54,16 @@ $.plusReady(function() {
 	mui('#sortMenu').on('tap', '.mui-table-view-cell', function() {
 		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
 		page=0;
-		url = XW.base + 'wallet/details' + this.getAttribute('data-stutas');
+		tid = this.getAttribute('data-tid');
 		getData();
 		toggleMenu();
+		document.querySelector(".mui-bar-nav .mui-title span").innerText = this.textContent;
 	});
 });
 //获取数据
 function getData(){
 	plus.nativeUI.showWaiting();
-	$.getJSON(url,function(data){
+	$.getJSON(XW.base + 'wallet/details' + tid,function(data){
 		plus.nativeUI.closeWaiting();
 		doc.body.querySelector('#detailsList').innerHTML = "";
 		if(data.length == 0){
@@ -76,7 +81,7 @@ function getData(){
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-    $.getJSON(url + '?page=' + page,function(data){
+    $.getJSON(XW.base + 'wallet/details' + tid + '?page=' + page,function(data){
 		showDetails(data);
 		setTimeout(function() {
 			var refb = data.length < 20 ? true : false;
@@ -172,7 +177,7 @@ function toggleMenu() {
 <body>
 	<header class="mui-bar mui-bar-nav" style="z-index: 1000;">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
-		<h1 class="mui-title">收支明细</h1>
+		<h1 class="mui-title">收支明细（<span>全部</span>）</h1>
 		<a class="mui-action-menu mui-icon iconfont icon-filter mui-pull-right" id="sortBtn"></a>
 	</header>
 	<div class="mui-scroll-wrapper mui-content" id="refreshContainer">
@@ -184,12 +189,12 @@ function toggleMenu() {
 	<div id="menu-wrapper" class="menu-wrapper hidden">
 		<div id="sortMenu" class="menu">
 			<ul class="mui-table-view mui-table-view-inverted">
-				<li class="mui-table-view-cell" data-stutas="">全部</li>
-			    <li class="mui-table-view-cell" data-stutas="/0">兼职工资</li>
-			    <li class="mui-table-view-cell" data-stutas="/2">工资提现</li>
-			    <li class="mui-table-view-cell" data-stutas="/1">签到奖励</li>
-			    <li class="mui-table-view-cell" data-stutas="/4">积分兑换</li>
-			    <li class="mui-table-view-cell" data-stutas="/3">网赚工资</li>
+				<li class="mui-table-view-cell" data-tid="">全部</li>
+			    <li class="mui-table-view-cell" data-tid="/0">兼职工资</li>
+			    <li class="mui-table-view-cell" data-tid="/2">工资提现</li>
+			    <li class="mui-table-view-cell" data-tid="/1">签到奖励</li>
+			    <li class="mui-table-view-cell" data-tid="/4">积分兑换</li>
+			    <li class="mui-table-view-cell" data-tid="/3">网赚工资</li>
 			</ul>
 		</div>
 	</div>

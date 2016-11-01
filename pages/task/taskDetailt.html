@@ -1,0 +1,270 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title></title>
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<link rel="stylesheet" type="text/css" href="../../css/mui.min.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/previewimage.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/task.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/share.css"/>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../js/setting.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" charset="UTF-8">
+mui.init({gestureConfig:{longtap:true}});
+var tid,taskData,referStatus=0,countDownTime=0;
+mui.plusReady(function(){
+	mui.previewImage();//图片预览插件
+	mui('.mui-scroll-wrapper').scroll();
+	tid = plus.webview.currentWebview().tid;
+	setData();
+	shareApp();
+	//添加下边线
+	var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
+	document.querySelector('#taskLave').classList.add(lineclass);
+	mui('.task-block-header')[0].classList.add(lineclass);
+	mui('.task-block-header')[1].classList.add(lineclass);
+	//点击任务按钮
+	mui("#getTaskBtn").on('tap', 'button', function() {getTask()});
+	//打开内容中的链接
+	mui("#taskBody,#taskStep").on('tap', 'a', function() {plus.runtime.openURL(this.getAttribute("href"))});
+	//长按保存图片
+	mui(".mui-preview-image").on('longtap', 'img', function() {
+		var actionList = {cancel:"取消",buttons:[{title:"保存图片到相册"}]};
+        var imgSrc = this.getAttribute("src");
+        //弹出actionSheet选项
+        plus.nativeUI.actionSheet(actionList,function(e){
+            if(e.index==1){
+                //创建一个下载任务
+                var imgDtask = plus.downloader.createDownload(imgSrc,{method:"GET"},function(d,status){
+                    //下载完成的回调函数
+                    if (status == 200 ) { 
+                        plus.gallery.save(d.filename,function(){//保存到相册
+                            plus.io.resolveLocalFileSystemURL(d.filename,function(entry){
+                                entry.remove();//删除临时文件
+                            });
+                            return mui.toast('图片已保存至相册');
+                        });                     
+                    }else{
+                        plus.nativeUI.toast("保存失败!",{'verticalAlign':'center'}); 
+                    }  
+                });
+                imgDtask.start();//开始下载任务
+            }
+        });
+	});
+})
+
+//初始化页面数据
+function setData(){
+	ownerLoad.show();
+	mui.getJSON(XW.base + 'customize/task/' + tid,function(data){
+		document.querySelector(".mui-content").style.display = "block";
+		ownerLoad.close();
+		taskData = data;
+		document.querySelector("#taskTitle span").textContent = data.title;
+		document.querySelector("#taskLave font").textContent = data.numberLave;
+		document.querySelector("#taskTitle b").textContent = '【' + data.wage + '】';
+		document.querySelector("#taskTid span").textContent = tid;
+		document.querySelector("#taskNumber span").textContent = data.number;
+		document.querySelector("#taskCheck span").textContent = data.checktime;
+		document.querySelector("#taskDevice span").textContent = data.device;
+		document.querySelector("#taskCity span").textContent = data.city;
+		document.querySelector("#taskBody").innerHTML = data.body;
+		//添加任务步骤
+		if(data.step.length>0){
+			document.querySelector('#taskStep').innerHTML = "";
+			document.querySelector(".task-detail-step").style.display = "block";
+			var numberArr = ["一", "二", "三", "四", "五", "六", "七", "八", "九","十"];
+			for(var i=0;i<data.step.length;i++){
+				var step = data.step[i];
+				var div = document.createElement('div');
+				div.className = 'step_item';
+				
+				var imageHtml = '';
+				if(step.images.length>0){
+					imageHtml += '<div class="content_image">';
+					for(var j=0;j<step.images.length;j++){
+						imageHtml += '<img data-preview-src="' + step.images[j].url + '" src="' + step.images[j].style + '"/>';
+					}
+					imageHtml += '</div>';
+				}
+				div.innerHTML = '<p class="step_number"><span>'+(i+1)+'</span>第'+numberArr[i]+'步</p><div class="step_content"><p>'+step.body+'</p>'+imageHtml+'</div>';
+				document.body.querySelector('#taskStep').appendChild(div);
+			}
+		}
+		//任务是否已结束
+		if(data.end == true){
+			document.querySelector("#taskLave span b").textContent = '已结束';
+		}else{
+			document.querySelector("#taskLave span b").textContent = data.endtime + '截止';
+			document.querySelector("#taskLave span").classList.add('yellow');
+		}
+		//领取任务按钮状态
+		if(data.btnStatus == 1 || data.btnStatus == 2 || data.btnStatus == 3 || data.btnStatus == 4){
+			var btnText = ['领取任务','任务已结束','任务已被领完','审核中','已完成'];
+			document.querySelector("#getTaskBtn button").textContent = btnText[data.btnStatus];
+			document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
+		}else if(data.btnStatus == 5){
+			document.querySelector("#getTaskBtn button").innerHTML = '提交任务<span>(请在<font></font>内完成)</span>';
+			countDownTime = (Number(data.refer_created)+Number(data.sbmtime*3600));
+			countDown();
+		}
+	});
+}
+//倒计时
+function countDown(){
+	var now = Math.ceil(new Date().getTime()/1000);
+	var time = countDownTime-now;
+	if(time > 0){
+		var hours = Math.floor(time/3600);
+		var minutes = Math.floor((time-hours*3600)/60);
+		var seconds = Math.floor(time%60);
+		
+		hours = hours<10 ? '0' + hours : hours;
+		minutes = minutes<10 ? '0' + minutes : minutes;
+		seconds = seconds<10 ? '0' + seconds : seconds;
+		document.querySelector("#getTaskBtn button font").textContent = hours+':'+minutes+':'+seconds;
+		setTimeout("countDown()",1000);
+	}else{
+		document.querySelector("#getTaskBtn button").textContent = '已过期';
+		document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
+	}
+}
+//点击任务按钮
+function getTask(){
+	if(!plus.storage.getItem('user')){
+		mui.openWindow({url: "../login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+	}else if(taskData.btnStatus == 5){
+		mui.openWindow({url: "taskRefer.html",id: "taskRefer",extras:{rid:taskData.refer_id}});
+	}else{
+		var confirmText = '领取后请在'+taskData.sbmtime+'小时内按要求提交任务';
+		mui.confirm(confirmText,'确定领取任务？',['取消','领取'], function(e){
+			if(e.index == 1){
+				plus.nativeUI.showWaiting();
+				mui.ajax(XW.base + 'customize/task/receive/' + tid,{
+		  			type:'post',
+		  			dataType: 'json',
+		  			success:function(data){
+		  				plus.nativeUI.closeWaiting();
+		  				if(data == 0){
+							mui.alert("抱歉，任务刚刚结束！","温馨提示","",function(){
+								document.querySelector("#taskLave span b").textContent = '已结束';
+								document.querySelector("#taskLave span").classList.remove('yellow');
+								document.querySelector("#taskLave font").textContent = '0';
+								document.querySelector("#getTaskBtn button").textContent = '任务已结束';
+								document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
+							});
+						}else if(data == 1){
+							mui.alert("其它用户领取了但未及时提交的，会继续开放领取，请稍后查看","抱歉，任务刚刚被领完！","",function(){
+								document.querySelector("#taskLave font").textContent = '0';
+								document.querySelector("#getTaskBtn button").textContent = '任务已被领完';
+								document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
+							});
+						}else{
+							document.querySelector("#taskLave font").textContent = taskData.numberLave-1;
+							document.querySelector("#getTaskBtn button").innerHTML = '提交任务<span>(请在<font></font>内完成)</span>';
+							taskData.btnStatus = 5;
+							taskData.refer_id = data.rid;
+							countDownTime = Math.ceil(new Date().getTime()/1000)+Number(taskData.sbmtime*3600);
+							countDown();
+						}
+		  			},
+		  			error:function(a){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("服务器响应失败，请稍后重试！","温馨提示");
+		  			}
+				});
+			}
+		});
+	}
+}
+//分享app
+function shareApp(){
+	updateSerivces();
+	var shareContent = '找兼职，不奔波，上薪窝。下载薪窝兼职APP领取任务'
+	var shareUrl = 'http://2bai.co/1000561';
+	mui('body').on('tap', '.mui-popover-action .shareItem', function() {
+		mui('#shareJob').popover('toggle');
+		var msgwx = {content:shareContent,href:shareUrl,title:taskData.title,extra:{scene:'WXSceneSession'}};
+		var msgpy = {content:shareContent,href:shareUrl,title:taskData.title,extra:{scene:'WXSceneTimeline'}};
+		var msgqq = {content:shareContent,href:shareUrl,title:taskData.title};
+		if (share['weixin'] ||share['qq']) {
+			switch (this.id){
+				case 'weixin':
+					shareAction(share['weixin'], msgwx);
+					break;
+				case 'pengyouquan':
+					shareAction(share['weixin'], msgpy);
+					break;
+				case 'qq':
+					shareAction(share['qq'],msgqq)
+					break;
+			}
+		}else{
+			mui.toast('系统发生错误，无法分享。');
+		}
+	});
+}
+</script>
+<style type="text/css">
+.mui-bar-nav .iconfont{line-height: 44px;font-size: 18px;z-index: 20;position: relative;float: right;padding: 0px 5px;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+	    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+	    <h1 class="mui-title">任务详情</h1>
+	    <a class="mui-pull-right iconfont icon-share" href="#shareApp"></a>
+	</header>
+	<div class="mui-content mui-scroll-wrapper" id="taskDetaitPage" style="display: none;">
+		<div class="mui-scroll">
+			<div class="task-detail-info task-block">
+				<div id="taskTitle"><span></span><b></b></div>
+				<div id="taskLave">剩余：<font></font>次<span><i class="iconfont icon-clock"></i><b></b></span></div>
+				<p id="taskTid">任务编号：<span></span></p>
+				<p id="taskNumber">任务总数：<span></span>次</p>
+				<p id="taskCheck">审核时长：最多<span></span>小时</p>
+				<p id="taskDevice">设备限制：<span></span></p>
+				<p id="taskCity">城市限制：<span></span></p>
+			</div>
+			<div class="task-detail-body task-block">
+				<div class="task-block-header"><span class="mui-icon iconfont icon-description"></span>&nbsp;任务描述</div>
+				<div id="taskBody"></div>
+			</div>
+			<div class="task-detail-step task-block">
+				<div class="task-block-header"><span class="mui-icon iconfont icon-step" style="color: #f4b400;"></span>&nbsp;任务步骤</div>
+				<div id="taskStep" class="mui-content-padded"></div>
+			</div>
+		</div>
+		<div class="mui-bar" id='getTaskBtn'><button type="button" class="mui-btn mui-btn-block mui-btn-success">领取任务</button></div>
+	</div>
+	<div id="shareApp" class="mui-popover mui-popover-action mui-popover-bottom">
+		<div class="share">
+			<div class="shareList" >
+				<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
+					<span class="mui-icon mui-icon-weixin icon"></span>
+				</div>
+				<p>微信</p>
+			</div>
+			<div class="shareList" >
+				<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
+					<span class="mui-icon mui-icon-pengyouquan icon"></span>
+				</div>
+				<p >朋友圈</p>
+			</div>
+			<div class="shareList">
+				<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
+					<span class="mui-icon mui-icon-qq icon"></span>
+					<p>QQ</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

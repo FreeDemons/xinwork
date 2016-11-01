@@ -74,7 +74,7 @@ function regSubmit(){
 		<h1 class="mui-title">注册</h1>
 	</header>
 	<div class="mui-content">
-		<form id='reg-form' class="mui-input-group">
+		<form id='reg-form' class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row">
 				<label for="phoneNumber">手机号码</label>
 				<input id="phoneNumber" maxlength="11" type="tel" class="mui-input-clear mui-input" placeholder="请填写手机号">

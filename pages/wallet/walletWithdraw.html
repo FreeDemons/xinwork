@@ -76,7 +76,7 @@ function strReplace(str){
 				<input type="radio" value="alipay" name="way"></input>支付宝<span></span>
 			</div>
 		</form>
-		<form class="mui-input-group">
+		<form class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row">
 				<label for="cash">提现金额</label>
 				<input id="cash" type="number" class="mui-input-clear mui-input">

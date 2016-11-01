@@ -13,12 +13,13 @@
 mui.init();
 mui.plusReady(function() {
 	mui('.mui-scroll-wrapper').scroll();
+	plus.nativeUI.toast('温馨提示：\n连报天数越多越容易被录取！',{'duration':'long'});
 	//获得传递值
 	var extrasval = plus.webview.currentWebview();
 	var title = extrasval.title;
 	var date_select = extrasval.date_select;
 	if(date_select != ""){
-		$(".mui-table-view,.block-header:eq(1)").show();
+		$(".mui-table-view,.block-header:eq(0)").show();
 		mui.each(date_select, function(i, n) {
 			var li = document.createElement('li');
 			li.className = 'mui-table-view-cell mui-checkbox mui-left';
@@ -82,23 +83,25 @@ mui.plusReady(function() {
 <style type="text/css">
 .block-header{margin-bottom: 0px;padding: 5px 15px;font-size: 14px;color: #333;margin-top: 10px;}
 .mui-table-view:after,.mui-table-view:before{background: #ccc;}
-.mui-table-view{color: #333;font-size: 16px;margin-bottom: 40px;}
+.mui-table-view{color: #333;font-size: 16px;}
 </style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">报名兼职</h1>
-		<a class="mui-btn-link mui-pull-right" id="saveBtn">确定</a>
 	</header>
 	<div class="mui-content mui-scroll-wrapper">
 		<div class="mui-scroll">
+			<p class="block-header" style="display: none;">你想报名哪几天：</p>
+			<ul class="mui-table-view" style="display: none;"></ul>
 			<p class="block-header">填写备注：</p>
 			<form class="mui-input-group" style="margin: 0px;">
 				<textarea id="body" rows="3" maxlength="100" placeholder="备注可能直接影响录取喔..."></textarea>
 			</form>
-			<p class="block-header" style="display: none;">选择报名日期（必选）：</p>
-			<ul class="mui-table-view" style="display: none;"></ul>
+			<div class="mui-content-padded">
+				<button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">提交报名</button>
+			</div>
 		</div>
 	</div>
 </body>

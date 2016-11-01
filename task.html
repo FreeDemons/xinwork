@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title>首页</title>
+<script src="js/mui.min.js"></script>
+<script src="js/setting.js"></script>
+<link href="css/mui.min.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="css/iconfont.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" charset="UTF-8">
+mui.init({
+	pullRefresh : {
+	    container:"#refreshContainer",
+	    down : {
+	      contentdown : "下拉刷新...",
+	      contentover : "松开刷新...",
+	      contentrefresh : "正在刷新...",
+	      callback :taskLoad
+	    },
+	    up : {
+	      contentrefresh : "正在加载...",
+	      contentnomore:'没有更多数据了',
+	      callback :pullUpfresh
+	    }
+  	},
+	keyEventBind: {backbutton: false}
+});
+var page=0;
+mui.plusReady(function() {
+	if(plus.storage.getItem('task')){showTask(JSON.parse(plus.storage.getItem('task')));}//显示缓存的任务列表
+	taskLoad();
+	//打开任务详情页
+	mui('#taskList').on('tap', '.mui-table-view-cell', function() {
+		mui.openWindow({id:'taskDetailt',url:"pages/task/taskDetailt.html",extras:{tid:this.getAttribute("data-tid")}});
+	});
+});
+//加载数据
+function taskLoad(){
+	plus.storage.setItem('taskUpdateTime',JSON.stringify(new Date().getTime()));
+	mui.getJSON(XW.base + 'tasklist',function(data){
+		page=0;
+		document.querySelector('#taskList').innerHTML = "";
+		mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+		mui('#refreshContainer').pullRefresh().refresh(true);
+		showTask(data);
+		plus.storage.setItem('task',JSON.stringify(data));
+	});
+}
+//上拉加载
+function pullUpfresh(){
+	page += 1;
+    mui.getJSON(XW.base + 'tasklist?page=' + page,function(data){
+		showTask(data);
+	});
+}
+
+function showTask(data){
+	mui.each(data, function(i, n) {
+		var typeArr = ["下载注册","微信关注","调查问卷","其它"];
+		var iconArr = ["download","attention","magnifier","other"];
+		
+		if(n.flagged == 1){
+			var number = '0';
+			var statusColor = '';
+			var time = '已结束';
+		}else{
+			var number = (n.field_number-n.count);
+			var statusColor = 'yellow';
+			var endDate = new Date(parseInt(n.field_timestamp_date) * 1000);
+			var time = (endDate.getMonth()+1) + '月' + endDate.getDate() + '号截止';
+		}
+		
+		var li = document.createElement('li');
+		li.className = 'mui-table-view-cell mui-media';
+		li.setAttribute("data-tid",n.tid);
+		li.innerHTML = '<div class="mui-media-object mui-pull-left"><span class="iconfont icon-' + iconArr[n.field_task_type] + ' mui-block"></span>' + typeArr[n.field_task_type]
+						+ '</div><div class="mui-media-body"><div class="task-title mui-ellipsis">' + n.title + '</div><p class="task-btm"><span class="task-wage">'
+						+ n.field_wage + '</span> | 剩余 ' + number + ' 次<span class="task-status ' + statusColor + '"><i class="iconfont icon-clock"></i>' + time + '</span></p></div>';
+		document.querySelector('#taskList').appendChild(li);
+	});
+	var refb = data.length < 20 ? true : false;
+	mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
+}
+//打开我的任务
+function openMyTask(){
+	if(plus.storage.getItem('user')){
+		mui.openWindow({id:'myTask',url:"pages/task/myTask.html"});
+	}else{
+		mui.openWindow({url: "pages/login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+	}
+}
+</script>
+</head>
+<body>
+	<div class="mui-content task-content mui-scroll-wrapper" id="refreshContainer">
+		<div class="mui-scroll">
+			<ul class="mui-table-view" id="taskList"></ul>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,3 +1,14 @@
+/*团队列表页*/
+#teamListPage #teamList{margin: 35px 0px 15px;display: none;}
+#teamListPage #teamList img{max-width: 60px;height: 60px;}
+#teamListPage #teamList .team-title{font-size: 16px;}
+#teamListPage #teamList .team-title span{font-size: 12px;color: #999;margin-left: 10px;}
+#teamListPage #teamList .team-description{font-size: 12px;color:#333;max-height: 3em;overflow: hidden;line-height: 150%;margin: 5px 0px;}
+#teamListPage #teamList .mui-icon{font-size: 16px;margin-right: 5px;}
+#teamListPage #teamList p{font-size: 12px;}
+#teamListPage #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+#teamListPage #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 100px 0px 0px;}
+
 /*团队详情页样式*/
 #teamDetaitPage .team-block-header{font-size: 16px;font-weight: normal;position: relative;padding-bottom: 10px;}
 #teamDetaitPage .team-block-header .mui-icon{color:#0f9d58;font-size: 18px;}
