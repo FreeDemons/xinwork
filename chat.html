@@ -55,7 +55,7 @@
 				//点击返回触发
 				document.querySelector(".mui-action-back").addEventListener("tap",function(){
 					var index = plus.webview.getLaunchWebview().id;
-					plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat .iconfont').style.display = 'none';");
+					plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat span').style.display = 'none';");
 				})
 			});
 			
@@ -130,7 +130,7 @@
 			
 			var checkNewMsg = function(groupId,unread) {
 				var index = plus.webview.getLaunchWebview().id;
-				plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat .iconfont').style.display = 'block';");
+				plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat span').style.display = 'block';");
 				var group_li = document.querySelector(".mui-table-view li[data-gid='" + groupId + "']");
 				if(group_li){
 					var badge = group_li.querySelector('.chat-badge');

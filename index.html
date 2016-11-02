@@ -50,7 +50,7 @@ mui.plusReady(function() {
 	mui.preload({id:'chat',url:"chat.html"});
 	document.getElementById("chat").addEventListener('tap',function(){
 		mui.openWindow({id:'chat'});
-		document.querySelector('.mui-bar-nav #chat .iconfont').style.display = 'none';
+		document.querySelector('.mui-bar-nav #chat span').style.display = 'none';
 	})
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
@@ -135,7 +135,7 @@ mui.plusReady(function() {
 .mui-bar-nav .mui-btn-link{color: #333;font-size: 14px;padding: 0px 5px;display: none;}
 .mui-bar-nav .mui-btn-link:active{color: #999;}
 .mui-bar-nav .mui-btn-link .mui-icon{font-size: 16px;}
-.mui-bar-nav #chat .iconfont{color: #DB4437;display: none;}
+.mui-bar-nav #chat span{display: none;width: 8px;height: 8px;border-radius: 8px;background: #DB4437;position: absolute;top: 12px;right: 12px;}
 
 .mui-pull-top-pocket{margin-top:30px}
 .tab-home .iconfont:before { content: "\e621";}
@@ -154,11 +154,11 @@ mui.plusReady(function() {
 		<a class="mui-pull-left mui-btn-link" id="articleSelect">分类<span class="mui-icon mui-icon-arrowdown"></span></a>
 		<h1 class="mui-title">首页</h1>
 		<a class="mui-pull-right mui-btn-link" id="myTask">我的任务</a>
-		<a class="mui-pull-right mui-btn-link" id="chat" style="display: block;"><span class="iconfont icon-qipao"></span>消息</a>
+		<a class="mui-pull-right mui-btn-link" id="chat" style="display: block;">消息<span></span></a>
 		<!--<span class="mui-icon mui-icon-arrowdown" id='articleSelect' style="font-size: 18px;display: none;position: relative;left:55%;top:10%"></span>
 		
-		<a class="iconfont icon-bubble mui-icon mui-pull-right" style="color: #0F9D58;font-size: 22px;">
-			<span class="iconfont icon-qipao"></span>
+		<a class="iconfont icon-bubble mui-icon mui-pull-right mui-btn-link" id="chat" style="color: #0F9D58;font-size: 22px;">
+			<span class="iconfont icon-qipao" style="display: none;"></span>
 		</a>-->
 	</header>
 	<nav class="mui-bar mui-bar-tab">
