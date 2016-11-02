@@ -119,7 +119,6 @@ function getCityByLoc(){
 		//主页显示当前城市
 		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
 	},function(e){
-		console.log(e.message)
 		homeLoad();
 	})
 }

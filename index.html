@@ -26,12 +26,12 @@ mui.plusReady(function() {
 			plus.navigator.setFullscreen(false);//显示状态栏；
 		},1500)
 	}
+	
 	//检查更新
 	app.checkUpdate();
-	
 	app.setUser();//刷新用户状态
     var self = plus.webview.currentWebview();
-    var subpages = ['home','task','chat','account'];
+    var subpages = ['home','task','discovery','account'];
     for(var i=0;i<subpages.length;i++){
     	var sub = plus.webview.create(subpages[i]+'.html',subpages[i],{top: 44+immersed,bottom: 51});
     	self.append(sub);
@@ -46,6 +46,12 @@ mui.plusReady(function() {
 		}
 		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
+	//点击打开消息页
+	mui.preload({id:'chat',url:"chat.html"});
+	document.getElementById("chat").addEventListener('tap',function(){
+		mui.openWindow({id:'chat'});
+		document.querySelector('.mui-bar-nav #chat .iconfont').style.display = 'none';
+	})
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
     	plus.webview.getWebviewById("home").evalJS("toggleMenu()");
@@ -54,12 +60,18 @@ mui.plusReady(function() {
     document.getElementById("myTask").addEventListener('tap',function(){
     	plus.webview.getWebviewById("task").evalJS("openMyTask()");
     });
+    //选择文章种类
+    document.getElementById("articleSelect").addEventListener('tap',function(){
+    	plus.webview.getWebviewById("discovery").evalJS("toggleMenu()");
+    })
     //选项卡点击事件
     var activeTab = 'home';
     var title=document.querySelector(".mui-title");
 	mui('.mui-bar-tab').on('tap', 'a', function(e) {
 		mui(".mui-bar-nav .mui-btn-link")[0].style.display = "none";
 		mui(".mui-bar-nav .mui-btn-link")[1].style.display = "none";
+		mui(".mui-bar-nav .mui-btn-link")[2].style.display = "none";
+		mui(".mui-bar-nav .mui-btn-link")[3].style.display = "none";
 		//获取目标子页的id
 	    var targetTab = this.getAttribute('data-tab');
 	    if (targetTab == activeTab) {
@@ -67,12 +79,13 @@ mui.plusReady(function() {
 	    }else if(targetTab == "home"){
 	    	//首页显示城市选择按钮
 	    	document.getElementById("citySelect").style.display = "block";
-	    	
+	    	document.getElementById("chat").style.display ="block";
 	    	//距离上次刷新超过10分钟，重新载入数据
 	    	if(new Date().getTime()-plus.storage.getItem('homeUpdateTime')>600000){
 	    		plus.webview.getWebviewById('home').evalJS("homeLoad()");
 	    	}
 	    }else if(targetTab == "account"){
+	    	document.getElementById("chat").style.display ="block";
 	    	app.setUser();
 	    	var user = plus.storage.getItem('user');
 	    	if(user != null){
@@ -87,6 +100,8 @@ mui.plusReady(function() {
 	    	if(new Date().getTime()-plus.storage.getItem('taskUpdateTime')>600000){
 	    		plus.webview.getWebviewById('task').evalJS("taskLoad()");
 	    	}
+	   }else if(targetTab == "discovery"){
+	    	document.getElementById("articleSelect").style.display = "block";
 	    }
 	    
 	    //更换标题
@@ -114,27 +129,37 @@ mui.plusReady(function() {
 		}
 	};
 });
+
 </script>
 <style type="text/css">
+.mui-bar-nav .mui-btn-link{color: #333;font-size: 14px;padding: 0px 5px;display: none;}
+.mui-bar-nav .mui-btn-link:active{color: #999;}
+.mui-bar-nav .mui-btn-link .mui-icon{font-size: 16px;}
+.mui-bar-nav #chat .iconfont{color: #DB4437;display: none;}
+
 .mui-pull-top-pocket{margin-top:30px}
 .tab-home .iconfont:before { content: "\e621";}
 .tab-home.mui-active .iconfont:before { content: "\e624";}
 .tab-task .iconfont:before { content: "\e62c";}
 .tab-task.mui-active .iconfont:before { content: "\e632";}
-.tab-chat .iconfont:before { content: "\e616"; }
-.tab-chat.mui-active .iconfont:before { content: "\e61a";}
+.tab-discovery .iconfont:before { content: "\e631"; }
+.tab-discovery.mui-active .iconfont:before { content: "\e646";}
 .tab-account .iconfont:before { content: "\e630";}
 .tab-account.mui-active .iconfont:before { content: "\e62f";}
 </style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
-		<a class="mui-pull-left mui-btn-link" id="citySelect" style="color: #333;font-size: 14px;padding-left: 5px;">
-			<font></font> 
-			<span class="mui-icon mui-icon-arrowdown" style="font-size: 16px;"></span>
-		</a>
+		<a class="mui-pull-left mui-btn-link" id="citySelect" style="display: block;"><font></font><span class="mui-icon mui-icon-arrowdown"></span></a>
+		<a class="mui-pull-left mui-btn-link" id="articleSelect">分类<span class="mui-icon mui-icon-arrowdown"></span></a>
 		<h1 class="mui-title">首页</h1>
-		<a class="mui-pull-right mui-btn-link" id="myTask" style="font-size: 14px;margin-right: 5px;display: none;">我的任务</a>
+		<a class="mui-pull-right mui-btn-link" id="myTask">我的任务</a>
+		<a class="mui-pull-right mui-btn-link" id="chat" style="display: block;"><span class="iconfont icon-qipao"></span>消息</a>
+		<!--<span class="mui-icon mui-icon-arrowdown" id='articleSelect' style="font-size: 18px;display: none;position: relative;left:55%;top:10%"></span>
+		
+		<a class="iconfont icon-bubble mui-icon mui-pull-right" style="color: #0F9D58;font-size: 22px;">
+			<span class="iconfont icon-qipao"></span>
+		</a>-->
 	</header>
 	<nav class="mui-bar mui-bar-tab">
         <a class="mui-tab-item mui-active tab-home" data-tab="home">
@@ -145,9 +170,9 @@ mui.plusReady(function() {
             <span class="mui-icon iconfont"></span>
             <span class="mui-tab-label">网赚</span>
         </a>
-        <a class="mui-tab-item tab-chat" data-tab="chat">
+        <a class="mui-tab-item tab-discovery" data-tab="discovery">
             <span class="mui-icon iconfont"></span>
-            <span class="mui-tab-label">消息</span>
+            <span class="mui-tab-label">发现</span>
         </a>
         <a class="mui-tab-item tab-account" data-tab="account">
             <span class="mui-icon iconfont"></span>

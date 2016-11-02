@@ -255,11 +255,10 @@
 				],
 				"priority": 0,
 				"refer": [
-					"team.html",
 					"chat.html",
-					"pages/login/login.html",
 					"guide.html",
-					"task.html"
+					"task.html",
+					"discovery.html"
 				]
 			},
 			"home.html": {
@@ -285,7 +284,8 @@
 					"pages/other/teamwork.html",
 					"pages/login/login.html",
 					"pages/mall/mallhome.html",
-					"guide.html"
+					"guide.html",
+					"wowen.html"
 				],
 				"priority": 0
 			},
@@ -722,7 +722,8 @@
 					"js/app.js",
 					"js/setting.js",
 					"images/chatheader.png",
-					"fonts/mui.ttf"
+					"fonts/mui.ttf",
+					"images/chatheader.jpg"
 				],
 				"refer": [
 					"pages/message/message.html",
@@ -968,6 +969,62 @@
 					"pages/task/taskDetailt.html",
 					"pages/wallet/walletDetails.html"
 				],
+					"priority": 0
+			},
+			"discovery.html": {
+				"resources": [
+					"images/cbd.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/setting.js",
+					"css/style.css",
+					"css/offcanvas-drag-down.css",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [
+					"pages/discovery/articleList.html",
+					"pages/job/jobDetailt.html",
+					"pages/login/login.html",
+					"pages/other/teamwork.html",
+					"pages/discovery/article.html"
+				],
+				"priority": 0
+			},
+			"pages/discovery/articleList.html": {
+				"resources": [
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"fonts/iconfont.ttf",
+					"images/ylbl.jpg",
+					"images/yb.jpg",
+					"images/dm-n.jpg",
+					"images/default.jpg",
+					"css/share.css",
+					"js/share.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/discovery/article.html": {
+				"resources": [
+					"css/share.css",
+					"images/yb.jpg",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"js/share.js",
+					"images/default.jpg",
+					"fonts/iconfont.ttf",
+					"images/ylbl.jpg",
+					"js/mui.min.js",
+					"css/mui.min.css",
+					"js/setting.js",
+					"css/style.css"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},

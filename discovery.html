@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>发现</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="css/offcanvas-drag-down.css"/>
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+		<style type="text/css" >
+		
+			html,body {min-height: 100%;background-color: #efeff4;}
+			.menu-wrapper{ height: auto;}
+			.mui-card{box-shadow: 3px 3px 3px rgba(0,0,0,0.2);margin-top: 10px;border-radius: 10px;}
+			.mui-card:active{box-shadow:none;opacity: 0.6;}
+			.mui-card .mui-card-content{height: 120px;background-size: 100% 120px;}
+			.mui-card-content .title{height: 30px;background-color: rgba(89,88,87,0.6);position: relative;top:45px;text-align: center;padding: 2px;}
+			.title h4{color: #FFF5EE;text-overflow: ellipsis;overflow: hidden;}
+			.mui-card-footer .guide{padding: 4px;font-size: 12px;}
+			.guide p{font-size: 12px;margin-bottom: -2px;}
+			.mui-card-footer .readCount{float: left}
+			.mui-card-footer .readBtn{float: right;display: block;}
+			
+			.articleSelect{border: 1px solid #D3D3D3;padding: 30px 10px;background-color: #FFF;z-index: 99;text-align: center;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;}
+			.articleSelect span{font-size: 14px;margin:8px;border: 1px solid /*#0F9D58*/#A9A9A9;padding: 2px;border-radius: 6px;}
+			.articleSelect p{font-size: 10px;position: absolute;bottom: -14px;left: 25%;}
+			.active{border: 1px solid #0F9D58 !important;}
+		</style>
+		<script src="js/mui.min.js"></script>
+		<script src="js/setting.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			mui.init({
+				pullRefresh : {	
+			    container:"#articleDiv",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+			    down : {
+			      height:30,//可选,默认50.触发下拉刷新拖动距离,
+			      auto: false,//可选,默认false.自动下拉刷新一次（安卓机无法自动下拉）
+			      contentdown : "下拉刷新...",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+			      contentover : "松开刷新...",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+			      contentrefresh : "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+			      callback :articlesLoad //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+			    },
+			    up : {
+			      //height:50,//可选.默认50.触发上拉加载拖动距离
+			      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+			      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+			      callback :moreArticles //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+			    }
+		  },
+			swipeBack: false,
+			keyEventBind: {
+					backbutton: false
+				} //关闭back按键监听
+			});
+			
+			var artType = null;
+			mui.plusReady(function(){
+			//打开文章详情页
+				mui('#articleList').on('tap', '.mui-card', function() {
+					mui.openWindow({id:'article',url:"pages/discovery/article.html",extras:{aid:this.getAttribute("data-aid")}});
+				});
+				artType = JSON.parse(plus.storage.getItem('artType'));
+				if(artType){
+						mui('.articleSelect span').each(function(){
+							for (var i = 0;i<artType.length;i++) {
+								if(artType[i] == this.textContent){
+									this.classList.add('active');
+								}
+							}
+						})
+				}else{
+					document.querySelector('.articleSelect #allArticle').classList.add('active');
+				}
+//				plus.storage.removeItem('artType');
+				mui('.articleSelect').on('tap','span',function(){
+					this.classList.toggle('active');
+					if (this.textContent !='所有文章'){
+						document.querySelector('.articleSelect #allArticle').classList.remove('active');
+					}else{
+						mui('.articleSelect .flag').each(function(){
+							this.classList.remove('active');
+						})
+					}
+				})
+				autoPulldown();
+//				articlesLoad();
+			})
+			function autoPulldown(){
+				if (mui.os.plus) {
+					mui.plusReady(function() {
+						setTimeout(function() {
+							console.log("我自己刷新了~~");
+							mui('#articleDiv').pullRefresh().pulldownLoading();
+						}, 100);
+	
+					});
+				} else {
+					mui.ready(function() {
+						mui('#articleDiv').pullRefresh().pulldownLoading();
+					});
+				}
+			}
+			var articlesType = [];
+			 var busying = false;
+			 function toggleMenu() {
+				var menuWrapper = document.getElementById("menu-wrapper");
+				var menu = document.getElementById("menu");
+				var menuWrapperClassList = menuWrapper.classList;
+				var backdrop = document.getElementById("menu-backdrop");
+					if (busying) {
+						return;
+					}
+					busying = true;
+					if (menuWrapperClassList.contains('mui-active')) {
+						document.body.classList.remove('menu-open');
+						menuWrapper.className = 'menu-wrapper fade-out-up animated';
+						menu.className = 'menu bounce-out-up animated';
+						setTimeout(function() {
+							backdrop.style.opacity = 0;
+							menuWrapper.classList.add('hidden');
+						}, 500);
+						articlesType = [];
+						mui('.articleSelect span').each(function(){
+							if(this.classList.contains('active')){
+								articlesType.push(this.innerText);
+							}
+						})
+						plus.storage.setItem('artType',JSON.stringify(articlesType));
+						autoPulldown();
+					} else {
+						document.body.classList.add('menu-open');
+						menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
+						menu.className = 'menu bounce-in-down animated';
+						backdrop.style.opacity = 1;
+					}
+					setTimeout(function() {
+						busying = false;
+					}, 500);
+				}
+			 function articlesLoad(){
+			 	var str = '';
+			 	artType = JSON.parse(plus.storage.getItem('artType'));
+			 	if (artType ) {
+			 		for (var i = 0;i < artType.length;i ++) {
+			 			if (i != artType.length - 1) {
+			 				str =str + 'sort['+i+']='+artType[i]+'&';
+			 			}else{
+			 				str =  str + 'sort['+i+']='+artType[i];
+			 				if (artType[i] == '所有文章') {
+			 				str = '';
+			 			}
+			 			}
+			 		}
+			 	}
+			 	console.log(XW.base + 'articlelist?'+str);
+			 	mui.ajax(XW.base + 'articlelist?'+str,{
+			 		dataType:'json',
+			 		type:'post',
+			 		timeout:'1000',
+			 		success:function(data){
+			 			document.body.querySelector('#articleList').innerHTML = "";
+			 			showArticles(data);
+			 			mui('#articleDiv').pullRefresh().endPulldownToRefresh();
+			 		},
+			 		errort:function(x,t,e){
+			 			console.log(t);
+			 		}
+			 	})
+			 }
+			 function moreArticles(){
+			 	console.log("456");
+			 	this.endPullupToRefresh(false);
+			 }
+			 function showArticles(data){
+			 	var articleList = document.querySelector('#articleList');
+			 	mui.each(data,function(i,item){
+			 		var artId = item.Id;
+			 		var artTitle = item.title;
+			 		var artSummary = item.field_body_summary;
+			 		var artBanner = item.field_banner.src;
+			 		var artNumber = item.field_number;
+			 		articleList.innerHTML = articleList.innerHTML + '<div class="mui-card" data-aid="'
+			 								+artId+'"><div class="mui-card-content" style="background-image: url('
+			 								+artBanner+');"><div class="title"> <h4><nobr>'
+			 								+artTitle+'</nobr></h4> </div> </div> <div class="mui-card-footer"> <div class="guide"> <p>&nbsp;&nbsp;&nbsp;&nbsp;'
+			 								+artSummary+'</p> <span class="readCount">'
+			 								+artNumber+'人看过</span></span> <span class="readBtn">阅读全文>></span> </div> </div> </div>';
+			 	})
+			 }
+		</script>
+	</head>
+	<body>
+				<div id="articleDiv" class="mui-content mui-scroll-wrapper" >
+				  <div id='articleList' class="mui-scroll">
+				  	<div class="mui-card">
+					<div class="mui-card-content" style="background-image: url(images/cbd.jpg);">
+						<div class="title">
+							<h4><nobr>我与你的世界只有一步之遥，见面却是遥遥无期</nobr></h4>
+						</div>
+					</div>
+					<div class="mui-card-footer">
+						<div class="guide">
+							<p>&nbsp;&nbsp;&nbsp;&nbsp;不曾记得我与你在毕业那年之后已有多少年月未曾见面，毕业狂欢那晚，你喝得醉醺醺的，在一群同学的起哄下，对当时的我说：
+								“毕业了......</p>
+							<span class="readCount">150<span class="iconfont icon-29"></span></span>
+							<span class="readBtn">阅读全文>></span>
+						</div>
+					</div>
+				</div>
+				  </div>
+				</div>
+		<div id="menu-wrapper" class="menu-wrapper hidden">
+				<div id="menu" class="menu">
+					<div class="articleSelect">
+							<span id='allArticle'>所有文章</span>
+							<span class="flag">闲言碎语</span>
+							<span class="flag" >职言职语</span>
+							<span class="flag">周边趣闻</span>
+							<p>选择你喜欢的消息分类便于阅览</p>
+					</div>
+				</div>
+			</div>
+			<div id="menu-backdrop" class="menu-backdrop"></div>
+	</body>
+
+</html>

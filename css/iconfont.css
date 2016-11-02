@@ -25,6 +25,8 @@
 
 .icon-address:before { content: "\e607"; }
 
+.icon-bubble:before { content: "\e8d6"; }
+
 .icon-question:before { content: "\e60d"; }
 
 .icon-filter:before { content: "\e611"; }
@@ -43,15 +45,21 @@
 
 .icon-collect:before { content: "\e61e"; }
 
+.icon-dushu1:before { content: "\e622"; }
+
 .icon-wallet:before { content: "\e60e"; }
 
 .icon-download:before { content: "\e634"; }
+
+.icon-discovery:before { content: "\e631"; }
 
 .icon-lists:before { content: "\e619"; }
 
 .icon-computer:before { content: "\e62c"; }
 
 .icon-team:before { content: "\e61f"; }
+
+.icon-shujiyuedu:before { content: "\e63a"; }
 
 .icon-magnifier:before { content: "\e636"; }
 
@@ -60,6 +68,8 @@
 .icon-about:before { content: "\e613"; }
 
 .icon-withdraw:before { content: "\e610"; }
+
+.icon-discoverys:before { content: "\e646"; }
 
 .icon-images:before { content: "\e6cc"; }
 
@@ -108,6 +118,8 @@
 .icon-cup:before { content: "\e629"; }
 
 .icon-computers:before { content: "\e632"; }
+
+.icon-qipao:before { content: "\e667"; }
 
 .icon-more:before { content: "\e623"; }
 
