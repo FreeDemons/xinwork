@@ -188,7 +188,7 @@ function getTask(){
 function shareApp(){
 	updateSerivces();
 	var shareContent = '找兼职，不奔波，上薪窝。下载薪窝兼职APP领取任务'
-	var shareUrl = 'http://2bai.co/1000561';
+	var shareUrl = XW.downAppSrc;
 	mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 		mui('#shareJob').popover('toggle');
 		var msgwx = {content:shareContent,href:shareUrl,title:taskData.title,extra:{scene:'WXSceneSession'}};

@@ -10,6 +10,7 @@
 
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
 		<!--App自定义的css-->
 		<style>
 			.mui-table h4, .mui-table h5, .mui-table .mui-h5, .mui-table .mui-h6, .mui-table p {
@@ -59,6 +60,17 @@
 				padding-top: 3px;
 				font-weight: 200;
 			}
+			#noneTips{
+				text-align: center;
+				color: #999;
+				font-size: 12px;
+				display: none;	
+			}
+			#noneTips .mui-icon {
+				font-size: 100px;
+				color: #aaa;
+				margin: 50px 0px 0px;
+			}
 		</style>
 
 		<script src="../../js/mui.min.js"></script>
@@ -82,8 +94,11 @@
 				var notice = '';
 				mui.getJSON(XW.base + 'rongcloud/group/notice/' + rid, function(data) {
 					if(data.length == 0){
-						document.querySelector('.mui-content').innerHTML = '<span>小主,管理员还未发布任何广告! </span>';
+						document.body.querySelector('#noneTips').style.display="block";
+						document.body.querySelector('ul').style.display = 'none';
 					}else{
+						document.body.querySelector('#noneTips').style.display="none";
+						document.body.querySelector('ul').style.display = '';
 						data = data.reverse();
 						mui.each(data, function(index, item) {
 							notice = notice + packNotice(item.noticeName, item.userName, item.noticeContent, app.timestampToTime(item.sentTime*1000));
@@ -120,6 +135,11 @@
 				<div class="nBody">
 					<p></p>
 				</div>
+			</div>
+			
+			<div id="noneTips">
+				<span class="mui-icon mui-block iconfont icon-nothing"></span>
+				很无奈，管理员还未发布任何通知ヽ(´～｀）
 			</div>
 		</div>
 	</body>

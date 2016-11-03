@@ -72,7 +72,7 @@
 					bindMsgList();
 				}
 				if (plus.storage.getItem('msgUser') == null ) {
-					//从缓存块读取当前用户以检索查询用户的接口中的头像信息
+					//从缓存块读取当前用户以检索查询用户接口中的头像信息
 					matchMsgUser(rid,uid,function(data){
 						console.log('当前用户的头像  '+data.imgUrc);
 						app.setImgFromNet(data.imgUrc,function(entry){
