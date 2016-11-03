@@ -30,7 +30,7 @@ mui.plusReady(function(){
 	mui('.task-block-header')[0].classList.add(lineclass);
 	mui('.task-block-header')[1].classList.add(lineclass);
 	//点击任务按钮
-	mui("#getTaskBtn").on('tap', 'button', function() {getTask()});
+	mui("#getTaskBtn").on('tap', 'button', getTask);
 	//打开内容中的链接
 	mui("#taskBody,#taskStep").on('tap', 'a', function() {plus.runtime.openURL(this.getAttribute("href"))});
 	//长按保存图片

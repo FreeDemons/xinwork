@@ -58,7 +58,7 @@ function hasUser(data){
 		user=data;
 		var avatar = data.picture == null ? '<span class="mui-icon iconfont icon-camera"></span>' : '<img src="'+data.picture.urls+'"/>';
 		$("#accountUser .mui-media-object").html(avatar);
-		
+		console.log(JSON.stringify(data));
 		if(data.field_identity_group == ""){
 			$(".mui-table-view-cell[data-wid='approve'] .mui-badge").show().attr("class","mui-badge mui-badge-inverted").text("未认证");
 		}else{

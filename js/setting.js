@@ -1,7 +1,7 @@
 window.XW={
 	env:"production",
 	base:"http://120.24.36.146/xinworkapp/",
-	//base:"http://192.168.0.105/goodjob58/xinworkapp/",
+	//base:"http://192.168.0.101/goodjob58/xinworkapp/",
 	xw:"http://xinwork.cn/",
 	city:{96:'珠海',95:'中山',80:'佛山',83:'江门',79:'东莞',93:'湛江'},
 	curCity:{'珠海':96,'中山':95,'佛山':80,'江门':83,'东莞':79,'湛江':93}

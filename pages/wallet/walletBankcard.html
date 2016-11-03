@@ -8,130 +8,57 @@
 <script src="../../js/setting.js"></script>
 <script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
-<link href="../../css/account.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
 $.init();
 $.plusReady(function() {
-	var bank = doc.querySelector("#bank");
-	var alipay = doc.querySelector("#alipay");
 	//显示初始值
-	var fieldId = JSON.parse(plus.storage.getItem('user')).field_wage_group;
-	if(fieldId != ""){
-		fieldId = fieldId.und[0].value;
-		doc.querySelector("#changeBtn").style.display = "block";
-		bank.setAttribute("readonly","readonly");
-		bank.classList.remove("mui-input-clear");
-		alipay.setAttribute("readonly","readonly");
-		alipay.classList.remove("mui-input-clear");
-		
-		$.getJSON(XW.base + 'entity_field_collection_item/' + fieldId,function(data){
-			bank.value = data.wage_bank == null ? "" : bankFormat(data.wage_bank);
-			alipay.value = data.wage_alipay;
-		});
-	}else{
-		doc.querySelector("#saveBtn").style.display = "block";
-	}
-	//输入银行卡号时加空格
-	bank.addEventListener("input",function(){this.value = bankFormat(this.value)});
+	plus.nativeUI.showWaiting();
+	var fieldId = JSON.parse(plus.storage.getItem('user')).field_wage_group.und[0].value;
+	$.getJSON(XW.base + 'entity_field_collection_item/' + fieldId,function(data){
+		plus.nativeUI.closeWaiting();
+		doc.querySelector("#bank").value = data.wage_bank == null ? "" : app.interceptionStr1(data.wage_bank);
+		doc.querySelector("#alipay").value = data.wage_alipay == null ? "" : app.interceptionStr1(data.wage_alipay);
+	});
+	
 	//点击更换
 	doc.querySelector("#changeBtn").addEventListener("tap",function(){
-		this.style.display = "none";
-		doc.querySelector("#saveBtn").style.display = "block";
-		bank.removeAttribute("readonly");
-		bank.classList.add("mui-input-clear");
-		bank.focus();
-		alipay.removeAttribute("readonly");
-		alipay.classList.add("mui-input-clear");
-	});
-	//提交
-	doc.querySelector("#saveBtn").addEventListener("tap",function(){
-		var bankval = bank.value.replace(/[ ]/g,"");
-		if(bankval == "" && alipay.value == ""){
-			$.alert("必须填写其中一个","温馨提示");
-		}else if(bankval != "" && !/^[0-9]{16,19}$/.test(bankval)){
-			$.alert("银行卡号格式不正确","温馨提示");
-		}else{
-			var fc_arr={};
-			var fc_field_arr={};
-			fc_field_arr['wage_bank'] = bank.value;
-			fc_field_arr['wage_alipay'] = alipay.value;
-			//检查是新建还是更新
-			if(fieldId != ""){
-				fc_arr = fc_field_arr;
-				var saveurl = 'entity_field_collection_item/' + fieldId;
-				var sendtype = 'put';
-			}else{
-				fc_arr['field_name'] = 'field_wage_group';
-				fc_arr['entity_type'] = 'user';
-				fc_arr['field'] = fc_field_arr;
-				var saveurl = 'customize/entity_field_collection_item/create';
-				var sendtype = 'post';
+		plus.nativeUI.actionSheet({cancel:"取消",buttons:[{title:"更换银行卡"},{title:"更换支付宝"}]},function(e){
+			if(e.index == 1 || e.index == 2){
+				$.openWindow({url:'walletBankcardEdit.html',id:'walletBankcardEdit',extras:{type:(e.index-1)}});
 			}
-			
-			plus.nativeUI.showWaiting( "正在保存..." );
-			$.ajax(XW.base + saveurl,{
-				headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
-	  			data:fc_arr,
-	  			type:sendtype,
-	  			dataType: 'json',
-	  			success:function(data){
-	  				plus.nativeUI.closeWaiting();
-	  				if(data == 1 || fieldId != ""){
-      					app.setUser();
-	      				$.alert("保存成功","温馨提示","",function(){
-	      					$.back();
-	      				});
-      				}else{
-      					$.alert("保存失败","温馨提示");
-      				}
-	  			},
-	  			error:function(){
-	  				plus.nativeUI.closeWaiting();
-	  				$.alert("保存失败","温馨提示");
-	  			}
-			});
-		}
-	})
+		});
+	});
 });
-
-//银行卡号格式转换
-function bankFormat(number){
-	var val=number.replace(/[ ]/g,"");
-	var arr=val.split("");
-	for(var i=3;i<arr.length;i+=4){
-		if(i != (arr.length-1)){arr[i]+=" ";}
-	}
-	return arr.join("");
-}
 }(mui, document));
 </script>
+<style type="text/css">
+.tips p{margin: 10px 15px;font-size: 12px;color: #999;}
+</style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">提现账号</h1>
-		<a class="mui-btn-link mui-pull-right" id="changeBtn" style="display: none;">更换</a>
+		<a class="mui-btn-link mui-pull-right" id="changeBtn">更换</a>
 	</header>
 	<div class="mui-content">
 		<form class="mui-input-group">
 			<div class="mui-input-row">
-				<label for="bank">银行卡</label>
-				<input id="bank" type="tel" class="mui-input-clear mui-input">
+				<label>银行卡</label>
+				<input id="bank" type="tel" readonly="readonly" class="mui-input">
 			</div>
 			<div class="mui-input-row mui-password">
-				<label for="alipay">支付宝</label>
-				<input id="alipay" type="text" class="mui-input-clear mui-input">
+				<label>支付宝</label>
+				<input id="alipay" type="text" readonly="readonly" class="mui-input">
 			</div>
 		</form>
-		<div style="padding-left: 1em;text-indent: -1em;margin: 0px 15px;">
-			<h5>温馨提示：</h5>
+		<div class="tips">
 			<p>1. 银行卡号可以识别开户银行，所以用户提供银行卡号即可转账成功；</p>
 			<p>2. 请勿担心银行卡信息泄漏，您提供的资料只能让他人向您转账，无法把您卡上的钱转出去；</p>
 			<p>3. 不支持提现到他人账户，请务必绑定与身份认证姓名一致的银行卡或支付宝，否则提现申请会被银行驳回；</p>
 			<p>4. 未实名认证的支付宝账号无法转账。</p>
 		</div>
-		<div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success" style="display: none">保存</button></div>
 	</div>
 </body>
 </html>

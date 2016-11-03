@@ -32,7 +32,12 @@ $.plusReady(function() {
   				if(e.index == 1){$.openWindow({url:'../other/approve.html',id:'approve'});}
   			});
 		}else{
-			$.openWindow({url:'walletBankcard.html',id:'walletBankcard'});
+			if(JSON.parse(plus.storage.getItem('user')).field_wage_group == ""){
+				$.openWindow({url:'walletBankcardAdd.html',id:'walletBankcardAdd'});
+			}else{
+				$.openWindow({url:'walletBankcard.html',id:'walletBankcard'});
+			}
+			
 		}
 	});
 	//点击收支明细
@@ -53,6 +58,8 @@ $.plusReady(function() {
   			$.confirm(confirmText,'',btnArray, function(e){
   				if(e.index == 1){$.openWindow({url:'walletBankcard.html',id:'walletBankcard'})}
   			});
+		}else if(userpoints.balance < 500){
+			$.alert("余额小于500积分，不可提现","温馨提示");
 		}else{
 			plus.nativeUI.showWaiting();
   			$.getJSON(XW.base + 'entity_field_collection_item/' + JSON.parse(plus.storage.getItem('user')).field_wage_group.und[0].value,function(data){
@@ -64,11 +71,28 @@ $.plusReady(function() {
 		  				if(e.index == 1){$.openWindow({url:'walletBankcard.html',id:'walletBankcard'})}
 		  			});
 				}else{
-					$.openWindow({
-						url:'walletWithdraw.html',
-						id:'walletWithdraw',
-						extras:{bank:data.wage_bank,alipay:data.wage_alipay,cash:(userpoints.balance/100).toFixed(2)}
-					})
+					var buttonArr = [];
+					if(data.wage_bank != null){buttonArr.push({title:"提现到银行卡",number:data.wage_bank,type:"bank"})}
+					if(data.wage_alipay != null){buttonArr.push({title:"提现到支付宝",number:data.wage_alipay,type:"alipay"})}
+					
+					plus.nativeUI.actionSheet({cancel:"取消",buttons:buttonArr},function(e){
+						if(e.index != 0){
+							var extrasArr = {
+								type:buttonArr[(e.index-1)].type,
+								number:buttonArr[(e.index-1)].number,
+								cash:(userpoints.balance/100).toFixed(2)
+							};
+							if(buttonArr[(e.index-1)].type == 'bank'){
+								$.confirm('提现到银行卡需要收取每笔一元的手续费','',['取消','确定提现'], function(a){
+				      				if(a.index == 1){
+				      					$.openWindow({url:'walletWithdraw.html',id:'walletWithdraw',extras:extrasArr});
+				      				}
+				      			});
+							}else{
+								$.openWindow({url:'walletWithdraw.html',id:'walletWithdraw',extras:extrasArr});
+							}
+						}
+					});
 				}
 			});
   		}
@@ -78,9 +102,9 @@ $.plusReady(function() {
 function showPoints(userpoints){
 	plus.webview.getWebviewById('account').evalJS('$(".mui-table-view-cell[data-wid=\'wallet\'] .mui-badge font").text("'+userpoints.balance+'")');
 	doc.querySelector('#pointsBalance h5').innerText = userpoints.balance;
-	doc.querySelector('#withdraw .mui-badge').innerText = "可提现 " + (userpoints.balance/100).toFixed(2) + " 元";
+	if(userpoints.balance >= 500){doc.querySelector('#withdraw .mui-badge').innerText = "可提现 " + (userpoints.balance/100).toFixed(2) + " 元"}
 	doc.querySelector('#pointsWage span').innerText = (userpoints.wage/100).toFixed(2);
-	doc.querySelector('#pointsWait span').innerText = (userpoints.wait/100).toFixed(2);
+	doc.querySelector('#pointsWait span').innerText = userpoints.wait;
 }
 }(mui, document));
 </script>
@@ -98,8 +122,8 @@ function showPoints(userpoints){
 			<div class="wallet_points">
 				<div id="pointsBalance"><p>积分余额</p><h5>0</h5></div>
 				<div class="points_bottom">
-					<div id="pointsWage">兼职收入<span>0.00</span>元</div>
-					<div id="pointsWait">待结工资<span>0.00</span>元</div>
+					<div id="pointsWage">兼职总收入<span>0.00</span>元</div>
+					<div id="pointsWait">待审核<span>0</span>积分</div>
 				</div>
 			</div>
 			<ul class="mui-table-view">
@@ -116,7 +140,10 @@ function showPoints(userpoints){
 					<a class="mui-navigate-right"><span class="mui-icon iconfont icon-details"></span>收支明细</a>
 				</li>
 			</ul>
-			<div class="tips">签到积分已并入账户余额，所有积分均可用于消费与提现！</div>
+			<div class="tips">
+				<p>1、余额提现到银行卡将收取每笔一元的手续费，提现到支付宝不收取。（由于支付宝、微信等平台均要收取提现手续费，薪窝无法支付越来越多的运营费用）</p>
+				<p>2、签到积分已并入账户余额，所有积分均可用于消费与提现！</p>
+			</div>
 		</div>
 	</div>
 </body>

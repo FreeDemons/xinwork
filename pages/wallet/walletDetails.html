@@ -33,19 +33,18 @@ $.plusReady(function() {
 	getData();
 	
 	//打开明细详情页
-	mui.preload({id:"walletDetailsPage",url:"walletDetailsPage.html"});
 	mui('#detailsList').on('tap', '.mui-table-view-cell', function() {
-		mui.fire(plus.webview.getWebviewById('walletDetailsPage'),'load_details',{
+		var extrasArr = {
 			points:this.querySelector("div").innerHTML,
 			tid:this.querySelector("h3").textContent,
 			time:this.getAttribute("data-time"),
-			nid:this.getAttribute("data-nid"),
+			eid:this.getAttribute("data-eid"),
 			expirydate:this.getAttribute("data-expirydate"),
 			stutas:this.getAttribute("data-stutas"),
 			description:this.getAttribute("data-description"),
 			reference:this.getAttribute("data-reference")
-		});
-		mui.openWindow({id:'walletDetailsPage',show:{duration:200}});
+		};
+		mui.openWindow({id:'walletDetailsPage',url:"walletDetailsPage.html",extras:extrasArr});
 	});
 	
 	doc.querySelector('#sortBtn').addEventListener('tap', toggleMenu);//点击筛选按钮
@@ -95,7 +94,7 @@ function showDetails(data){
 	$.each(data, function(i, n) {
 		var li = doc.createElement('li');
 		li.className = 'mui-table-view-cell';
-		li.setAttribute("data-nid",n.nid);
+		li.setAttribute("data-eid",n.entity_id);
 		li.setAttribute("data-time",n.time_stamp_2);
 		li.setAttribute("data-stutas",n.status);
 		li.setAttribute("data-expirydate",n.expirydate);
@@ -168,8 +167,8 @@ function toggleMenu() {
 #detailsList .mui-table-view-cell span.red{color: #db4437;}
 #detailsList .mui-table-view-cell.month{padding-top: 41px;}
 #detailsList .mui-table-view-cell.month div{top: 40px;}
-#noneTips{text-align: center;color: #666;font-size: 16px;display: none;}
-#noneTips .mui-icon{font-size: 120px;color: #ccc;margin: 70px 0px 0px;}
+#noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+#noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 100px 0px 0px;}
 .menu-wrapper{top:44px;}
 .menu-open .menu-backdrop{top:44px;}
 </style>
@@ -183,7 +182,7 @@ function toggleMenu() {
 	<div class="mui-scroll-wrapper mui-content" id="refreshContainer">
 		<div class="mui-scroll">
 			<ul class="mui-table-view" id="detailsList" style="display: none;"></ul>
-			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>心碎了！啥都没有</div>
 		</div>
 	</div>
 	<div id="menu-wrapper" class="menu-wrapper hidden">

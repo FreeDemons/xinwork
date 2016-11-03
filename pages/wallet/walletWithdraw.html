@@ -7,81 +7,47 @@
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/setting.js"></script>
 <link href="../../css/mui.min.css" rel="stylesheet"/>
-<link href="../../css/account.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
 $.init();
 $.plusReady(function() {
 	extrasval = plus.webview.currentWebview();
-	var bank = doc.querySelector("#bank");
-	var alipay = doc.querySelector("#alipay");
 	var cash = doc.querySelector("#cash");
-	if(extrasval.bank){bank.style.display = "block";bank.querySelector("span").innerText = strReplace(extrasval.bank)}
-	if(extrasval.alipay){alipay.style.display = "block";alipay.querySelector("span").innerText = strReplace(extrasval.alipay)}
 	cash.setAttribute("placeholder","可提现金额为"+extrasval.cash+"元");
 	
 	doc.querySelector("#saveBtn").addEventListener("tap",function(){
-		var way = "",account = "";
-		if(bank.querySelector("input").checked){
-			way = "bank";
-			account = extrasval.bank;
-		}else if(alipay.querySelector("input").checked){
-			way = "alipay";
-			account = extrasval.alipay;
-		}
-		
 		var cashVal = Number(cash.value);
-		if(way==""){
-			$.toast("请选择提现方式");
-		}else if(!/^\d+(\.\d+)?$/.test(cash.value)){
+		if(!/^\d+(\.\d+)?$/.test(cash.value)){
 			$.toast("请核对提现金额");
 		}else if(Number(extrasval.cash) < cashVal){
 			$.toast("提现金额超出余额");
-		}else if(cashVal < 20){
-			$.toast("提现金额不能少于20元");
+		}else if(cashVal < 5){
+			$.toast("提现金额不能少于5元");
 		}else{
-			$.openWindow({id:'walletWithdrawSm',url:"walletWithdrawSm.html",extras:{way:way,account:account,cash:cashVal.toFixed(2)}});
+			$.openWindow({
+				id:'walletWithdrawSm',
+				url:"walletWithdrawSm.html",
+				extras:{type:extrasval.type,number:extrasval.number,cash:cashVal}
+			});
 		}
 	});
 });
-
-function strReplace(str){
-	str = str.replace(/[ ]/g,"")
-	var star = "";
-	for(var i=0;i<str.length-7;i++){
-		star += "*";
-	}
-	return str.substr(0,4)+' '+star+' '+str.substr(str.length-3);
-}
 }(mui, document));
 </script>
-<style type="text/css">
-.mui-table-view{font-size: 14px;}
-.mui-table-view span{margin-left: 10px;color: #999;}
-.mui-radio{display: none;}
-</style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">积分提现</h1>
-		<a class="mui-btn-link mui-pull-right" id="saveBtn">提交</a>
 	</header>
 	<div class="mui-content">
-		<form class="mui-input-group mui-table-view">
-			<div class="mui-radio mui-left mui-table-view-cell" id="bank">
-				<input type="radio" value="bank" name="way"></input>银行卡<span></span>
-			</div>
-			<div class="mui-radio mui-left mui-table-view-cell" id="alipay">
-				<input type="radio" value="alipay" name="way"></input>支付宝<span></span>
-			</div>
-		</form>
 		<form class="mui-input-group" onkeydown="if(event.keyCode==13){return false;}">
 			<div class="mui-input-row">
-				<label for="cash">提现金额</label>
+				<label for="cash" style="padding: 9px 15px;">提现金额(元)</label>
 				<input id="cash" type="number" class="mui-input-clear mui-input">
 			</div>
 		</form>
+		<div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">提交</button></div>
 	</div>
 </body>
 </html>

@@ -47,6 +47,26 @@ owner.interceptionStr=function(str){
 	return str.substring(0,3)+" **** "+str.substring(7);
 }
 
+//银行卡支付宝账号处理
+owner.interceptionStr1=function(str){
+	var str = str.replace(/\s/g, "");
+	var star = " ";
+	for(var i=0;i<(str.length-7);i++){
+		star += '*';
+	}
+	return str.substring(0,3)+star +" "+str.substring(str.length-4);
+}
+
+//银行卡号格式转换
+owner.bankFormat=function(number){
+	var val=number.replace(/[ ]/g,"");
+	var arr=val.split("");
+	for(var i=3;i<arr.length;i+=4){
+		if(i != (arr.length-1)){arr[i]+=" ";}
+	}
+	return arr.join("");
+}
+
 //通过操作表添加照片
 owner.addPicture=function(s){
 	var btnArray = [{title:"打开相机"},{title:"手机相册"}];

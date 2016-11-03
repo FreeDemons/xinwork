@@ -12,51 +12,54 @@
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
 $.init();
+var extrasArr = "";
 $.plusReady(function() {
-	plus.webview.currentWebview().setStyle({'popGesture':'hide'});
-	window.addEventListener("load_details",function(event){
-		doc.querySelector("#details").style.display = "none";
-		doc.querySelector('#jobLink').style.display = "none";
-		var data = event.detail;
-		doc.querySelector("#points font").innerHTML = data.points;
-		doc.querySelector("#tid").innerText = data.tid;
-		doc.querySelector("#time").innerText = data.time;
-		doc.querySelector("#expirydate").innerText = data.expirydate;
-		
-		var stutas = "已生效";
-		if(data.stutas == "1") stutas = "未生效";
-		else if(data.stutas == "2") stutas = "已撤消";
-		doc.querySelector("#stutas").innerText = stutas;
-		
-		if(data.tid == '兼职工资' && data.nid != ''){
-			jobLoad(data.nid);
-		}else if(data.tid == '工资提现' && data.nid != ''){
-			cashLoad(data.nid);
-		}else if(data.tid == '积分兑换'){
-			var html = '<p>订单编号<span>'+data.reference+'</span></p><p>备<i></i>注<span>'+data.description+'</span></p>'
-			doc.querySelector("#details").innerHTML=html;
-			doc.querySelector('#details').style.display = "block";
-		}
-	});
+	extrasArr = plus.webview.currentWebview();
+	
+	doc.querySelector("#points font").innerHTML = extrasArr.points;
+	doc.querySelector("#tid").innerText = extrasArr.tid;
+	doc.querySelector("#time").innerText = extrasArr.time;
+	if(extrasArr.expirydate != "" && extrasArr.expirydate != "即时生效"){
+		doc.querySelector("#expirydate").style.display = "block";
+		doc.querySelector("#expirydate span").innerText = extrasArr.expirydate;
+	}
+	
+	var stutas = "已生效";
+	if(extrasArr.stutas == "1") stutas = "未生效";
+	else if(extrasArr.stutas == "2") stutas = "已撤消";
+	doc.querySelector("#stutas").innerText = stutas;
+	
+	if(extrasArr.tid == '兼职工资' && extrasArr.eid != 0){
+		jobLoad(extrasArr.eid);
+	}else if(extrasArr.tid == '工资提现' && extrasArr.eid != 0){
+		cashLoad(extrasArr.eid);
+	}else if(extrasArr.tid == '网赚工资' && extrasArr.eid != 0){
+		taskLoad(extrasArr.eid);
+	}else if(extrasArr.tid == '积分兑换'){
+		var html = '<p>订单编号<span>'+extrasArr.reference+'</span></p><p>备<i></i>注<span>'+extrasArr.description+'</span></p>'
+		doc.querySelector("#details").innerHTML=html;
+		doc.querySelector('#details').style.display = "block";
+	}
 });
 //兼职工资详细
-function jobLoad(nid){
+function jobLoad(eid){
 	plus.nativeUI.showWaiting();
-	$.getJSON(XW.base + 'node/' + nid,function(data){
-		doc.querySelector('#jobLink').style.display = "block";
+	$.getJSON(XW.base + 'node/' + eid,function(data){
+		doc.querySelector('#link').style.display = "block";
+		doc.querySelector('#link').innerHTML = "查看兼职详情";
 		doc.querySelector('#details').style.display = "block";
-		doc.querySelector("#details").innerHTML='<p>兼职标题<span>'+data.title+'</span></p><p>兼职编号<span>'+nid+'</span></p>';
+		doc.querySelector("#details").innerHTML='<p>兼职标题<span>'+data.title+'</span></p><p>兼职编号<span>'+eid+'</span></p>';
 		plus.nativeUI.closeWaiting();
 	});
 	
-	doc.querySelector("#jobLink").addEventListener("tap",function(){
-		mui.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:nid}});
+	doc.querySelector("#link").addEventListener("tap",function(){
+		mui.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:eid}});
 	});
 }
 //工资提现详细
-function cashLoad(nid){
+function cashLoad(eid){
 	plus.nativeUI.showWaiting();
-	$.getJSON(XW.base + 'entity_node/' + nid,function(data){
+	$.getJSON(XW.base + 'entity_node/' + eid,function(data){
 		doc.querySelector('#details').style.display = "block";
 		var way = data.cash_way == "bank" ? "银行卡" : "支付宝";
 		var remark = data.remark == null ? "" : '<p>备<i></i>注<span>'+data.remark+'</span></p>';
@@ -69,9 +72,24 @@ function cashLoad(nid){
 		}
 		
 		doc.querySelector("#details").innerHTML='<p>提现方式<span>'+way+'</span></p><p>账<i></i>号<span>'
-												+data.cash_account+'</span></p><p>提现审核<span>'+check
-												+'</span></p>'+remark;
+												+app.interceptionStr1(data.cash_account)+'</span></p><p>提现审核<span>'
+												+check+'</span></p>'+remark;
 		plus.nativeUI.closeWaiting();
+	});
+}
+//网赚工资详细
+function taskLoad(eid){
+	plus.nativeUI.showWaiting();
+	$.getJSON(XW.base + 'entity_wangzhuan/' + eid,function(data){
+		plus.nativeUI.closeWaiting();
+		doc.querySelector('#link').style.display = "block";
+		doc.querySelector('#link').innerHTML = "查看任务详情";
+		doc.querySelector('#details').style.display = "block";
+		doc.querySelector("#details").innerHTML='<p>任务标题<span>' + extrasArr.description + '</span></p><p>任务编号<span>' + data.task_reference.id + '</span></p>';
+		
+		doc.querySelector("#link").addEventListener("tap",function(){
+			mui.openWindow({id:'taskDetailt',url:'../task/taskDetailt.html',extras:{tid:data.task_reference.id}});
+		});
 	});
 }
 }(mui, document));
@@ -81,12 +99,13 @@ function cashLoad(nid){
 .mui-table-view-cell i{display: inline-block;width: 2em;}
 .mui-table-view-cell p{padding-left: 5em;text-indent: -5em;margin: 5px 0px;color: #999;}
 .mui-table-view-cell p span{margin-left: 1em;color: #333;}
-#points.mui-active,#details.mui-active{background: none;}
+.mui-table-view-cell:not(#link).mui-active{background: none;}
 #points font{font-size: 24px;font-weight: 200;color: #000;margin-left: 15px;}
 #points font span.green{color: #0F9D58;}
 #points font span.gray{color: #ccc;}
 #points font span.red{color: #db4437;}
-#jobLink{text-align: center;color: #0F9D58;}
+#expirydate,#details{display: none;}
+#link{text-align: center;color: #0F9D58;display: none;}
 </style>
 </head>
 <body>
@@ -101,10 +120,10 @@ function cashLoad(nid){
 				<p>类<i></i>型<span id="tid"></span></p>
 				<p>创建时间<span id="time"></span></p>
 				<p>积分状态<span id="stutas"></span></p>
-				<p>生效时间<span id="expirydate"></span></p>
+				<p id="expirydate">生效时间<span></span></p>
 			</li>
 			<li class="mui-table-view-cell" id="details"></li>
-			<li class="mui-table-view-cell" id="jobLink">查看兼职详情</li>
+			<li class="mui-table-view-cell" id="link"></li>
 		</ul>
 	</div>
 </body>

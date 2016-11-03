@@ -40,7 +40,6 @@ mui.plusReady(function(){
 				break;
 			case 3:
 				app.setUser();
-				plus.webview.getWebviewById('account').evalJS('$(".mui-table-view-cell[data-wid=\'approve\'] .mui-badge").attr("class","mui-badge mui-badge-warning").text("已认证")');
 				$("#approvePass #passname").text(data.name);
 				$("#approvePass #passnumber").text(data.number);
 				$("#approvePass").show();

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<title></title>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/setting.js"></script>
+<script src="../../js/app.js" type="text/javascript" charset="utf-8"></script>
+<link href="../../css/mui.min.css" rel="stylesheet"/>
+<script type="text/javascript" charset="UTF-8">
+(function($, doc) {
+$.init();
+$.plusReady(function() {
+	var bank = doc.querySelector("#bank");
+	var alipay = doc.querySelector("#alipay");
+	
+	//输入银行卡号时加空格
+	bank.addEventListener("input",function(){this.value = app.bankFormat(this.value)});
+	//提交
+	doc.querySelector("#saveBtn").addEventListener("tap",function(){
+		var bankval = bank.value.replace(/[ ]/g,"");
+		if(bankval == "" && alipay.value == ""){
+			$.toast("必须填写其中一个");
+		}else if(bankval != "" && !/^[0-9]{16,19}$/.test(bankval)){
+			$.toast("银行卡号格式不正确");
+		}else{
+			plus.nativeUI.showWaiting( "正在保存..." );
+			var fc_arr={'field_name':'field_wage_group','entity_type':'user'};
+			fc_arr['field'] = {'wage_bank':bank.value,'wage_alipay':alipay.value};
+			
+			$.ajax(XW.base + 'customize/entity_field_collection_item/create',{
+				headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+	  			data:fc_arr,
+	  			type:'post',
+	  			dataType: 'json',
+	  			timeout:10000,
+	  			success:function(data){
+	  				plus.nativeUI.closeWaiting();
+	  				if(data == 1){
+      					app.setUser();
+	      				$.toast("保存成功");
+	      				$.back();
+      				}else{
+      					$.alert("保存失败","温馨提示");
+      				}
+	  			},
+	  			error:function(){
+	  				plus.nativeUI.closeWaiting();
+	  				$.alert("服务器响应超时，请重试","温馨提示");
+	  			}
+			});
+		}
+	})
+});
+}(mui, document));
+</script>
+<style type="text/css">
+.tips p{margin: 10px 15px;font-size: 12px;color: #999;}
+</style>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
+		<h1 class="mui-title">设置提现账号</h1>
+	</header>
+	<div class="mui-content">
+		<form class="mui-input-group">
+			<div class="mui-input-row">
+				<label for="bank">银行卡</label>
+				<input id="bank" type="tel" class="mui-input-clear mui-input">
+			</div>
+			<div class="mui-input-row mui-password">
+				<label for="alipay">支付宝</label>
+				<input id="alipay" type="text" class="mui-input-clear mui-input">
+			</div>
+		</form>
+		<div class="tips">
+			<p>1. 银行卡号可以识别开户银行，所以用户提供银行卡号即可转账成功；</p>
+			<p>2. 请勿担心银行卡信息泄漏，您提供的资料只能让他人向您转账，无法把您卡上的钱转出去；</p>
+			<p>3. 不支持提现到他人账户，请务必绑定与身份认证姓名一致的银行卡或支付宝，否则提现申请会被银行驳回；</p>
+			<p>4. 未实名认证的支付宝账号无法转账。</p>
+		</div>
+		<div class="mui-content-padded"><button id="saveBtn" class="mui-btn mui-btn-block mui-btn-success">保存</button></div>
+	</div>
+</body>
+</html>
