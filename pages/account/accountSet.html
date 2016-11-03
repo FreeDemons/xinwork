@@ -57,7 +57,7 @@ function logout(){
 	      			plus.webview.getWebviewById('chat').evalJS('refreshPage()');
 	      			plus.webview.getWebviewById('chat').evalJS('delMsgCache()');
 					mui.toast('退出成功');
-					mui.back();
+					mui.back();//hh
 				},
 				error:function(){
 					plus.nativeUI.closeWaiting();
