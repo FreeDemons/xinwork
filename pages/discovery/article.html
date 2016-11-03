@@ -6,33 +6,128 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/share.css"/>
-		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/share.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/discovery.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/previewimage.css" />
 		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/setting.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			mui.init();
-			var share = null,aid;
-			mui.plusReady(function(){
-			aid = plus.webview.currentWebview().aid;
-			getArticle();
-			updateSerivces();
-			mui('.mui-scroll-wrapper').scroll({
-				indicators: false//是否显示滚动条
+			mui.init({gestureConfig:{longtap:true}});
+			var share = null,
+				aid, aTitle, aSummary;
+			mui.plusReady(function() {
+				mui.previewImage(); //图片预览插件
+				aid = plus.webview.currentWebview().aid;
+				aTitle = plus.webview.currentWebview().aTitle;
+				aSummary = plus.webview.currentWebview().aSummary;
+				getArticle();
+				shareArticle();
+				mui('.mui-scroll-wrapper').scroll({
+					indicators: false //是否显示滚动条
+				});
+				//点击图片看大图
+				setTimeout(function() {
+					var img = document.querySelector('section').querySelectorAll('img');
+					for(var i = 0; i < img.length; i++) {
+						img[i].setAttribute("data-preview-src", img[i].src);
+					}
+				}, 700);
+				//长按大图保存
+				mui(".mui-preview-image").on('longtap', 'img', function() {
+					var actionList = {
+						cancel: "取消",
+						buttons: [{
+							title: "保存图片到相册"
+						}]
+					};
+					var imgSrc = this.getAttribute("src");
+					//弹出actionSheet选项
+					plus.nativeUI.actionSheet(actionList, function(e) {
+						if(e.index == 1) {
+							//创建一个下载任务
+							var imgDtask = plus.downloader.createDownload(imgSrc, {
+								method: "GET"
+							}, function(d, status) {
+								//下载完成的回调函数
+								if(status == 200) {
+									plus.gallery.save(d.filename, function() { //保存到相册
+										plus.io.resolveLocalFileSystemURL(d.filename, function(entry) {
+											entry.remove(); //删除临时文件
+										});
+										return mui.toast('图片已保存至相册');
+									});
+								} else {
+									plus.nativeUI.toast("保存失败!", {
+										'verticalAlign': 'center'
+									});
+								}
+							});
+							imgDtask.start(); //开始下载任务
+						}
+					});
+
+				});
 			});
-			//打开分享列表
-			var shareContent = '一篇好文章要用心去读'
-			document.querySelector('.icon-share').addEventListener("tap",function(){
-					console.log("ioi");
-			    var msgwx={content:shareContent,href:'www.baidu.com',extra:{scene:'WXSceneSession'}};
-				var msgpy ={content:shareContent,href:'www.baidu.com',title:shareContent,extra:{scene:'WXSceneTimeline'}};
-				var msgqq ={content:shareContent,href:'www.baidu.com',title:shareContent};
+
+			function getArticle() {
+				ownerLoad.show();
+				mui.ajax(XW.base + 'customize/discovery/article/' + aid, {
+					dataType: 'json',
+					type: 'post',
+					timeout: '1000',
+					success: function(data) {
+						document.querySelector('header h3').innerHTML = data.title;
+						document.querySelector('header p #readTime').innerHTML = data.created;
+						document.querySelector('header p #readLabel').innerHTML = data.sort;
+						document.querySelector('header p #readCount').innerHTML = data.number + '次阅读';
+						document.querySelector('section').innerHTML = data.body;
+						document.querySelector('footer').innerHTML = '<div class="art_bottom"><p>' +
+							data.author.signature + '</p> <img src="' +
+							data.author.picture + '"/><br/> <span>' +
+							data.author.name + '</span><br/>';
+						document.querySelector(".mui-content").style.display = "block";
+						ownerLoad.close();
+					},
+					error: function(x, t, e) {
+						console.log(t);
+					}
+				})
+			}
+
+			function shareArticle() {
+				updateSerivces();
+				var shareContent = aSummary
+				var shareUrl = XW.downAppSrc;;
 				mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 					mui('#shareJob').popover('toggle');
-					if (share['weixin'] ||share['qq']) {
-						switch (this.id){
+					var msgwx = {
+						content: shareContent,
+						href: shareUrl,
+						title: aTitle,
+						extra: {
+							scene: 'WXSceneSession'
+						}
+					};
+					var msgpy = {
+						content: shareContent,
+						href: shareUrl,
+						title: aTitle,
+						extra: {
+							scene: 'WXSceneTimeline'
+						}
+					};
+					var msgqq = {
+						content: shareContent,
+						href: shareUrl,
+						title: aTitle
+					};
+					if(share['weixin'] || share['qq']) {
+						switch(this.id) {
 							case 'weixin':
 								shareAction(share['weixin'], msgwx);
 								break;
@@ -40,77 +135,31 @@
 								shareAction(share['weixin'], msgpy);
 								break;
 							case 'qq':
-								shareAction(share['qq'],msgqq)
+								shareAction(share['qq'], msgqq)
 								break;
 						}
+					} else {
+						mui.toast('系统发生错误，无法分享。');
 					}
-					else{
-						mui.toast('系统发生错误，分享失败。');
-					}
-				})
-			})
-});
-function getArticle(){
-	ownerLoad.show();
-	mui.ajax(XW.base +'customize/discovery/article/'+aid,{
-		dataType:'json',
-		type:'post',
-		timeout:'1000',
-		success:function(data){
-			ownerLoad.close();
-			document.querySelector('header h3').innerHTML = data.title;
-			document.querySelector('header p #readTime').innerHTML = data.created;
-			document.querySelector('header p #readLabel').innerHTML = data.sort;
-			document.querySelector('header p #readCount').innerHTML = data.number+'次阅读';
-			document.querySelector('section').innerHTML = data.body;
-			document.querySelector('footer').innerHTML = '<div class="art_bottom"><p>'
-														+data.author.signature+'</p> <img src="'
-														+data.author.picture+'"/><br/> <span>'
-														+data.author.name+'</span><br/>';
-//			document.querySelector('footer p').innerHTML = data.author.signature;
-//			document.querySelector('footer img').src = data.author.picture;
-//			document.querySelector('footer span').innerHTML = data.author.name;
-		},
-		errror:function(x,t,e){
-			console.log(t);
-		}
-	})
-}
+				});
+			}
 		</script>
-		<style>
-			body{background-color: #FFFFFF;}
-			.icon-share{font-size: 18px !important;}
-			article{padding: 10px;}
-			article header h3{font-weight:bold;line-height: 30px;letter-spacing: 2px;text-align: center;}
-			article header p{font-size: 12px;letter-spacing: 1px;}
-			article header p span:first-child{margin-right: 20px;}
-			article header p span:last-child{float: right;border:1px solid #6495ED;border-radius: 10px;padding: 0px 2px;color: #6495ED;}
-			article section p {color: #000000;font-size: 16px;margin: 20px 0px;text-indent: 30px;overflow: hidden;}
-			article section img{max-width: 100%;width: 100%;height: auto;}
-			article section img:first-child{position: relative;right: 30px;}
-			.lineclass-android{position: relative;}
-			.lineclass-android:before{position: absolute;right: 0;bottom:130px;left: 0;height: 1px;content: '';-webkit-transform: scaleY(.3);transform: scaleY(.3);background-color:#DCDCDC;}
-			.lineclass-android:after,.lineclass-ios:after{background-color: #DCDCDC;bottom: -20px;}
-			.art_bottom{margin: 50px 0px;text-align: center;}
-			.art_bottom span{font-size: 12px;}
-			.art_bottom img{width: 60px;height: 60px;border-radius: 50px;}
-		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <a class="iconfont icon-share mui-icon mui-pull-right" href="#shareArticles" ></a>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a class="iconfont icon-share mui-icon mui-pull-right" href="#shareArticles"></a>
 		</header>
-		<div class="mui-content mui-scroll-wrapper">
+		<div class="mui-content mui-scroll-wrapper" style="display: none;">
 			<div class="mui-scroll">
-			    <article>
-			    	<header>
-			    		<h3></h3>
-			    		<p><span id='readCount'></span><span id='readTime'></span><span id='readLabel'></span></p>
-			    	</header>
-			    	<section>
-			    		<!--<p>网友老麦发微信跟我说，他失业了，在家相妻教子，也不再出去和朋友们聚会了。</p>
+				<article>
+					<header>
+						<h3></h3>
+						<p><span id='readCount'></span><span id='readTime'></span><span id='readLabel'></span></p>
+					</header>
+					<section>
+						<!--<p>网友老麦发微信跟我说，他失业了，在家相妻教子，也不再出去和朋友们聚会了。</p>
 						<p>他自嘲道，这叫低潮。</p>
 						<p>我能体会到，对于一个年近40的男人来说，上有老下有小，一下子，工作、朋友全没了，意味着什么。</p>
 						<p>可我只能淡淡地说，谁都会有低潮，没啥，熬过去了就好。</p>
@@ -119,67 +168,48 @@ function getArticle(){
 			    		<p>也许你觉得我太冷淡，太不会安慰人。其实，我非常有感于他的信任，没有几个人愿意把自己的伤口拨开给别人看。只是，同样经历过低潮的我知道，别人再多的安慰，对当事人也不会有实质性的帮助，能走出来的，只有靠他自己。人生在世就像是踏上了一条修行的不归路，大家都在熬。最难熬的，是自己的心，跟谁都没有关系。</p>
 			    		<p>人生犹如一条抛物线，一个高潮连着一个低潮。我们谁也无法预料生活未来的样子，也永远不知道命运会在什么时候给你一段更艰难的时光。</p>
 			    		<img src="../../images/yb.jpg"/>-->
-<p>江湖上有一类门派叫烧烤，坊间有一种武器叫吃货，当吃货遇到烧烤，每个人都有自己的独门绝技。人在珠海漂，怎能不烧烤！</p>
-<p><strong>TOP1：</strong></p>
-<p>名称：忠记湛江烧蚝</p>
-<p>地址：香洲区银桦路85号(天鹅酒店对面)</p>
-<p>营业时间：18:00&mdash;凌晨00:00</p>
-<p>特色菜：蒜蓉烤生蚝、烤茄子鸡胗</p>
-<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/dde000613acfa8e6f76.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/ddf000010318b6ad80f.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4d00046e645a0a74f3.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4f0003bebb71aefe64.jpg" /></p>
-<p>小编点评：来珠海必须要尝一尝生蚝，如果觉得横琴太远，那就选这里吧。888街老店，蒜蓉烤生蚝和烤茄子鸡胗会让你不虚此行的。</p>
-<p>TOP2:</p>
-<p>名称：波吧</p>
-<p>地址：香洲区人民西路康怡花园189号商铺（区府巴士站往香洲方向100米）</p>
-<p>营业时间：13:00&mdash;凌晨02:00</p>
-<p>特色菜： 锡纸烤焗沙白、锡纸烤焗什菇、烤大鲜鱿、绝味炒钉螺</p>
-<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4c0000140b9e919cce.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4d00046e645a0a74f3_0.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4f0003bebb71aefe64_0.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4f0003bebce8daf416.jpg" /></p>
-<p>小编点评：如果你喜欢烧烤也喜欢足球，那么波吧就是你最好的选择。锡纸烤焗沙白、锡纸烤焗什菇、绝味炒钉螺等都是来这里首选菜式，而且分量很足哦。</p>
-<p><strong>TOP3：</strong></p>
-<p>名称：雷子烧烤</p>
-<p>地址：珠海香洲区人民东路504号（巴士站后）</p>
-<p>营业时间：18：00&mdash;凌晨03：00</p>
-<p>特色菜：香菜卷、牛心管</p>
-<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/ddc00083ddffa83e53c.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/dde000613aa83af70ab.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/dde000613ab68509c1b.jpg" /></p>
-<p>小编点评：雷子的烧烤店虽小，但却很干净很温馨。这里的烧烤偏辣，但配合啤酒却是另一番风味。很适合三五知己坐下慢聊轻享。</p>
-<p>TOP4:</p>
-<p>名称：水珠小食烧蚝店</p>
-<p>地址：珠海市香洲区华富街1、3号</p>
-<p>营业时间：18：00&mdash;凌晨5：00</p>
-<p>特色菜：烧排骨、掌中宝</p>
-<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4c0000140ce30acb07.jpg" /><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/e4c0000140de572039a.jpg" /></p> at pages/discovery/article.html:61
-			    	</section>
-			    	<footer class="lineclass-android">
-			    		<!--<div class="art_bottom">
+						<!--<p>网友老麦发微信跟我说，他失业了，在家相妻教子，也不再出去和朋友们聚会了。</p>
+<p>他自嘲道，这叫低潮。</p>
+<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/ylbl.jpg" /></p>
+<p>我能体会到，对于一个年近40的男人来说，上有老下有小，一下子，工作、朋友全没了，意味着什么。</p>
+<p>可我只能淡淡地说，谁都会有低潮，没啥，熬过去了就好。</p>
+<p>他说，嗯，熬着。</p>
+<p>也许你觉得我太冷淡，太不会安慰人。其实，我非常有感于他的信任，没有几个人愿意把自己的伤口拨开给别人看。只是，同样经历过低潮的我知道，别人再多的安慰，对当事人也不会有实质性的帮助，能走出来的，只有靠他自己。人生在世就像是踏上了一条修行的不归路，大家都在熬。最难熬的，是自己的心，跟谁都没有关系。</p>
+<p>人生犹如一条抛物线，一个高潮连着一个低潮。我们谁也无法预料生活未来的样子，也永远不知道命运会在什么时候给你一段更艰难的时光。</p>
+<p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/yb_0.jpg" /></p> -->
+					</section>
+					<footer class="lineclass-android">
+						<!--<div class="art_bottom">
 			    			<p></p>
 			    			<img /><br/>
 			    			<span></span><br/>
 			    		</div>-->
-			    	</footer>
-			    </article>
+					</footer>
+				</article>
 			</div>
 		</div>
 		<div id="shareArticles" class="mui-popover mui-popover-action mui-popover-bottom">
 			<div class="share">
-				<div class="shareList" >
-					<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
+				<div class="shareList">
+					<div id='weixin' class="shareItem" style="background-color: #35D151;">
 						<span class="mui-icon mui-icon-weixin icon"></span>
 					</div>
 					<p>微信</p>
 				</div>
-				<div class="shareList" >
-					<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
+				<div class="shareList">
+					<div id='pengyouquan' class="shareItem" style="background-color: #00D05C;">
 						<span class="mui-icon mui-icon-pengyouquan icon"></span>
 					</div>
-					<p >朋友圈</p>
+					<p>朋友圈</p>
 				</div>
 				<div class="shareList">
-					<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
+					<div id='qq' class="shareItem" style="background-color: #00A2EB;">
 						<span class="mui-icon mui-icon-qq icon"></span>
 						<p>QQ</p>
 					</div>
 				</div>
 			</div>
-			
+
 		</div>
 	</body>
 

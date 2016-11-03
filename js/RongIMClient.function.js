@@ -45,7 +45,8 @@ function sendMessage(e, name, image, groupId) {
 			switch(message.messageType) {
 				case RongIMClient.MessageType.TextMessage:
 					//保存消息到服务器
-					var url = 'http://www.goodjob58.com/xinworkapp/rongcloud/history/save';
+					var url = XW.base+'/rongcloud/history/save';
+					console.log(url);
 					var content = RongIMLib.RongIMEmoji.emojiToSymbol(message.content.content);
 					mui.ajax(url, {
 						type: 'post',
@@ -59,12 +60,15 @@ function sendMessage(e, name, image, groupId) {
 						},
 						success: function(e) {
 							console.log("文字上传成功！"+tid);
-						}
+						},
+						error: function(x, t, e) {
+						console.log(t+'  '+x.status);
+					}
 					});
 					break;
 				case RongIMClient.MessageType.ImageMessage:
 					// do something...
-					var url = 'http://www.goodjob58.com/xinworkapp/rongcloud/upload';
+					var url = XW.base+'/rongcloud/upload';
 					mui.ajax(url, {
 						type: 'post',
 						data: {
@@ -83,7 +87,7 @@ function sendMessage(e, name, image, groupId) {
 				case RongIMClient.MessageType.VoiceMessage:
 					// do something...
 					console.log("发送语音成功");
-					var url = 'http://www.goodjob58.com/xinworkapp/rongcloud/upload';
+					var url = XW.base+'/rongcloud/upload';
 					mui.ajax(url, {
 						type: 'post',
 						data: {

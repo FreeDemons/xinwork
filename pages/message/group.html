@@ -7,6 +7,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/chat.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 		<script src="../../js/mui.min.js"></script>
 		<script src="../../js/setting.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
@@ -43,12 +44,16 @@
 					})
 					//监听fire事件
 				window.addEventListener('room', function(event) {
-					var rname = event.detail.roomname,
-						rid = event.detail.roomid;
+					var rname = event.detail.roomname;
+					var rid = event.detail.roomid;
+					ownerLoad.show();
 					document.querySelector('#rid').innerText = rid;
 					document.querySelector('.mui-table-view-cell p').innerText = rname;
 					mui.getJSON(XW.base + 'rongcloud/group/queryUser?groupId=' + rid, function(data) {
 						mui.each(data, function(index, item) {
+							if (item.userName == null ||item.userName == '') {
+								return;
+							}
 							var hpicUrl = ( item.image == '' ? '../../images/default.jpg': item.image);
 							document.querySelector('.memberBox').innerHTML = document.querySelector('.memberBox').innerHTML + '<div class="amember"><img src="' +
 								hpicUrl + '"/><span>&nbsp;' + item.userName + '</span></div>';
@@ -56,6 +61,7 @@
 								return false;
 							}
 						})
+						ownerLoad.close();
 					})
 				})
 			})
@@ -76,7 +82,7 @@
 						<!--<div class="amember"><img src="../../images/100x100.png"/><span>&nbsp;范成镇</span></div>-->
 					</div>
 					<div class="mui-table-view-cell" id="allmember">
-						<a class="mui-navigate-right" style="top: 5px;">全部群成员</a>
+						<a class="mui-navigate-right"><span style="display: block;position: relative;top:8px">全部群成员</span></a>
 					</div>
 				</div>
 				<ul class="mui-table-view">

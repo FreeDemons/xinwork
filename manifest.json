@@ -285,7 +285,8 @@
 					"pages/login/login.html",
 					"pages/mall/mallhome.html",
 					"guide.html",
-					"wowen.html"
+					"wowen.html",
+					"pages/team/teamList.html"
 				],
 				"priority": 0
 			},
@@ -314,7 +315,8 @@
 					"pages/other/question.html",
 					"pages/other/feedback.html",
 					"pages/record/record.html",
-					"pages/record/collect.html"
+					"pages/record/collect.html",
+					"pages/other/more.html"
 				],
 				"priority": 0
 			},
@@ -770,7 +772,8 @@
 					"css/mui.min.css",
 					"css/chat.css",
 					"js/setting.js",
-					"images/default.jpg"
+					"images/default.jpg",
+					"css/style.css"
 				],
 				"refer": [
 					"pages/message/allmember.html",
@@ -807,7 +810,10 @@
 					"js/setting.js",
 					"js/mui.min.js",
 					"fonts/mui.ttf",
-					"css/mui.min.css"
+					"css/mui.min.css",
+					"css/iconfont.css",
+					"fonts/iconfont.ttf",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -818,7 +824,9 @@
 					"js/mui.min.js",
 					"fonts/mui.ttf",
 					"css/mui.min.css",
-					"css/chat.css"
+					"css/chat.css",
+					"images/default.jpg",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0
@@ -964,12 +972,14 @@
 				"priority": 0
 			},
 			"pages/task/myTask.html": {
-				"resources": [],
+				"resources": [
+					"css/task.css"
+				],
 				"refer": [
 					"pages/task/taskDetailt.html",
 					"pages/wallet/walletDetails.html"
 				],
-					"priority": 0
+				"priority": 0
 			},
 			"discovery.html": {
 				"resources": [
@@ -981,7 +991,8 @@
 					"css/offcanvas-drag-down.css",
 					"fonts/mui.ttf",
 					"css/iconfont.css",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/discovery.css"
 				],
 				"refer": [
 					"pages/discovery/articleList.html",
@@ -1022,7 +1033,37 @@
 					"js/mui.min.js",
 					"css/mui.min.css",
 					"js/setting.js",
-					"css/style.css"
+					"css/style.css",
+					"css/discovery.css",
+					"js/mui.imageViewer.js",
+					"js/mui.zoom.js",
+					"css/previewimage.css",
+					"js/mui.previewimage.js"
+				],
+				"refer": [],
+				"priority": 0
+			},
+			"pages/other/more.html": {
+				"resources": [
+					"css/share.css",
+					"js/app.js",
+					"js/setting.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"js/share.js",
+					"fonts/iconfont.ttf"
+				],
+				"refer": [
+					"pages/other/feedback.html"
+				],
+				"priority": 0
+			},
+			"pages/team/teamList.html": {
+				"resources": [
+					"fonts/mui.ttf",
+					"css/team.css"
 				],
 				"refer": [],
 				"priority": 0

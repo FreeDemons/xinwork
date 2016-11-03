@@ -11,14 +11,9 @@
 		<link href="css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="css/chat.css" />
 		<script type="text/javascript" charset="UTF-8">
-			mui.init({
-				keyEventBind: {
-					backbutton: false
-				} //关闭back按键监听
-			});
+			mui.init({});
 
 			mui.plusReady(function() {
-				plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
 				app.setUser();
 				isLogined(); //根据是否登录刷新页面
 				refreshChat(); //刷新会话列表
@@ -90,7 +85,6 @@
 						var conId = item.groupId;
 						var newMsg;
 						gidArray[index] = item.groupId;
-						console.log(conId);
 							getNewMsg(item.groupId, function(data) {
 							newMsg = (data == null ? '' :data[0]);
 							if(newMsg.messageType == 'TextMessage') {
@@ -123,6 +117,7 @@
 					type: 'post', //HTTP请求类型	              
 					async: true,
 					success: function(data) {
+						console.log(JSON.stringify(data));
 						callback(data);
 					}
 				})

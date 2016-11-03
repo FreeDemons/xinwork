@@ -48,7 +48,7 @@ mui.plusReady(function() {
 	});
 	//点击打开消息页
 	mui.preload({id:'chat',url:"chat.html"});
-	document.getElementById("chat").addEventListener('tap',function(){
+	document.getElementById("chat").addEventListener('touchstart',function(){
 		mui.openWindow({id:'chat'});
 		document.querySelector('.mui-bar-nav #chat span').style.display = 'none';
 	})
@@ -136,8 +136,8 @@ mui.plusReady(function() {
 .mui-bar-nav .mui-btn-link:active{color: #999;}
 .mui-bar-nav .mui-btn-link .mui-icon{font-size: 16px;}
 .mui-bar-nav #chat span{display: none;width: 8px;height: 8px;border-radius: 8px;background: #DB4437;position: absolute;top: 12px;right: 12px;}
-
 .mui-pull-top-pocket{margin-top:30px}
+
 .tab-home .iconfont:before { content: "\e621";}
 .tab-home.mui-active .iconfont:before { content: "\e624";}
 .tab-task .iconfont:before { content: "\e62c";}
