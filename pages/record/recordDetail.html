@@ -13,51 +13,55 @@
 <link href="../../css/account.css" rel="stylesheet"/>
 <script type="text/javascript" charset="UTF-8">
 (function($, doc) {
-$.init({
-	gestureConfig:{longtap:true}
-});
+$.init({gestureConfig:{longtap:true}});
+var extrasArr;
 $.plusReady(function() {
-	plus.webview.currentWebview().setStyle({'popGesture':'hide'});
 	$('.mui-scroll-wrapper').scroll({startY: 0,bounce: true});
+	extrasArr = plus.webview.currentWebview();
+
+	doc.querySelector("#recordTitle").innerHTML = extrasArr.titleHtml;
+	doc.querySelector("#jobId span").innerHTML = extrasArr.jobId;
+	doc.querySelector("#time span").innerHTML = extrasArr.time;
+	//选择日期
+	if(extrasArr.date != ""){
+		doc.querySelector("#date").style.display = "block";
+		doc.querySelector("#date span").innerHTML = extrasArr.date;
+	}
+	//备注
+	if(extrasArr.remark != ""){
+		doc.querySelector("#remark").style.display = "block";
+		doc.querySelector("#remark span").innerHTML = extrasArr.remark;
+	}
 	
-	//初始化数据
-	var jobId;
-	window.addEventListener("load_detail",function(event){
-		var data = event.detail;
-		jobId = data.jobId;
-		doc.querySelector("#recordTitle").innerHTML = data.titleHtml;
-		doc.querySelector("#jobId span").innerHTML = data.jobId;
-		doc.querySelector("#time span").innerHTML = data.time;
-		doc.querySelector("#qrcode").style.display = "none";
-		//选择日期
-		if(this.date == ""){
-			doc.querySelector("#date").style.display = "none";
-		}else{
-			doc.querySelector("#date").style.display = "block";
-			doc.querySelector("#date span").innerHTML = data.date;
-		}
-		//备注
-		if(data.remark == ""){
-			doc.querySelector("#remark").style.display = "none";
-		}else{
-			doc.querySelector("#remark").style.display = "block";
-			doc.querySelector("#remark span").innerHTML = data.remark;
-		}
-		ownerLoad.show();
-		mui.getJSON(XW.base + 'node/' + data.jobId,function(n){
-			ownerLoad.close();
-			if(data.enrol == 1 && n.field_job_qrcode_img.length != 0){
-				mui.getJSON(XW.base + 'entity_file/' + n.field_job_qrcode_img.und[0].fid,function(f){
-					doc.querySelector("#qrcode img").src = f.url;
-					doc.querySelector("#qrcode").style.display = "block";
-				});
-			}
-		});
-	});
+	//是否已被录取
+	if(extrasArr.enrol == 1){
+		hasEnrol();
+	}else{
+		noEnrol();
+	}
+	
 	//点击查看兼职详情
 	doc.querySelector("#recordTitle").addEventListener("tap",function(){
-		$.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:jobId}});
+		$.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:extrasArr.jobId}});
 	})
+});
+//报名已被录取
+function hasEnrol(){
+	doc.querySelector("#link").style.color = "#ccc";
+	doc.querySelector("#link").style.background = "#fff";
+	doc.querySelector("#link").innerHTML = "已录取不能取消报名";
+	
+	plus.nativeUI.showWaiting();
+	mui.getJSON(XW.base + 'node/' + extrasArr.jobId,function(n){
+		plus.nativeUI.closeWaiting();
+		if(n.field_job_qrcode_img.length != 0){
+			mui.getJSON(XW.base + 'entity_file/' + n.field_job_qrcode_img.und[0].fid,function(f){
+				doc.querySelector("#qrcode img").src = f.url;
+				doc.querySelector("#qrcode").style.display = "block";
+			});
+		}
+	});
+	
 	//长按保存二维码图片
 	doc.querySelector("#qrcode img").addEventListener("longtap",function(){
 		var actionList = {cancel:"取消",buttons:[{title:"保存图片到相册"}]};
@@ -68,7 +72,7 @@ $.plusReady(function() {
                 //创建一个下载任务
                 var imgDtask = plus.downloader.createDownload(imgSrc,{method:"GET"},function(d,status){
                     //下载完成的回调函数
-                    if (status == 200 ) { 
+                    if (status == 200 ) {
                         plus.gallery.save(d.filename,function(){//保存到相册
                             plus.io.resolveLocalFileSystemURL(d.filename,function(entry){
                                 entry.remove();//删除临时文件
@@ -83,7 +87,36 @@ $.plusReady(function() {
             }
         });
 	});
-});
+}
+//报名未被录取
+function noEnrol(){
+	doc.querySelector("#link").style.display = "block";
+	doc.querySelector("#link").addEventListener("tap",function(){
+		$.confirm('确定取消报名本兼职？','',['不取消','确定'], function(e){
+			if(e.index == 1){
+				plus.nativeUI.showWaiting();
+				$.ajax(XW.base + 'node/' + extrasArr.applyId,{
+					headers:{'X-CSRF-token':JSON.parse(plus.storage.getItem('login_session')).token},
+		  			type:'delete',
+		  			dataType: 'json',
+		  			timeout: 10000,
+		  			success:function(){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("取消报名成功","温馨提示","",function(){
+		  					var html = "document.querySelector('.mui-table-view-cell[data-applyId=\"" + extrasArr.applyId + "\"]').style.display = 'none'";
+		  					plus.webview.getWebviewById("record").evalJS(html);
+		  					mui.back();
+		  				});
+		  			},
+		  			error:function(){
+		  				plus.nativeUI.closeWaiting();
+		  				mui.alert("取消报名失败，请稍后重试...","温馨提示");
+		  			}
+				});
+			}
+		});
+	});
+}
 }(mui, document));
 </script>
 </head>
@@ -106,6 +139,7 @@ $.plusReady(function() {
 					<p>微信扫描下方二维码加入工作群<br/><span style="font-size: 12px;">(长按保存图片，然后到微信识别)</span></p>
 					<p><img src=""></img></p>
 				</li>
+				<li class="mui-table-view-cell" id="link">取消报名</li>
 			</ul>
 		</div>
 	</div>

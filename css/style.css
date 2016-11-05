@@ -28,7 +28,7 @@
 .task-content .task-menu #menuPointTask{width: 50%;float: right;}
 .task-content .task-menu span{margin: 0px 5px;color: #0F9D58;}
 
-.task-content #taskList{margin: 15px 0px;}
+.task-content #taskList{margin-top: 15px;}
 .task-content #taskList .mui-media-object{max-width: 50px;width: 50px;height: 50px;border-radius: 3px;font-size: 8px;text-align: center;line-height: 100%;}
 .task-content #taskList .mui-media-object .iconfont{font-size: 28px;line-height: 100%;margin-top: 3px;}
 .task-content #taskList .mui-media-object .iconfont.icon-download{color: #f4b400;}
@@ -50,3 +50,11 @@
 @-webkit-keyframes load{0%,100%{height:40px;background:#add8e6}50%{height:70px;margin:-15px 0;background:#90ee90}}
 .loading div span:nth-child(2){-webkit-animation-delay:.2s}.loading span:nth-child(3){-webkit-animation-delay:.4s}
 .loading div span:nth-child(4){-webkit-animation-delay:.6s}.loading span:nth-child(5){-webkit-animation-delay:.8s}
+
+/*分享样式*/
+.shareBox{background-color: #FFFFFF;padding: 10px 15px;}
+.shareBox .shareItem{display: inline-block;margin-right: 10px;text-align: center;font-size: 12px;color: #333;}
+.shareBox .shareItem .mui-icon{border-radius: 5px;padding: 10px;color: #fff;font-size: 32px;margin-bottom: 5px;display: block;}
+.shareBox .shareItem#weixin .mui-icon{background-color: #35D151;}
+.shareBox .shareItem#pengyouquan .mui-icon{background-color: #00D05C;}
+.shareBox .shareItem#qq .mui-icon{background-color: #00A2EB;}

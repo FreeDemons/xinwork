@@ -7,7 +7,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/iconfont.css" />
-		<link rel="stylesheet" type="text/css" href="../../css/share.css" />
 		<link rel="stylesheet" type="text/css" href="../../css/style.css" />
 		<link rel="stylesheet" type="text/css" href="../../css/discovery.css" />
 		<link rel="stylesheet" type="text/css" href="../../css/previewimage.css" />
@@ -79,7 +78,7 @@
 				mui.ajax(XW.base + 'customize/discovery/article/' + aid, {
 					dataType: 'json',
 					type: 'post',
-					timeout: '1000',
+					timeout: '10000',
 					success: function(data) {
 						document.querySelector('header h3').innerHTML = data.title;
 						document.querySelector('header p #readTime').innerHTML = data.created;
@@ -148,7 +147,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 			<a class="iconfont icon-share mui-icon mui-pull-right" href="#shareArticles"></a>
 		</header>
 		<div class="mui-content mui-scroll-wrapper" style="display: none;">
@@ -189,25 +188,10 @@
 			</div>
 		</div>
 		<div id="shareArticles" class="mui-popover mui-popover-action mui-popover-bottom">
-			<div class="share">
-				<div class="shareList">
-					<div id='weixin' class="shareItem" style="background-color: #35D151;">
-						<span class="mui-icon mui-icon-weixin icon"></span>
-					</div>
-					<p>微信</p>
-				</div>
-				<div class="shareList">
-					<div id='pengyouquan' class="shareItem" style="background-color: #00D05C;">
-						<span class="mui-icon mui-icon-pengyouquan icon"></span>
-					</div>
-					<p>朋友圈</p>
-				</div>
-				<div class="shareList">
-					<div id='qq' class="shareItem" style="background-color: #00A2EB;">
-						<span class="mui-icon mui-icon-qq icon"></span>
-						<p>QQ</p>
-					</div>
-				</div>
+			<div class="shareBox">
+				<div class="shareItem" id='weixin'><span class="mui-icon mui-icon-weixin"></span>微信</div>
+				<div class="shareItem" id='pengyouquan'><span class="mui-icon mui-icon-pengyouquan"></span>朋友圈</div>
+				<div class="shareItem" id='qq'><span class="mui-icon mui-icon-qq"></span>QQ</div>
 			</div>
 
 		</div>

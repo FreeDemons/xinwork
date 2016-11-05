@@ -43,6 +43,7 @@ function loginSubmit() {
 			},
 			dataType: 'json',
 			type: 'post',
+			timeout: 10000,
 			success: function(data) {
 				//同步个推cid
 				mui.post(XW.base + 'customize/user_edit/getuiCid',{'cid':plus.push.getClientInfo().clientid});
@@ -61,9 +62,13 @@ function loginSubmit() {
 	      		if(plus.webview.getWebviewById("taskDetailt")){plus.webview.getWebviewById("taskDetailt").evalJS("setData()")}
 				$.back();
 			},
-			error: function(a,b,c) {
+			error: function(a) {
 				plus.nativeUI.closeWaiting();
-				$.alert("手机号码或密码错误","温馨提示");
+				if(a.readyState == 4){
+					$.alert("手机号码或密码错误","温馨提示");
+				}else{
+					$.toast("服务器响应失败!");
+				}
 			}
 		});
 	}

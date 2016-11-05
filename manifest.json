@@ -617,7 +617,9 @@
 					"fonts/mui.ttf",
 					"css/mui.min.css"
 				],
-				"refer": [],
+				"refer": [
+					"pages/login/login.html"
+				],
 				"priority": 0
 			},
 			"pages/other/bannerPage.html": {
@@ -868,7 +870,15 @@
 			},
 			"pages/record/recordDetail.html": {
 				"resources": [
-					"js/app.js"
+					"js/app.js",
+					"js/mui.min.js",
+					"js/setting.js",
+					"fonts/mui.ttf",
+					"css/account.css",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"pages/job/jobDetailt.html"
@@ -910,7 +920,9 @@
 					"fonts/iconfont.ttf",
 					"css/style.css"
 				],
-				"refer": [],
+				"refer": [
+					"pages/job/jobDetailt.html"
+				],
 				"priority": 0
 			},
 			"pages/task/taskDetailt.html": {
@@ -973,7 +985,14 @@
 			},
 			"pages/task/myTask.html": {
 				"resources": [
-					"css/task.css"
+					"css/task.css",
+					"js/setting.js",
+					"js/mui.min.js",
+					"fonts/mui.ttf",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css",
+					"fonts/iconfont.ttf"
 				],
 				"refer": [
 					"pages/task/taskDetailt.html",

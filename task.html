@@ -53,6 +53,8 @@ function pullUpfresh(){
 	page += 1;
     mui.getJSON(XW.base + 'tasklist?page=' + page,function(data){
 		showTask(data);
+		var refb = data.length < 20 ? true : false;
+		mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
 	});
 }
 
@@ -80,8 +82,6 @@ function showTask(data){
 						+ n.field_wage + '</span> | 剩余 ' + number + ' 次<span class="task-status ' + statusColor + '"><i class="iconfont icon-clock"></i>' + time + '</span></p></div>';
 		document.querySelector('#taskList').appendChild(li);
 	});
-	var refb = data.length < 20 ? true : false;
-	mui('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
 }
 //打开我的任务
 function openMyTask(){

@@ -73,6 +73,22 @@ function showJob(data){
 		jobList.appendChild(li);
 	});
 }
+//兼职详情页点击收藏回调
+function jobReturn(nid,display){
+	if(document.querySelector('.mui-table-view-cell[data-nid="' + nid + '"]')){
+		document.querySelector('.mui-table-view-cell[data-nid="' + nid + '"]').style.display = display;
+		//通过ul的高度确定是否已经没有了收藏数据，显示没有数据的提示
+		if(display == "none" && document.querySelector(".mui-table-view").offsetHeight < 50){
+			document.body.querySelector('#collectPage .mui-table-view').style.display="none";
+			document.body.querySelector('#noneTips').style.display="block";
+			mui('#collectPage').pullRefresh().disablePullupToRefresh();
+		}else if(display == "block"){
+			document.body.querySelector('#collectPage .mui-table-view').style.display="block";
+			document.body.querySelector('#noneTips').style.display="none";
+			mui('#collectPage').pullRefresh().enablePullupToRefresh();
+		}
+	}
+}
 </script>
 </head>
 <body>
@@ -83,7 +99,7 @@ function showJob(data){
 	<div class="mui-content mui-scroll-wrapper" id="collectPage">
 		<div class="mui-scroll">
 			<ul class="mui-table-view"></ul>
-			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>暂时没有记录</div>
+			<div id="noneTips"><span class="mui-icon mui-block iconfont icon-nothing"></span>心碎了！啥都没有</div>
 		</div>
 	</div>
 </body>

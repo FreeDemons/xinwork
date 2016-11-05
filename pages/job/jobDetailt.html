@@ -12,7 +12,6 @@
 <link href="../../css/iconfont.css" rel="stylesheet" type="text/css" />
 <link href="../../css/job.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
-<link rel="stylesheet" type="text/css" href="../../css/share.css"/>
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 
@@ -67,8 +66,7 @@ mui.plusReady(function() {
 						shareAction(share['qq'],msgqq)
 						break;
 				}
-			}
-			else{
+			}else{
 				mui.toast('系统发生错误，分享失败。');
 			}
 		})
@@ -134,10 +132,12 @@ function collect(){
 				$("#collectBtn").removeAttr("disabled");
 				if(data == "0"){
 					plus.nativeUI.toast('取消收藏',{'verticalAlign':'center'});
+					if(plus.webview.getWebviewById("collect")){plus.webview.getWebviewById("collect").evalJS('jobReturn("'+nid+'","none")');}
 				}else{
 					plus.nativeUI.toast('已收藏',{'verticalAlign':'center'});
+					if(plus.webview.getWebviewById("collect")){plus.webview.getWebviewById("collect").evalJS('jobReturn("'+nid+'","block")');}
 				}
-				if(plus.webview.getWebviewById("collect")){plus.webview.getWebviewById("collect").evalJS("collectLoad()");}
+				//plus.webview.getWebviewById("collect").evalJS("collectLoad()");}
 			}
 		});
 	}
@@ -171,7 +171,7 @@ function apply(){
 }
 </script>
 <style type="text/css">
-.mui-bar-nav .iconfont{line-height: 44px;font-size: 18px;z-index: 20;position: relative;float: right;padding: 0px 5px;}
+.mui-bar-nav .iconfont{line-height: 44px;font-size: 18px;z-index: 20;position: relative;float: right;padding: 0px 10px;}
 .mui-bar-nav .iconfont.green{color: #0F9D58;}
 </style>
 </head>
@@ -228,34 +228,11 @@ function apply(){
 	</div>
 
 	<div id="shareJob" class="mui-popover mui-popover-action mui-popover-bottom">
-		<div class="share">
-			<div class="shareList" >
-				<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
-					<span class="mui-icon mui-icon-weixin icon"></span>
-				</div>
-				<p>微信</p>
-			</div>
-			<div class="shareList" >
-				<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
-					<span class="mui-icon mui-icon-pengyouquan icon"></span>
-				</div>
-				<p >朋友圈</p>
-			</div>
-			<div class="shareList">
-				<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
-					<span class="mui-icon mui-icon-qq icon"></span>
-					<p>QQ</p>
-				</div>
-			</div>
+		<div class="shareBox">
+			<div class="shareItem" id='weixin'><span class="mui-icon mui-icon-weixin"></span>微信</div>
+			<div class="shareItem" id='pengyouquan'><span class="mui-icon mui-icon-pengyouquan"></span>朋友圈</div>
+			<div class="shareItem" id='qq'><span class="mui-icon mui-icon-qq"></span>QQ</div>
 		</div>
 	</div>
-	
-	<!--<div class="loading">
-		<span></span>
-		<span></span>
-		<span></span>
-		<span></span>
-		<span></span>
-	</div>-->
 </body>
 </html>

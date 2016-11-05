@@ -15,6 +15,7 @@ mui.init({
 	pullRefresh : {
 	    container:"#myTaskPage",//容器标识，querySelector能定位的css选择器均可，比如：id、.class等
 	    up : {
+	      auto:true,//现在数据比较少所以自动上拉一次，下一版本去掉
 	      contentdown: "",//无操作状态下显示的文字
 	      contentrefresh : "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
 	      contentnomore:'没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
@@ -44,7 +45,7 @@ function getData(){
 		ownerLoad.close();
 		if(data.length == 0){
     		document.querySelector('#noneTips').style.display="block";
-    		mui('#myTaskPage').pullRefresh().endPullupToRefresh(true);
+    		mui('#myTaskPage').pullRefresh().disablePullupToRefresh();
     	}else{
     		document.querySelector('.mui-table-view').style.display="block";
     		showTask(data);
@@ -57,6 +58,8 @@ function pullUpfresh(){
 	page += 1;
     mui.getJSON(XW.base + 'taskrefer/' + uid + '?page=' + page,function(data){
     	showTask(data);
+    	var refb = data.length < 20 ? true : false;
+		mui('#myTaskPage').pullRefresh().endPullupToRefresh(refb);
 	});
 }
 
@@ -85,9 +88,6 @@ function showTask(data){
 						+ number + ' 次<span class="task-status ' + statusColor + '"><i class="iconfont icon-clock"></i>' + statusArr[n.field_task_refer_status] + '</span></p>' + remark +'</div>';
 		document.querySelector(".mui-table-view").appendChild(li);
 	});
-	
-	var refb = data.length < 20 ? true : false;
-	mui('#myTaskPage').pullRefresh().endPullupToRefresh(refb);
 }
 </script>
 </head>

@@ -34,8 +34,17 @@ $.plusReady(function() {
       				if(data == 1){
       					$.toast("当前密码不正确");
       				}else{
-	      				$.toast("修改成功");
-	      				$.back();
+	      				plus.storage.removeItem('user');
+						plus.webview.getWebviewById('account').evalJS('noUser()');
+		      			plus.webview.getWebviewById('chat').evalJS('refreshPage()');
+		      			plus.webview.getWebviewById('chat').evalJS('delMsgCache()');
+	      				mui.alert('修改成功，请重新登录', '温馨提示', function() {
+	      					mui.openWindow({url: "../login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+	      					mui.later(function(){
+	      						plus.webview.getWebviewById("accountSet").close("none");
+	      						plus.webview.getWebviewById("accountPw").close("none");
+	      					},800);
+	      				});
       				}
       			},
       			error:function(){

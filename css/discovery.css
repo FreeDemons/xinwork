@@ -1,6 +1,6 @@
 /*article.html*/
 body{background-color:#FFF}
-.icon-share{font-size:18px!important}
+.icon-share{font-size:18px !important;}
 article{padding:10px}
 article header h3{text-align:center;letter-spacing:2px;font-weight:700;line-height:30px}
 article header p{letter-spacing:1px;font-size:12px}

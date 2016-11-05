@@ -82,10 +82,8 @@ function pullUpfresh() {
 	page += 1;
     $.getJSON(XW.base + 'wallet/details' + tid + '?page=' + page,function(data){
 		showDetails(data);
-		setTimeout(function() {
-			var refb = data.length < 20 ? true : false;
-			$('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
-		}, 1000);
+		var refb = data.length < 20 ? true : false;
+		$('#refreshContainer').pullRefresh().endPullupToRefresh(refb);
 	});
 }
 //显示列表

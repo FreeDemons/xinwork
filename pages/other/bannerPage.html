@@ -29,6 +29,8 @@ var listenLoad = function(thisWeb){
 			mui.openWindow({id:'jobDetailt',url:'../job/jobDetailt.html',extras:{nid:parameter[1]}});
 		}else if(parameter[0] == "team"){
 			mui.openWindow({id:'teamDetailt',url:'../team/teamDetailt.html',extras:{tid:parameter[1]}});
+		}else if(parameter[0] == "article"){
+			mui.openWindow({id:'article',url:'../discovery/article.html',extras:{aid:parameter[1]}});
 		}
 	})
 }

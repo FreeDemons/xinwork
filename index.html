@@ -39,18 +39,18 @@ mui.plusReady(function() {
     	if(subpages[i] == "home"){sub.show();}
     }
     //双击头部返回顶部
-    var contentWebview = null;
 	document.querySelector('header').addEventListener('doubletap',function () {
-		if(contentWebview==null){
-			contentWebview = plus.webview.currentWebview().children()[0];
-		}
-		contentWebview.evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
+		plus.webview.currentWebview().children()[0].evalJS("mui('#refreshContainer').pullRefresh().scrollTo(0,0,300)");
 	});
 	//点击打开消息页
 	mui.preload({id:'chat',url:"chat.html"});
 	document.getElementById("chat").addEventListener('touchstart',function(){
-		mui.openWindow({id:'chat'});
-		document.querySelector('.mui-bar-nav #chat span').style.display = 'none';
+		if(plus.storage.getItem('user') == null){
+			mui.openWindow({url: "pages/login/login.html",id: "login",show:{aniShow:"slide-in-bottom",duration:300}});
+		}else{
+			mui.openWindow({id:'chat'});
+			document.querySelector('.mui-bar-nav #chat span').style.display = 'none';
+		}
 	})
 	//选择城市
     document.getElementById("citySelect").addEventListener('tap',function(){
@@ -68,49 +68,49 @@ mui.plusReady(function() {
     var activeTab = 'home';
     var title=document.querySelector(".mui-title");
 	mui('.mui-bar-tab').on('tap', 'a', function(e) {
-		mui(".mui-bar-nav .mui-btn-link")[0].style.display = "none";
-		mui(".mui-bar-nav .mui-btn-link")[1].style.display = "none";
-		mui(".mui-bar-nav .mui-btn-link")[2].style.display = "none";
-		mui(".mui-bar-nav .mui-btn-link")[3].style.display = "none";
-		//获取目标子页的id
-	    var targetTab = this.getAttribute('data-tab');
-	    if (targetTab == activeTab) {
-	        return;
-	    }else if(targetTab == "home"){
-	    	//首页显示城市选择按钮
-	    	document.getElementById("citySelect").style.display = "block";
-	    	document.getElementById("chat").style.display ="block";
-	    	//距离上次刷新超过10分钟，重新载入数据
-	    	if(new Date().getTime()-plus.storage.getItem('homeUpdateTime')>600000){
-	    		plus.webview.getWebviewById('home').evalJS("homeLoad()");
-	    	}
-	    }else if(targetTab == "account"){
-	    	document.getElementById("chat").style.display ="block";
-	    	app.setUser();
-	    	var user = plus.storage.getItem('user');
-	    	if(user != null){
-				user = JSON.parse(user);
-				mui.fire(plus.webview.getWebviewById('account'),'refresh',{user:user});
-			}else{
-				plus.webview.getWebviewById('account').evalJS("noUser()");
-			}
-		}else if(targetTab == "task"){
-			document.getElementById("myTask").style.display = "block";
-	    	//距离上次刷新超过10分钟，重新载入数据
-	    	if(new Date().getTime()-plus.storage.getItem('taskUpdateTime')>600000){
-	    		plus.webview.getWebviewById('task').evalJS("taskLoad()");
-	    	}
-	   }else if(targetTab == "discovery"){
-	    	document.getElementById("articleSelect").style.display = "block";
-	    }
-	    
-	    //更换标题
-	    title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
-	    //显示目标选项卡
-    	plus.webview.hide(activeTab);
-	    plus.webview.show(targetTab);
-	    //隐藏当前选项卡
-    	activeTab = targetTab;
+		var targetTab = this.getAttribute('data-tab');
+		if (targetTab == activeTab) {
+			return;
+		}else{
+			mui(".mui-bar-nav .mui-btn-link")[0].style.display = "none";
+			mui(".mui-bar-nav .mui-btn-link")[1].style.display = "none";
+			mui(".mui-bar-nav .mui-btn-link")[2].style.display = "none";
+			mui(".mui-bar-nav .mui-btn-link")[3].style.display = "none";
+			//更换标题
+		    title.innerHTML = this.querySelector('.mui-tab-label').innerHTML;
+		    //显示目标选项卡
+	    	plus.webview.hide(activeTab);
+		    plus.webview.show(targetTab);
+		    //隐藏当前选项卡
+	    	activeTab = targetTab;
+			if(targetTab == "home"){
+		    	//首页显示城市选择按钮
+		    	document.getElementById("citySelect").style.display = "block";
+		    	document.getElementById("chat").style.display ="block";
+		    	//距离上次刷新超过10分钟，重新载入数据
+		    	if(new Date().getTime()-plus.storage.getItem('homeUpdateTime')>600000){
+		    		plus.webview.getWebviewById('home').evalJS("homeLoad()");
+		    	}
+		    }else if(targetTab == "account"){
+		    	document.getElementById("chat").style.display ="block";
+		    	app.setUser();
+		    	var user = plus.storage.getItem('user');
+		    	if(user != null){
+					user = JSON.parse(user);
+					mui.fire(plus.webview.getWebviewById('account'),'refresh',{user:user});
+				}else{
+					plus.webview.getWebviewById('account').evalJS("noUser()");
+				}
+			}else if(targetTab == "task"){
+				document.getElementById("myTask").style.display = "block";
+		    	//距离上次刷新超过10分钟，重新载入数据
+		    	if(new Date().getTime()-plus.storage.getItem('taskUpdateTime')>600000){
+		    		plus.webview.getWebviewById('task').evalJS("taskLoad()");
+		    	}
+			}else if(targetTab == "discovery"){
+		    	document.getElementById("articleSelect").style.display = "block";
+		    }
+		}
 	});
 	
 	//首页返回键处理,处理逻辑：1秒内，连续两次按返回键，则退出应用；

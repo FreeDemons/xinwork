@@ -126,25 +126,34 @@ function homeLoad() {
 	plus.storage.setItem('homeUpdateTime',JSON.stringify(new Date().getTime()));
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
-	mui.getJSON(XW.base + 'joblist?city=' + city,function(data){
-		plus.nativeUI.closeWaiting();
-		page=0;
-		document.body.querySelector('#jobList').innerHTML = "";
-		mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
-		
-		if(data.length > 0){
-			showJob(data);
-			document.body.querySelector('#jobList').style.display="block";
-			document.body.querySelector('#noneTips').style.display="none";
-			plus.storage.setItem('job',JSON.stringify(data));
-			mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
-		}else{
-			document.body.querySelector('#jobList').style.display="none";
-			document.body.querySelector('#noneTips').style.display="block";
-			mui('#refreshContainer').pullRefresh().disablePullupToRefresh();
-			plus.storage.removeItem('job');
+	mui.ajax(XW.base + 'joblist?city=' + city, {
+		dataType: 'json',
+		type: 'get',
+		timeout: 10000,
+		success: function(data) {
+			plus.nativeUI.closeWaiting();
+			page=0;
+			document.body.querySelector('#jobList').innerHTML = "";
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			
+			if(data.length > 0){
+				showJob(data);
+				document.body.querySelector('#jobList').style.display="block";
+				document.body.querySelector('#noneTips').style.display="none";
+				plus.storage.setItem('job',JSON.stringify(data));
+				mui('#refreshContainer').pullRefresh().enablePullupToRefresh();
+			}else{
+				document.body.querySelector('#jobList').style.display="none";
+				document.body.querySelector('#noneTips').style.display="block";
+				mui('#refreshContainer').pullRefresh().disablePullupToRefresh();
+				plus.storage.removeItem('job');
+			}
+		},
+		error: function() {
+			mui('#refreshContainer').pullRefresh().endPulldownToRefresh();
+			mui.toast("服务器响应失败！");
 		}
-	});
+	})
 	//添加banner图
 	mui.getJSON(XW.base + 'banner',function(data){
 		plus.storage.setItem('banner',JSON.stringify(data));

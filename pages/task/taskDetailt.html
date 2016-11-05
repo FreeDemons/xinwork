@@ -9,7 +9,6 @@
 <link rel="stylesheet" type="text/css" href="../../css/iconfont.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 <link rel="stylesheet" type="text/css" href="../../css/task.css"/>
-<link rel="stylesheet" type="text/css" href="../../css/share.css"/>
 <script src="../../js/mui.min.js"></script>
 <script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
 <script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
@@ -245,25 +244,10 @@ function shareApp(){
 		<div class="mui-bar" id='getTaskBtn'><button type="button" class="mui-btn mui-btn-block mui-btn-success">领取任务</button></div>
 	</div>
 	<div id="shareApp" class="mui-popover mui-popover-action mui-popover-bottom">
-		<div class="share">
-			<div class="shareList" >
-				<div id = 'weixin' class="shareItem" style="background-color: #35D151;">
-					<span class="mui-icon mui-icon-weixin icon"></span>
-				</div>
-				<p>微信</p>
-			</div>
-			<div class="shareList" >
-				<div id = 'pengyouquan'  class="shareItem" style="background-color: #00D05C;">
-					<span class="mui-icon mui-icon-pengyouquan icon"></span>
-				</div>
-				<p >朋友圈</p>
-			</div>
-			<div class="shareList">
-				<div  id = 'qq' class="shareItem" style="background-color: #00A2EB;">
-					<span class="mui-icon mui-icon-qq icon"></span>
-					<p>QQ</p>
-				</div>
-			</div>
+		<div class="shareBox">
+			<div class="shareItem" id='weixin'><span class="mui-icon mui-icon-weixin"></span>微信</div>
+			<div class="shareItem" id='pengyouquan'><span class="mui-icon mui-icon-pengyouquan"></span>朋友圈</div>
+			<div class="shareItem" id='qq'><span class="mui-icon mui-icon-qq"></span>QQ</div>
 		</div>
 	</div>
 </body>
