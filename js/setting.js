@@ -53,6 +53,7 @@ window.ownerLoad = {
 	loading:document.createElement('div'),
 	init:function(){
 		this.loading.classList.add('loading');
+		this.loading.style.top = 44 + immersed + 'px';
 		this.loading.innerHTML = '<div><span></span><span></span><span></span><span></span><span></span></div>';
 		document.body.appendChild(this.loading);
 	},
