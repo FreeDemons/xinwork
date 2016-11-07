@@ -29,6 +29,9 @@
 				mui('.mui-scroll-wrapper').scroll({
 					indicators: false //是否显示滚动条
 				});
+				//添加下边线
+				var lineclass = mui.os.ios ? "lineclass-ios" : "lineclass-android";
+				document.querySelector('footer').classList.add(lineclass);
 				//点击图片看大图
 				setTimeout(function() {
 					var img = document.querySelector('section').querySelectorAll('img');
@@ -72,7 +75,6 @@
 
 				});
 			});
-
 			function getArticle() {
 				ownerLoad.show();
 				mui.ajax(XW.base + 'customize/discovery/article/' + aid, {
@@ -101,7 +103,7 @@
 			function shareArticle() {
 				updateSerivces();
 				var shareContent = aSummary
-				var shareUrl = XW.downAppSrc;;
+				var shareUrl = "http://xinwork.cn/discovery/article/"+aid;
 				mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 					mui('#shareJob').popover('toggle');
 					var msgwx = {
@@ -177,7 +179,7 @@
 <p>人生犹如一条抛物线，一个高潮连着一个低潮。我们谁也无法预料生活未来的样子，也永远不知道命运会在什么时候给你一段更艰难的时光。</p>
 <p><img alt="" src="http://xinwork.cn/sites/default/files/CKEditor/images/yb_0.jpg" /></p> -->
 					</section>
-					<footer class="lineclass-android">
+					<footer>
 						<!--<div class="art_bottom">
 			    			<p></p>
 			    			<img /><br/>

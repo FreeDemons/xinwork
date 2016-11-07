@@ -258,7 +258,8 @@
 					"chat.html",
 					"guide.html",
 					"task.html",
-					"discovery.html"
+					"discovery.html",
+					"pages/login/login.html"
 				]
 			},
 			"home.html": {
@@ -1082,7 +1083,12 @@
 			"pages/team/teamList.html": {
 				"resources": [
 					"fonts/mui.ttf",
-					"css/team.css"
+					"css/team.css",
+					"js/setting.js",
+					"js/mui.min.js",
+					"css/iconfont.css",
+					"css/mui.min.css",
+					"css/style.css"
 				],
 				"refer": [],
 				"priority": 0

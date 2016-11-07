@@ -10,12 +10,10 @@
 
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="css/mui.min.css">
-		<link rel="stylesheet" type="text/css" href="css/style.css" />
+		<!--<link rel="stylesheet" type="text/css" href="css/style.css" />-->
 		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="css/offcanvas-drag-down.css" />
 		<link rel="stylesheet" type="text/css" href="css/discovery.css" />
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="css/app.css" />
 		<style type="text/css">
 			html, body {
 				min-height: 100%;
@@ -54,7 +52,8 @@
 			var str = '';
 			mui.plusReady(function() {
 				plus.webview.currentWebview().setStyle({'popGesture':'none'});//关闭ios侧滑返回
-				autoPulldown();
+//				autoPulldown();
+				articlesLoad();
 				//打开文章详情页
 				mui('#articleList').on('tap', '.mui-card', function() {
 					mui.openWindow({
@@ -124,6 +123,7 @@
 				}
 				busying = true;
 				if(menuWrapperClassList.contains('mui-active')) {
+					mui('#articleDiv').pullRefresh().setStopped(false);
 					document.body.classList.remove('menu-open');
 					menuWrapper.className = 'menu-wrapper fade-out-up animated';
 					menu.className = 'menu bounce-out-up animated';
@@ -140,6 +140,7 @@
 					plus.storage.setItem('artType', JSON.stringify(articlesType));
 					autoPulldown();
 				} else {
+					mui('#articleDiv').pullRefresh().setStopped(true);
 					document.body.classList.add('menu-open');
 					menuWrapper.className = 'menu-wrapper fade-in-down animated mui-active';
 					menu.className = 'menu bounce-in-down animated';
@@ -156,29 +157,29 @@
 				mui.ajax(XW.base + 'articlelist?' + str, {
 					dataType: 'json',
 					type: 'post',
-					timeout: '1000',
+					timeout: '10000',
 					success: function(data) {
 						page = 0;
 						document.body.querySelector('#articleList').innerHTML = "";
 						showArticles(data);
-						mui('#articleDiv').pullRefresh().endPulldownToRefresh();
+						mui('#articleDiv').pullRefresh().endPulldownToRefresh(true);
 					},
 					error: function(x, t, e) {
-						console.log(t);
+						mui.toast('网络异常');
 					}
 				})
 			}
 
 			function moreArticles() {
+				console.log("787878");
 				page += 1;
 				modelTypeStr();
 				console.log('articlelist?' + str);
 				mui.getJSON(XW.base + 'articlelist?' + str + '&page=' + page, function(data) {
 					showArticles(data);
 					setTimeout(function() {
-						console.log(data.length);
 						var refb = data.length < 20 ? true : false;
-						mui('#articleDiv').pullRefresh().endPullupToRefresh(refb);
+						mui('#articleDiv').pullRefresh().endPullupToRefresh(false);
 					}, 1000);
 				});
 			}

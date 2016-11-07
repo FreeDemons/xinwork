@@ -45,7 +45,7 @@ function sendMessage(e, name, image, groupId) {
 			switch(message.messageType) {
 				case RongIMClient.MessageType.TextMessage:
 					//保存消息到服务器
-					var url = XW.base+'/rongcloud/history/save';
+					var url = XW.base+'rongcloud/history/save';
 					console.log(url);
 					var content = RongIMLib.RongIMEmoji.emojiToSymbol(message.content.content);
 					mui.ajax(url, {
@@ -58,8 +58,10 @@ function sendMessage(e, name, image, groupId) {
 							conversationType: message.conversationType,
 							sendContent: contentTxt
 						},
+						dataType:'json',
 						success: function(e) {
 							console.log("文字上传成功！"+tid);
+//							console.log(e);
 						},
 						error: function(x, t, e) {
 						console.log(t+'  '+x.status);
@@ -68,7 +70,7 @@ function sendMessage(e, name, image, groupId) {
 					break;
 				case RongIMClient.MessageType.ImageMessage:
 					// do something...
-					var url = XW.base+'/rongcloud/upload';
+					var url = XW.base+'rongcloud/history/save';
 					mui.ajax(url, {
 						type: 'post',
 						data: {
@@ -79,6 +81,7 @@ function sendMessage(e, name, image, groupId) {
 							messageType: message.messageType,
 							sendId:message.senderUserId
 						},
+						dataType:'json',
 						success: function() {
 							console.log("图片上传成功！");
 						}
@@ -87,7 +90,7 @@ function sendMessage(e, name, image, groupId) {
 				case RongIMClient.MessageType.VoiceMessage:
 					// do something...
 					console.log("发送语音成功");
-					var url = XW.base+'/rongcloud/upload';
+					var url = XW.base+'rongcloud/history/save';
 					mui.ajax(url, {
 						type: 'post',
 						data: {
@@ -98,6 +101,7 @@ function sendMessage(e, name, image, groupId) {
 							messageType: message.messageType,
 							sendId:message.senderUserId
 						},
+						dataType:'json',
 						success: function(result) {
 						}
 					});

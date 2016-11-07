@@ -1,7 +1,7 @@
 /*article.html*/
 body{background-color:#FFF}
 .icon-share{font-size:18px !important;}
-article{padding:10px}
+article{padding:15px}
 article header h3{text-align:center;letter-spacing:2px;font-weight:700;line-height:30px}
 article header p{letter-spacing:1px;font-size:12px}
 article header p span:first-child{margin-right:20px}
@@ -11,20 +11,24 @@ article section img{width:100%;height:auto;max-width:100%}
 article section img:first-child{position:relative;right:30px}
 .lineclass-android{position:relative}
 .lineclass-android:before{position:absolute;right:0;bottom:130px;left:0;height:1px;background-color:#DCDCDC;content:'';-webkit-transform:scaleY(.3);transform:scaleY(.3)}
-.lineclass-android:after,.lineclass-ios:after{bottom:-20px;background-color:#DCDCDC}
+.lineclass-ios:before{position:absolute;right:0;bottom:200px;left:0;height:1px;margin: 0px 15px;background-color:#DCDCDC;content:'';-webkit-transform:scaleY(.3);transform:scaleY(.3)}
+.lineclass-android:after{bottom:-20px;background-color:#DCDCDC}
+.lineclass-ios:after{position:absolute;right:0;bottom:50px;left:0;height:1px;margin: 0px 15px;background-color:#DCDCDC;content:'';-webkit-transform:scaleY(.3);transform:scaleY(.3)}
 .art_bottom{margin:50px 0;text-align:center}
 .art_bottom span{font-size:12px}
 .art_bottom img{width:60px;height:60px;border-radius:50px}
 
 /*discovery.html*/
-.menu-wrapper{height:auto}
-.mui-card{box-shadow:3px 3px 3px rgba(0,0,0,.2);margin-top:10px;border-radius:10px}
+#articleDiv{padding-bottom: 60px;}
+.menu-wrapper{height:auto;}
+.mui-card{/*box-shadow:3px 3px 3px rgba(0,0,0,.2);*/border-radius:5px;margin-top: 15px;}
 .mui-card:active{box-shadow:none;opacity:.6}
 .mui-card .mui-card-content{height:120px;background-size:100% 120px}
-.mui-card-content .title{height:30px;background-color:rgba(89,88,87,.6);position:relative;top:45px;text-align:center;padding:2px}
-.title h4{color:#FFF5EE;text-overflow:ellipsis;overflow:hidden}
-.mui-card-footer .guide{padding:4px;font-size:12px}
-.guide p{font-size:12px;margin-bottom:-2px}
+.mui-card .mui-card-content .title{height:30px;background-color:rgba(89,88,87,.6);position:relative;top:45px;text-align:center;padding:2px}
+.mui-card .mui-card-content .title h4{color:#FFF5EE;text-overflow:ellipsis;overflow:hidden}
+.mui-card-footer{padding: 7px 10px;}
+.mui-card-footer .guide{font-size:12px}
+.mui-card-footer .guide p{font-size:12px;margin-bottom:-2px}
 .mui-card-footer .readCount{float:left}
 .mui-card-footer .readBtn{float:right;display:block}
 .articleSelect{border:1px solid #D3D3D3;padding:30px 10px;background-color:#FFF;z-index:99;text-align:center;border-bottom-left-radius:10px;border-bottom-right-radius:10px}
