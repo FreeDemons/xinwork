@@ -45,7 +45,8 @@ $.plusReady(function(){
 			time:this.getAttribute("data-time"),
 			date:this.getAttribute("data-date"),
 			remark:this.getAttribute("data-remark"),
-			enrol:this.getAttribute("data-enrol")
+			enrol:this.getAttribute("data-enrol"),
+			status:this.getAttribute("data-status")
 		};
 		mui.openWindow({id:'recordDetail',url:"recordDetail.html",extras:extrasArr});
 	});
@@ -73,6 +74,7 @@ function jobLoad(data){
 		li.setAttribute("data-date",n.field_part_time);
 		li.setAttribute("data-remark",n.body);
 		li.setAttribute("data-enrol",n.flagged);
+		li.setAttribute("data-status",n.field_job_status);
 		li.innerHTML = '<img class="mui-media-object mui-pull-left" src="' + n.field_logo.src + '"></img><div class="mui-media-body">'
 						+ '<div class="job-title mui-ellipsis">' + n.title + '</div><p>' + flagged + '<span class="job-status' + statusclass
 						+ '"><i class="iconfont icon-clock"></i>' + n.field_job_status + '</span></p></div>';

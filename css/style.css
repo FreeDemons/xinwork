@@ -28,7 +28,7 @@
 .task-content .task-menu #menuPointTask{width: 50%;float: right;}
 .task-content .task-menu span{margin: 0px 5px;color: #0F9D58;}
 
-.task-content #taskList{margin-top: 15px;}
+.task-content #taskList{margin-top: 15px;display: none;}
 .task-content #taskList .mui-media-object{max-width: 50px;width: 50px;height: 50px;border-radius: 3px;font-size: 8px;text-align: center;line-height: 100%;}
 .task-content #taskList .mui-media-object .iconfont{font-size: 28px;line-height: 100%;margin-top: 3px;}
 .task-content #taskList .mui-media-object .iconfont.icon-download{color: #f4b400;}
@@ -42,6 +42,8 @@
 .task-content #taskList .task-btm .task-status .iconfont{font-size: 14px;background: #ccc;color: #fff;height: 100%;line-height: 16px;margin-right: 3px;float: left;padding: 0px 1px;}
 .task-content #taskList .task-btm .task-status.yellow{border-color: #f4b400;color: #f4b400;}
 .task-content #taskList .task-btm .task-status.yellow .iconfont{background: #f4b400;}
+.task-content #noneTips{text-align: center;color: #999;font-size: 12px;display: none;}
+.task-content #noneTips .mui-icon{font-size: 100px;color: #aaa;margin: 50px 0px 0px;}
 
 /*全局loading动画样式*/
 .loading{width: 100%;height: 100%;position: fixed;top: 44px;background: #f1f1f1;z-index: 1000;}

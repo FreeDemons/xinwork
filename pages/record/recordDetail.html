@@ -22,6 +22,7 @@ $.plusReady(function() {
 	doc.querySelector("#recordTitle").innerHTML = extrasArr.titleHtml;
 	doc.querySelector("#jobId span").innerHTML = extrasArr.jobId;
 	doc.querySelector("#time span").innerHTML = extrasArr.time;
+	
 	//选择日期
 	if(extrasArr.date != ""){
 		doc.querySelector("#date").style.display = "block";
@@ -36,6 +37,8 @@ $.plusReady(function() {
 	//是否已被录取
 	if(extrasArr.enrol == 1){
 		hasEnrol();
+	}else if(extrasArr.status == "待发工资" || extrasArr.status == "已发工资"){
+		doc.querySelector("#link").style.display = "none";
 	}else{
 		noEnrol();
 	}
@@ -90,7 +93,6 @@ function hasEnrol(){
 }
 //报名未被录取
 function noEnrol(){
-	doc.querySelector("#link").style.display = "block";
 	doc.querySelector("#link").addEventListener("tap",function(){
 		$.confirm('确定取消报名本兼职？','',['不取消','确定'], function(e){
 			if(e.index == 1){

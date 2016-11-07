@@ -76,48 +76,58 @@ mui.plusReady(function() {
 //初始化页面数据
 function setData(){
 	ownerLoad.show();
-	mui.getJSON(XW.base + 'customize/job/' + nid,function(data){
-		ownerLoad.close();
-		$(".mui-content").show();
-		
-		title = data.title;
-		$("#jobCreate font").text(data.created);
-		$("#jobDate span").text(data.date);
-		$("#jobTime span").text(data.time);
-		$("#jobTitle span").text(data.title);
-		$("#jobTitle b").text("【" + data.wage + "】");
-		$("#jobNid span").text(data.nid);
-		$("#jobSort span").text(data.sort);
-		$("#jobNumber span").text(data.number);
-		$("#jobPlace span").text(data.place);
-		
-		var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
-		$("#jobCreate span b").text(statusArr[data.status]);
-		if(data.status == 0){
-			$("#jobCreate span").addClass('status-apply');
-		}else{
-			$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>');
+	mui.ajax(XW.base + 'customize/job/' + nid, {
+		dataType: 'json',
+		type: 'get',
+		timeout: 10000,
+		success: function(data) {
+			ownerLoad.close();
+			$(".mui-content").show();
+			
+			title = data.title;
+			$("#jobCreate font").text(data.created);
+			$("#jobDate span").text(data.date);
+			$("#jobTime span").text(data.time);
+			$("#jobTitle span").text(data.title);
+			$("#jobTitle b").text("【" + data.wage + "】");
+			$("#jobNid span").text(data.nid);
+			$("#jobSort span").text(data.sort);
+			$("#jobNumber span").text(data.number);
+			$("#jobPlace span").text(data.place);
+			
+			var statusArr = ['正在报名','完成录取','待结工资','已发工资'];
+			$("#jobCreate span b").text(statusArr[data.status]);
+			if(data.status == 0){
+				$("#jobCreate span").addClass('status-apply');
+			}else{
+				$("#enrolList a").append('<span class="mui-badge mui-badge-danger">已录完</span>');
+			}
+			
+			tid = data.team.id;
+			$("#jobDescription").html(data.body);
+			$("#teamTitle").attr("data-name",data.team.name).text(data.team.title);
+			$("#teamProof span").text(data.team.proof);
+			$("#teamJobcount span").text(data.team.jobcount);
+			$("#team img").attr('src',data.team.logo);
+			$("#team").attr({"data-phone":data.team.phone,"data-banner":data.team.banner,"data-place":data.team.place,"data-description":data.team.description});
+			$("#applyList b").text(data.apply_count);
+			$("#enrolList b").text(data.enrol_count);
+			$("#collectBtn").removeClass("green");
+			date_select = data.date_select;
+			shareContent = data.remark;
+			
+			if(data.apply_status == 1){$("#jobApply button").text("您已报名本兼职").attr("disabled","disabled");}
+			else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
+			else{$("#jobApply button").text("已结束报名");}
+	
+			if(data.flag_collect == true){$("#collectBtn").addClass("green");}
+		},
+		error: function() {
+			mui.alert("服务器响应失败！","",function(){
+				mui.back();
+			});
 		}
-		
-		tid = data.team.id;
-		$("#jobDescription").html(data.body);
-		$("#teamTitle").attr("data-name",data.team.name).text(data.team.title);
-		$("#teamProof span").text(data.team.proof);
-		$("#teamJobcount span").text(data.team.jobcount);
-		$("#team img").attr('src',data.team.logo);
-		$("#team").attr({"data-phone":data.team.phone,"data-banner":data.team.banner,"data-place":data.team.place,"data-description":data.team.description});
-		$("#applyList b").text(data.apply_count);
-		$("#enrolList b").text(data.enrol_count);
-		$("#collectBtn").removeClass("green");
-		date_select = data.date_select;
-		shareContent = data.remark;
-		
-		if(data.apply_status == 1){$("#jobApply button").text("您已报名本兼职").attr("disabled","disabled");}
-		else if(data.status == 0){$("#jobApply button").text("报名兼职").removeAttr("disabled");}
-		else{$("#jobApply button").text("已结束报名");}
-
-		if(data.flag_collect == true){$("#collectBtn").addClass("green");}
-	});
+	})
 }
 //点击收藏
 function collect(){
@@ -137,7 +147,6 @@ function collect(){
 					plus.nativeUI.toast('已收藏',{'verticalAlign':'center'});
 					if(plus.webview.getWebviewById("collect")){plus.webview.getWebviewById("collect").evalJS('jobReturn("'+nid+'","block")');}
 				}
-				//plus.webview.getWebviewById("collect").evalJS("collectLoad()");}
 			}
 		});
 	}
@@ -218,8 +227,9 @@ function apply(){
 			<div class="job-detail-care job-block" style="margin: 15px 0px 0px;">
 				<div class="job-block-header"><span class="mui-icon iconfont icon-warning" style="color: #db4437;"></span>&nbsp;注意事项</div>
 				<div>
-					<p>1、工作期间请遵守商家的规章制度，请勿迟到、早退、旷工、无故放飞机（这一点尤其重要）；</p>
-					<p>2、商家若存在不合法或违反规定的行为，请及时向薪窝投诉！</p>
+					<p>1、已报名的兼职可以在【我的-已报兼职】里取消报名，被录取后不能再取消；</p>
+					<p>2、工作期间请遵守商家的规章制度，请勿迟到、早退、旷工、无故放飞机（这一点尤其重要）；</p>
+					<p>3、商家若存在不合法或违反规定的行为，请及时向薪窝投诉！</p>
 					<a class="mui-table-view-cell"><span class="mui-icon mui-icon-phone"></span>薪窝投诉电话</a>
 				</div>
 			</div>

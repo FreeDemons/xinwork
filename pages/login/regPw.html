@@ -112,7 +112,7 @@ function login(username,password){
 			//如果是兼职详情页或任务详情页唤醒登录的，则重新加载页面数据
       		if(plus.webview.getWebviewById("jobDetailt")){plus.webview.getWebviewById("jobDetailt").evalJS("setData()")}
       		if(plus.webview.getWebviewById("taskDetailt")){plus.webview.getWebviewById("taskDetailt").evalJS("setData()")}
-			$.back();
+			plus.webview.currentWebview().close();
 		},
 		error: function() {
 			plus.nativeUI.closeWaiting();

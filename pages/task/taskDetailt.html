@@ -62,57 +62,67 @@ mui.plusReady(function(){
 //初始化页面数据
 function setData(){
 	ownerLoad.show();
-	mui.getJSON(XW.base + 'customize/task/' + tid,function(data){
-		document.querySelector(".mui-content").style.display = "block";
-		ownerLoad.close();
-		taskData = data;
-		document.querySelector("#taskTitle span").textContent = data.title;
-		document.querySelector("#taskLave font").textContent = data.numberLave;
-		document.querySelector("#taskTitle b").textContent = '【' + data.wage + '】';
-		document.querySelector("#taskTid span").textContent = tid;
-		document.querySelector("#taskNumber span").textContent = data.number;
-		document.querySelector("#taskCheck span").textContent = data.checktime;
-		document.querySelector("#taskDevice span").textContent = data.device;
-		document.querySelector("#taskCity span").textContent = data.city;
-		document.querySelector("#taskBody").innerHTML = data.body;
-		//添加任务步骤
-		if(data.step.length>0){
-			document.querySelector('#taskStep').innerHTML = "";
-			document.querySelector(".task-detail-step").style.display = "block";
-			var numberArr = ["一", "二", "三", "四", "五", "六", "七", "八", "九","十"];
-			for(var i=0;i<data.step.length;i++){
-				var step = data.step[i];
-				var div = document.createElement('div');
-				div.className = 'step_item';
-				
-				var imageHtml = '';
-				if(step.images.length>0){
-					imageHtml += '<div class="content_image">';
-					for(var j=0;j<step.images.length;j++){
-						imageHtml += '<img data-preview-src="' + step.images[j].url + '" src="' + step.images[j].style + '"/>';
+	mui.ajax(XW.base + 'customize/task/' + tid, {
+		dataType: 'json',
+		type: 'get',
+		timeout: 10000,
+		success: function(data) {
+			document.querySelector(".mui-content").style.display = "block";
+			ownerLoad.close();
+			taskData = data;
+			document.querySelector("#taskTitle span").textContent = data.title;
+			document.querySelector("#taskLave font").textContent = data.numberLave;
+			document.querySelector("#taskTitle b").textContent = '【' + data.wage + '】';
+			document.querySelector("#taskTid span").textContent = tid;
+			document.querySelector("#taskNumber span").textContent = data.number;
+			document.querySelector("#taskCheck span").textContent = data.checktime;
+			document.querySelector("#taskDevice span").textContent = data.device;
+			document.querySelector("#taskCity span").textContent = data.city;
+			document.querySelector("#taskBody").innerHTML = data.body;
+			//添加任务步骤
+			if(data.step.length>0){
+				document.querySelector('#taskStep').innerHTML = "";
+				document.querySelector(".task-detail-step").style.display = "block";
+				var numberArr = ["一", "二", "三", "四", "五", "六", "七", "八", "九","十"];
+				for(var i=0;i<data.step.length;i++){
+					var step = data.step[i];
+					var div = document.createElement('div');
+					div.className = 'step_item';
+					
+					var imageHtml = '';
+					if(step.images.length>0){
+						imageHtml += '<div class="content_image">';
+						for(var j=0;j<step.images.length;j++){
+							imageHtml += '<img data-preview-src="' + step.images[j].url + '" src="' + step.images[j].style + '"/>';
+						}
+						imageHtml += '</div>';
 					}
-					imageHtml += '</div>';
+					div.innerHTML = '<p class="step_number"><span>'+(i+1)+'</span>第'+numberArr[i]+'步</p><div class="step_content"><p>'+step.body+'</p>'+imageHtml+'</div>';
+					document.body.querySelector('#taskStep').appendChild(div);
 				}
-				div.innerHTML = '<p class="step_number"><span>'+(i+1)+'</span>第'+numberArr[i]+'步</p><div class="step_content"><p>'+step.body+'</p>'+imageHtml+'</div>';
-				document.body.querySelector('#taskStep').appendChild(div);
 			}
-		}
-		//任务是否已结束
-		if(data.end == true){
-			document.querySelector("#taskLave span b").textContent = '已结束';
-		}else{
-			document.querySelector("#taskLave span b").textContent = data.endtime + '截止';
-			document.querySelector("#taskLave span").classList.add('yellow');
-		}
-		//领取任务按钮状态
-		if(data.btnStatus == 1 || data.btnStatus == 2 || data.btnStatus == 3 || data.btnStatus == 4){
-			var btnText = ['领取任务','任务已结束','任务已被领完','审核中','已完成'];
-			document.querySelector("#getTaskBtn button").textContent = btnText[data.btnStatus];
-			document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
-		}else if(data.btnStatus == 5){
-			document.querySelector("#getTaskBtn button").innerHTML = '提交任务<span>(请在<font></font>内完成)</span>';
-			countDownTime = (Number(data.refer_created)+Number(data.sbmtime*3600));
-			countDown();
+			//任务是否已结束
+			if(data.end == true){
+				document.querySelector("#taskLave span b").textContent = '已结束';
+			}else{
+				document.querySelector("#taskLave span b").textContent = data.endtime + '截止';
+				document.querySelector("#taskLave span").classList.add('yellow');
+			}
+			//领取任务按钮状态
+			if(data.btnStatus == 1 || data.btnStatus == 2 || data.btnStatus == 3 || data.btnStatus == 4){
+				var btnText = ['领取任务','任务已结束','任务已被领完','审核中','已完成'];
+				document.querySelector("#getTaskBtn button").textContent = btnText[data.btnStatus];
+				document.querySelector("#getTaskBtn button").setAttribute("disabled","disabled");
+			}else if(data.btnStatus == 5){
+				document.querySelector("#getTaskBtn button").innerHTML = '提交任务<span>(请在<font></font>内完成)</span>';
+				countDownTime = (Number(data.refer_created)+Number(data.sbmtime*3600));
+				countDown();
+			}
+		},
+		error: function() {
+			mui.alert("服务器响应失败！","",function(){
+				mui.back();
+			});
 		}
 	});
 }

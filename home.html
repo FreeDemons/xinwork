@@ -37,7 +37,7 @@ mui.init({
 });
 
 var page=0;
-var city='';
+var city='全部';
 mui.plusReady(function() {
 	if(plus.storage.getItem('job')){showJob(JSON.parse(plus.storage.getItem('job')));}//显示缓存的工作列表
 	if(plus.storage.getItem('banner')){showBanner(JSON.parse(plus.storage.getItem('banner')));}//显示缓存的banner
@@ -91,9 +91,10 @@ mui.plusReady(function() {
 	//城市选择下沉菜单中的点击事件
 	mui('#cityMenu').on('tap', 'a', function() {
 		toggleMenu();
+		city = this.innerHTML;
 		//改变标题栏的文字
-		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+this.innerHTML+"'");
-		city = this.getAttribute("data-cid");
+		plus.webview.all()[0].evalJS("document.querySelector('#citySelect font').innerHTML='"+city+"'");
+		//city = this.getAttribute("data-cid");
 		plus.storage.setItem('city',city);
 		mui('#refreshContainer').pullRefresh().scrollTo(0,0,300);
 		
@@ -105,20 +106,18 @@ mui.plusReady(function() {
 //获取定位城市从而刷新兼职列表
 function getCityByLoc(){
 	plus.geolocation.getCurrentPosition(function(a){
-		var currentCity = a.address.city.replace("市","");
-		if(XW.curCity[currentCity]){
-			mui.toast('当前定位为'+currentCity+'市');
-			city = XW.curCity[currentCity];
+		city = a.address.city.replace("市","");
+		if(XW.curCity[city]){
+			mui.toast('当前定位为'+city+'市');
 		}else{
 			mui.toast('当前定位城市未开通');
-			city = '';
-			currentCity = '全部';
 		}
 		plus.storage.setItem('city',city);
 		homeLoad();
 		//主页显示当前城市
-		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+currentCity+"'");
+		plus.webview.currentWebview().parent().evalJS("document.querySelector('#citySelect font').innerHTML='"+city+"'");
 	},function(e){
+		plus.storage.setItem('city',city);
 		homeLoad();
 	})
 }
@@ -126,7 +125,7 @@ function homeLoad() {
 	plus.storage.setItem('homeUpdateTime',JSON.stringify(new Date().getTime()));
 	if(app.checkNetwork() != true){return false;}
 	//加载工作列表数据
-	mui.ajax(XW.base + 'joblist?city=' + city, {
+	mui.ajax(XW.base + 'joblist?city=' + XW.curCity[city], {
 		dataType: 'json',
 		type: 'get',
 		timeout: 10000,
@@ -163,7 +162,7 @@ function homeLoad() {
 //上拉加载
 function pullUpfresh() {
 	page += 1;
-	mui.getJSON(XW.base + 'joblist?city=' + city + '&page=' + page,function(data){
+	mui.getJSON(XW.base + 'joblist?city=' + XW.curCity[city] + '&page=' + page,function(data){
 		showJob(data);
 		setTimeout(function() {
 			var refb = data.length < 20 ? true : false;
@@ -262,6 +261,10 @@ function toggleMenu() {
 				<li class="mui-table-view-cell"><a data-cid="83">江门</a></li>
 				<li class="mui-table-view-cell"><a data-cid="79">东莞</a></li>
 				<li class="mui-table-view-cell"><a data-cid="93">湛江</a></li>
+				<li class="mui-table-view-cell"><a data-cid="87">清远</a></li>
+				<li class="mui-table-view-cell"><a data-cid="82">惠州</a></li>
+				<li class="mui-table-view-cell"><a data-cid="90">韶关</a></li>
+				<li class="mui-table-view-cell"><a data-cid="86">梅州</a></li>
 			</ul>
 		</div>
 	</div>

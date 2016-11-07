@@ -32,10 +32,20 @@ mui.plusReady(function() {
 function loadTeam(){
 	var city = plus.storage.getItem('city') ? plus.storage.getItem('city') : '';
 	ownerLoad.show();
-	mui.getJSON(XW.base + 'teamlist?city=' + city,function(data){
-		ownerLoad.close();
-		showTeam(data);
-	});
+	mui.ajax(XW.base + 'teamlist?city=' + XW.curCity[city], {
+		dataType: 'json',
+		type: 'get',
+		timeout: 10000,
+		success: function(data) {
+			ownerLoad.close();
+			showTeam(data);
+		},
+		error: function() {
+			mui.alert("服务器响应失败！","",function(){
+				mui.back();
+			});
+		}
+	})
 }
 //显示团队项
 function showTeam(data){

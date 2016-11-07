@@ -46,7 +46,7 @@
 
 #recordDetailPage #recordData.mui-active,#recordDetailPage #qrcode.mui-active{background: #fff;}
 #recordDetailPage #recordData i{display: inline-block;width: 2em;}
-#recordDetailPage #recordData p{margin-bottom: 5px;color:#666;text-indent: -5em;padding-left: 5em;}
+#recordDetailPage #recordData p{margin: 0px;color:#666;text-indent: -5em;padding: 5px 0px 5px 5em;word-wrap:break-word;word-break:break-all;line-height: 120%;}
 #recordDetailPage #recordData #date,#recordDetailPage #recordData #remark{display: none;}
 #recordDetailPage #qrcode{text-align: center;display: none;}
 #recordDetailPage #qrcode img{width: 200px;margin-top: 10px;}
