@@ -35,7 +35,6 @@ RongIMClient.setConnectionStatusListener({
 mui.plusReady(function() {
 	t=plus.storage.getItem('mToken');
 	mui.getJSON(XW.base+'rongcloud/getToken', function(data) {
-		console.log(JSON.stringify(data)+'      '+data.token);
 		RongIMClient.connect(data.token, {
 			onSuccess: function() {
 				console.log("Login successfully!");

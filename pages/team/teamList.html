@@ -13,6 +13,7 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 mui.plusReady(function() {
+document.getElementById('affiliate').style.top = 44 + immersed + 'px';
 	mui('.mui-scroll-wrapper').scroll();
 	loadTeam();
 	//打开团队详情页
@@ -67,13 +68,16 @@ function showTeam(data){
 	}
 }
 </script>
+<style type="text/css">
+#affiliate{position: absolute;font-size: 12px;padding-left: 15px;background: #FCF2BF;color: #666;bottom:-20px;z-index: 100;margin: 0px;width: 100%;left: 0px;height: 20px;}
+</style>
 </head>
 <body>
 	<header class="mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">团队列表</h1>
+		<p id="affiliate">城市合伙人加盟热线：15919187268（廖先生）</p>
 	</header>
-	<p id="affiliate" style="position: relative;font-size: 12px;padding-left: 15px;background: #FCF2BF;color: #666;top: 44px;z-index: 100;">城市合伙人加盟热线：15919187268（廖先生）</p>
 	<div class="mui-content mui-scroll-wrapper" id="teamListPage">
 		<div class="mui-scroll">
 			<ul class="mui-table-view" id="teamList"></ul>

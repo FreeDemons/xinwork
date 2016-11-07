@@ -1073,10 +1073,13 @@
 					"css/iconfont.css",
 					"css/mui.min.css",
 					"js/share.js",
-					"fonts/iconfont.ttf"
+					"fonts/iconfont.ttf",
+					"css/style.css"
 				],
 				"refer": [
-					"pages/other/feedback.html"
+					"pages/other/feedback.html",
+					"pages/other/teamwork.html",
+					"pages/other/about.html"
 				],
 				"priority": 0
 			},

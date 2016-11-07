@@ -80,7 +80,11 @@
 				var type = message.messageType;
 				console.log(JSON.stringify(message));
 				 unread[targetId] = (!isNaN(unread[targetId]) ? ++unread[targetId] :1) ;
-				 console.log(unread[targetId]);
+				 //主页显示消息提示红点
+				var index = plus.webview.getLaunchWebview().id;
+				plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat span').style.display = 'block';");
+				 //消息列表消息计数
+				 console.log("未读消息数："+unread[targetId]);
 				plus.webview.getWebviewById('chat').evalJS("checkNewMsg(" + targetId + ","+ unread[targetId]+")");//刷新最新会话
 				//后台运行推送消息叠加
 				if(status == '后台') {

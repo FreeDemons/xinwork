@@ -10,7 +10,6 @@
 
 		<!--标准mui.css-->
 		<link rel="stylesheet" href="css/mui.min.css">
-		<!--<link rel="stylesheet" type="text/css" href="css/style.css" />-->
 		<link rel="stylesheet" type="text/css" href="css/iconfont.css" />
 		<link rel="stylesheet" type="text/css" href="css/offcanvas-drag-down.css" />
 		<link rel="stylesheet" type="text/css" href="css/discovery.css" />
@@ -25,18 +24,18 @@
 		<script>
 			mui.init({
 				pullRefresh: {
-					container: "#articleDiv", //容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+					container: "#articleDiv", 
 					down: {
-						auto: false, //可选,默认false.自动下拉刷新一次（安卓机无法自动下拉）
-						contentdown: "下拉刷新...", //可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
-						contentover: "松开刷新...", //可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
-						contentrefresh: "正在刷新...", //可选，正在刷新状态时，下拉刷新控件上显示的标题内容
-						callback: articlesLoad //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+						auto: false, 
+						contentdown: "下拉刷新...", 
+						contentover: "松开刷新...",
+						contentrefresh: "正在刷新...",
+						callback: articlesLoad 
 					},
 					up: {
-						contentrefresh: "正在加载...", //可选，正在加载状态时，上拉加载控件上显示的标题内容
-						contentnomore: '没有更多数据了', //可选，请求完毕若没有更多数据时显示的提醒内容；
-						callback: moreArticles //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+						contentrefresh: "正在加载...", 
+						contentnomore: '没有更多数据了', 
+						callback: moreArticles 
 					}
 				},
 				swipeBack: false,
@@ -153,7 +152,6 @@
 
 			function articlesLoad() {
 				modelTypeStr();
-				console.log('articlelist?' + str);
 				mui.ajax(XW.base + 'articlelist?' + str, {
 					dataType: 'json',
 					type: 'post',
@@ -171,15 +169,13 @@
 			}
 
 			function moreArticles() {
-				console.log("787878");
 				page += 1;
 				modelTypeStr();
-				console.log('articlelist?' + str);
 				mui.getJSON(XW.base + 'articlelist?' + str + '&page=' + page, function(data) {
 					showArticles(data);
 					setTimeout(function() {
 						var refb = data.length < 20 ? true : false;
-						mui('#articleDiv').pullRefresh().endPullupToRefresh(false);
+						mui('#articleDiv').pullRefresh().endPullupToRefresh(refb);
 					}, 1000);
 				});
 			}
@@ -222,7 +218,8 @@
 
 	<body>
 		<div id="articleDiv" class="mui-content mui-scroll-wrapper">
-			<div id='articleList' class="mui-scroll">
+			<div class="mui-scroll">
+				<div id='articleList'>
 				<!--<div class="mui-card">
 					<div class="mui-card-content" style="background-image: url(images/cbd.jpg);">
 						<div class="title">
@@ -238,6 +235,7 @@
 						</div>
 					</div>
 				</div>-->
+				</div>
 			</div>
 		</div>
 		<div id="menu-wrapper" class="menu-wrapper hidden">

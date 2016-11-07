@@ -36,17 +36,17 @@
 				})
 				
 				//没有登录的操作
-				mui('.noLoginBox').on('tap', 'button', function() {
-					var id = this.getAttribute('data');
-					mui.openWindow({
-						url: "pages/login/" + id + ".html",
-						id: id,
-						show: {
-							aniShow: "slide-in-bottom",
-							duration: 300
-						}
-					});
-				})
+//				mui('.noLoginBox').on('tap', 'button', function() {
+//					var id = this.getAttribute('data');
+//					mui.openWindow({
+//						url: "pages/login/" + id + ".html",
+//						id: id,
+//						show: {
+//							aniShow: "slide-in-bottom",
+//							duration: 300
+//						}
+//					});
+//				})
 				//点击返回触发
 				document.querySelector(".mui-action-back").addEventListener("tap",function(){
 					var index = plus.webview.getLaunchWebview().id;
@@ -63,10 +63,10 @@
 				var user = plus.storage.getItem('user'); //获取用户对象
 
 				if(user == null) {
-					document.querySelector('.chat-content').style.display = 'none';
+					document.querySelector('.mui-content').style.display = 'none';
 					document.querySelector('.noLoginBox').removeAttribute('style');
 				} else {
-					document.querySelector('.chat-content').style.display = 'block';
+					document.querySelector('.mui-content').style.display = 'block';
 					document.querySelector('.noLoginBox').style.display = 'none';
 				}
 			}
@@ -123,8 +123,6 @@
 			}
 			
 			var checkNewMsg = function(groupId,unread) {
-				var index = plus.webview.getLaunchWebview().id;
-				plus.webview.getWebviewById(index).evalJS("document.querySelector('.mui-bar-nav #chat span').style.display = 'block';");
 				var group_li = document.querySelector(".mui-table-view li[data-gid='" + groupId + "']");
 				if(group_li){
 					var badge = group_li.querySelector('.chat-badge');
@@ -221,8 +219,8 @@
 		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 		    <h1 class="mui-title">消息</h1>
 		</header>
-		<div class="mui-content" >
-			<div class="chat-content mui-scroll-wrapper">
+		
+			<div class="mui-content mui-scroll-wrapper">
 				<div class="mui-scroll" id="chat_body">
 					<ul class="mui-table-view mui-table-view-chevron" id="chatlist">
 						<!--<li class="mui-table-view-cell mui-media" data-gid="">
@@ -246,14 +244,13 @@
 					</ul>
 				</div>
 			</div>
+				<div class="noLoginBox" style="display: none;">
+					<img src="images/parter.png" />
+					<a><button id="loginBtn" data="login">登录薪窝</button></a>
+					<p>兼职不孤单，与小伙伴一起分享成长</p>
+					<p>兼职不迷惘，听组长领队教你不烦恼</p>
+				</div>
 
-			<div class="noLoginBox" style="display: none;">
-				<img src="images/parter.png" />
-				<a><button id="loginBtn" data="login">登录薪窝</button></a>
-				<p>兼职不孤单，与小伙伴一起分享成长</p>
-				<p>兼职不迷惘，听组长领队教你不烦恼</p>
-			</div>
-		</div>
 
 	</body>
 

@@ -1,6 +1,4 @@
 /*聊天主页chat.html*/
-.chat-content{ margin-top: 44px; }
-/*.conNews{font-size: 14px;color: #CCCCCC;display:block;width: 80%;margin-top: 5px;}*/
 .conTime{display: block;font-size: 12px;font-weight:bold;color: #00AFC9;position: absolute;top:8px;right: 5%;}
 .conName{overflow: hidden;text-overflow:ellipsis}
 .mui-navigate-right:after{bottom: 50px;font-weight: 800;font-size: 18px;}

@@ -46,7 +46,6 @@ function sendMessage(e, name, image, groupId) {
 				case RongIMClient.MessageType.TextMessage:
 					//保存消息到服务器
 					var url = XW.base+'rongcloud/history/save';
-					console.log(url);
 					var content = RongIMLib.RongIMEmoji.emojiToSymbol(message.content.content);
 					mui.ajax(url, {
 						type: 'post',
