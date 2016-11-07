@@ -74,7 +74,7 @@ function forgetSubmit(){
   					plus.webview.getWebviewById('login').evalJS('document.querySelector("#phone").value="'+extrasval.phoneNumber+'"');
   					plus.webview.getWebviewById("forget").close("none");
       				plus.webview.getWebviewById("forgetCode").close("none");
-		      		$.back();
+		      		plus.webview.currentWebview().close();
   				});
 			}else{
 				mui.alert("确认码错误","温馨提示");
