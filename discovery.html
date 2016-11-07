@@ -173,10 +173,8 @@
 				modelTypeStr();
 				mui.getJSON(XW.base + 'articlelist?' + str + '&page=' + page, function(data) {
 					showArticles(data);
-					setTimeout(function() {
-						var refb = data.length < 20 ? true : false;
-						mui('#articleDiv').pullRefresh().endPullupToRefresh(refb);
-					}, 1000);
+					var refb = data.length < 20 ? true : false;
+					mui('#articleDiv').pullRefresh().endPullupToRefresh(refb);
 				});
 			}
 
@@ -220,21 +218,7 @@
 		<div id="articleDiv" class="mui-content mui-scroll-wrapper">
 			<div class="mui-scroll">
 				<div id='articleList'>
-				<!--<div class="mui-card">
-					<div class="mui-card-content" style="background-image: url(images/cbd.jpg);">
-						<div class="title">
-							<h4><nobr>我与你的世界只有一步之遥，见面却是遥遥无期</nobr></h4>
-						</div>
-					</div>
-					<div class="mui-card-footer">
-						<div class="guide">
-							<p>&nbsp;&nbsp;&nbsp;&nbsp;不曾记得我与你在毕业那年之后已有多少年月未曾见面，毕业狂欢那晚，你喝得醉醺醺的，在一群同学的起哄下，对当时的我说：
-								“毕业了......</p>
-							<span class="readCount">150<span class="iconfont icon-29"></span></span>
-							<span class="readBtn">阅读全文>></span>
-						</div>
-					</div>
-				</div>-->
+				
 				</div>
 			</div>
 		</div>
