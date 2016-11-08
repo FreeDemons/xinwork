@@ -646,7 +646,8 @@
 					"css/iconfont.css",
 					"css/mui.min.css",
 					"js/app.js",
-					"js/echarts.js"
+					"js/echarts.js",
+					"css/wallet.css"
 				],
 				"refer": [
 					"pages/wallet/walletDetails.html",
@@ -979,7 +980,8 @@
 					"css/style.css",
 					"js/mui.previewimage.js",
 					"fonts/iconfont.ttf",
-					"css/task.css"
+					"css/task.css",
+					"images/default.jpg"
 				],
 				"refer": [],
 				"priority": 0

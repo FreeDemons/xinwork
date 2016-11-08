@@ -41,6 +41,7 @@
 #taskReferPage .tips .tips_image img{width: 60px;height: 60px;margin: 0px 5px 5px 0px;border-radius: 2px;}
 
 #taskReferPage #referImage .mui-input-group{display: table;width: 100%;color: #666;font-size: 24px;}
+#taskReferPage #referImage p span{font-size: 8px;color:#808080;}
 #taskReferPage #referImage img{width: 60px;height: 60px;margin: 5px 5px 5px 0px;border-radius: 2px;float: left;}
 #taskReferPage #referImage #addImage{width: 60px;height: 60px;margin: 5px 5px 5px 0px;background: #eaeaea;line-height: 55px;text-align: center;border-radius: 2px;float: left;}
 #taskReferPage #warning{margin: 0px 15px;font-size: 12px;}

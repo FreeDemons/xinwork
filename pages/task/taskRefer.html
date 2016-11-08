@@ -206,7 +206,7 @@ function openQQ() {
 		<a class="mui-action-back mui-icon mui-icon-arrowleft mui-pull-left"></a>
 		<h1 class="mui-title">提交任务</h1>
 	</header>
-	<div class="mui-content mui-scroll-wrapper" id="taskReferPage" style="display: none;">
+	<div class="mui-content mui-scroll-wrapper" id="taskReferPage" style="">
 		<div class="mui-scroll">
 			<form class="mui-input-group tips">
 				<p><span class="mui-icon iconfont icon-description" style="color: #0F9D58;"></span>&nbsp;提交说明</p>
@@ -223,9 +223,11 @@ function openQQ() {
 				</form>
 			</div>
 			
-			<div id="referImage" style="display: none;">
-				<p class="block-header">上传图片</p>
-				<form class="mui-input-group"><div id="addImage">+</div></form>	
+			<div id="referImage" style="">
+				<p class="block-header">上传图片<span>（长按图片删除）</span></p>
+				<form class="mui-input-group">
+					<div id="addImage">+</div>
+				</form>	
 			</div>
 			<p id="warning">
 				随意填写会被限制使用网赚功能

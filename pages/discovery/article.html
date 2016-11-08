@@ -22,10 +22,11 @@
 			mui.plusReady(function() {
 				mui.previewImage(); //图片预览插件
 				aid = plus.webview.currentWebview().aid;
-				aTitle = plus.webview.currentWebview().aTitle;
-				aSummary = plus.webview.currentWebview().aSummary;
+//				aTitle = plus.webview.currentWebview().aTitle;
+//				aSummary = plus.webview.currentWebview().aSummary;
 				getArticle();
-				shareArticle();
+//				console.log(aSummary);
+//				shareArticle();
 				mui('.mui-scroll-wrapper').scroll({
 					indicators: false //是否显示滚动条
 				});
@@ -83,6 +84,7 @@
 					timeout: '10000',
 					success: function(data) {
 						document.querySelector('header h3').innerHTML = data.title;
+						aTitle = data.title;
 						document.querySelector('header p #readTime').innerHTML = data.created;
 						document.querySelector('header p #readLabel').innerHTML = data.sort;
 						document.querySelector('header p #readCount').innerHTML = data.number + '次阅读';
@@ -92,7 +94,13 @@
 							data.author.picture + '"/><br/> <span>' +
 							data.author.name + '</span><br/>';
 						document.querySelector(".mui-content").style.display = "block";
+						if(data.summary){
+							aSummary = data.summary;
+						}else{
+							aSummary = document.querySelector('section').textContent;
+						}
 						ownerLoad.close();
+						shareArticle(aSummary);
 					},
 					error: function(x, t, e) {
 						console.log(t);
@@ -100,9 +108,10 @@
 				})
 			}
 
-			function shareArticle() {
+			function shareArticle(aSummary) {
 				updateSerivces();
-				var shareContent = aSummary
+				console.log(aSummary);
+				var shareContent = aSummary;
 				var shareUrl = "http://xinwork.cn/discovery/article/"+aid;
 				mui('body').on('tap', '.mui-popover-action .shareItem', function() {
 					mui('#shareJob').popover('toggle');
