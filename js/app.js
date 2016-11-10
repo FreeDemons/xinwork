@@ -195,6 +195,15 @@ owner.downWgt = function(wgtUrl){
         plus.nativeUI.alert("安装更新文件失败");
     });
 }
+ //数组转数值
+ owner.arrayToValue = function(array){
+ 	var len = array.length;
+ 	var total = 0;
+ 	for (var i = 0 ;i < len ;i++) {
+ 		total = total + array[len-1-i]*Math.pow(10,i)
+ 	}
+ 	return total;
+ }
  
  //监测更新
 owner.checkUpdate = function(){
@@ -202,17 +211,19 @@ owner.checkUpdate = function(){
 	plus.runtime.getProperty(plus.runtime.appid,function(inf){
 		var currentVersionStr = inf.version;
 		var currentVersion = currentVersionStr.split('.');
+		var curVerNumber = app.arrayToValue(currentVersion);
 		//先判断整包下载，再判断资源升级
 		mui.getJSON(XW.base + 'appversion/0',function(data){
 			//field_remark是版本号，body是升级备注
 			var apkVersion = data[0].field_remark.split('.');
+			var apkVerNumber = app.arrayToValue(apkVersion);
 			if(currentVersion[0] == apkVersion[0] && currentVersion[1] == apkVersion[1]){
 				mui.getJSON(XW.base + 'appversion/1',function(datas){
 					if(currentVersionStr != datas[0].field_remark){
 						app.downWgt(datas[0].field_version_file);
 					}
 				});
-			}else{
+			}else if(curVerNumber < apkVerNumber){
 				var btnArray = ['立即更新', '以后更新'];
 				mui.confirm(data[0].body, '新版本更新', btnArray, function(e) {
 					//点击不更新，不需要做任何提示
