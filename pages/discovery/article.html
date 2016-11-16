@@ -17,16 +17,13 @@
 		<script src="../../js/share.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.init({gestureConfig:{longtap:true}});
-			var share = null,
-				aid, aTitle, aSummary;
+			var aid, aTitle, aSummary;
 			mui.plusReady(function() {
 				mui.previewImage(); //图片预览插件
 				aid = plus.webview.currentWebview().aid;
 //				aTitle = plus.webview.currentWebview().aTitle;
 //				aSummary = plus.webview.currentWebview().aSummary;
 				getArticle();
-//				console.log(aSummary);
-//				shareArticle();
 				mui('.mui-scroll-wrapper').scroll({
 					indicators: false //是否显示滚动条
 				});
@@ -100,58 +97,12 @@
 							aSummary = document.querySelector('section').textContent;
 						}
 						ownerLoad.close();
-						shareArticle(aSummary);
+						shareShow(aTitle,aSummary,"http://xinwork.cn/discovery/article/"+aid);
 					},
 					error: function(x, t, e) {
 						console.log(t);
 					}
 				})
-			}
-
-			function shareArticle(aSummary) {
-				updateSerivces();
-				console.log(aSummary);
-				var shareContent = aSummary;
-				var shareUrl = "http://xinwork.cn/discovery/article/"+aid;
-				mui('body').on('tap', '.mui-popover-action .shareItem', function() {
-					mui('#shareJob').popover('toggle');
-					var msgwx = {
-						content: shareContent,
-						href: shareUrl,
-						title: aTitle,
-						extra: {
-							scene: 'WXSceneSession'
-						}
-					};
-					var msgpy = {
-						content: shareContent,
-						href: shareUrl,
-						title: aTitle,
-						extra: {
-							scene: 'WXSceneTimeline'
-						}
-					};
-					var msgqq = {
-						content: shareContent,
-						href: shareUrl,
-						title: aTitle
-					};
-					if(share['weixin'] || share['qq']) {
-						switch(this.id) {
-							case 'weixin':
-								shareAction(share['weixin'], msgwx);
-								break;
-							case 'pengyouquan':
-								shareAction(share['weixin'], msgpy);
-								break;
-							case 'qq':
-								shareAction(share['qq'], msgqq)
-								break;
-						}
-					} else {
-						mui.toast('系统发生错误，无法分享。');
-					}
-				});
 			}
 		</script>
 	</head>

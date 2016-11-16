@@ -15,10 +15,9 @@
 <script type="text/javascript" charset="UTF-8">
 mui.init();
 
-var nid,title,tid,date_select;
-var share = null,shareContent = null;
+var nid,title = '',tid,date_select,shareContent = '';
 mui.plusReady(function() {
-	updateSerivces();
+//	updateSerivces();
 	mui('.mui-scroll-wrapper').scroll();
 	nid = plus.webview.currentWebview().nid;
 	setData();
@@ -46,30 +45,6 @@ mui.plusReady(function() {
 		mui.confirm(confirmText,'',btnArray, function(e){
 			if(e.index == 1){plus.device.dial("0756-6958831", true);}
 		});
-	})
-	//打开分享列表
-	document.getElementById("shareBtn").addEventListener("tap",function(){
-	    var msgwx={content:shareContent,href:XW.xw+'job/'+nid,title:title,extra:{scene:'WXSceneSession'}};
-		var msgpy ={content:shareContent,href:XW.xw+'job/'+nid,title:title,extra:{scene:'WXSceneTimeline'}};
-		var msgqq ={content:shareContent,href:XW.xw+'job/'+nid,title:title};
-		mui('body').on('tap', '.mui-popover-action .shareItem', function() {
-			mui('#shareJob').popover('toggle');
-			if (share['weixin'] ||share['qq']) {
-				switch (this.id){
-					case 'weixin':
-						shareAction(share['weixin'], msgwx);
-						break;
-					case 'pengyouquan':
-						shareAction(share['weixin'], msgpy);
-						break;
-					case 'qq':
-						shareAction(share['qq'],msgqq)
-						break;
-				}
-			}else{
-				mui.toast('系统发生错误，分享失败。');
-			}
-		})
 	})
 });
 
@@ -121,6 +96,7 @@ function setData(){
 			else{$("#jobApply button").text("已结束报名");}
 	
 			if(data.flag_collect == true){$("#collectBtn").addClass("green");}
+			shareShow(title,shareContent,XW.xw+'job/'+nid);
 		},
 		error: function() {
 			mui.alert("服务器响应失败！","",function(){
